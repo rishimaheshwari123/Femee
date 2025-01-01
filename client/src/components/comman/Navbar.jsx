@@ -1,0 +1,160 @@
+import React, { useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import { FaBars, FaTimes } from "react-icons/fa";
+import logo from "../../assets/logo.png";
+import { useSelector } from "react-redux";
+import { memberLogout } from "../../services/operations/memeber";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+
+const Navbar = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const { userName } = useParams();
+  const { token } = useSelector((state) => state.auth);
+  const { user } = useSelector((state) => state.auth);
+  const handleLogout = async () => {
+    dispatch(memberLogout(navigate));
+  };
+  // Links Array
+  const links = [
+    { name: "Home", to: "/" },
+    { name: "About", to: "/about" },
+    { name: "Shop", to: "/shop" },
+    { name: "Contact", to: "/contact" },
+    { name: "Become Member", to: `/member/${userName ? userName : "admin"}` },
+  ];
+
+  return (
+    <div className="lg:top-11 left-0 w-full bg-white text-black z-50 shadow-md">
+      {/* Navbar for Large Screens */}
+      <div className="hidden sm:flex justify-between max-w-7xl mx-auto items-center px-6 py-3 border-b border-gray-200">
+        <Link to="/">
+          <img src={logo} alt="Logo" className="h-16" />
+        </Link>
+        <div className="flex space-x-6 items-center">
+          {/* Render links */}
+          {links.map((link, index) => (
+            <Link
+              key={index}
+              to={link.to || "#"}
+              className="hover:text-gray-600"
+            >
+              {link.name}
+            </Link>
+          ))}
+          {/* Conditionally render buttons */}
+          {token && (user.role === "memeber" || user.role === "admin") ? (
+            <>
+              <Link
+                to={`${user?.role}/dashboard`}
+                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+              >
+                Dashboard
+              </Link>
+              <button
+                onClick={handleLogout}
+                className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 ml-2"
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link onClick={() => setIsSidebarOpen(false)} to="/login">
+                Login
+              </Link>
+              <Link
+                to={`/member/${userName ? userName : "admin"}`}
+                onClick={() => setIsSidebarOpen(false)}
+                className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 ml-2"
+              >
+                Become Member
+              </Link>
+            </>
+          )}
+        </div>
+      </div>
+
+      {/* Hamburger Menu for Small Devices */}
+      <div className="sm:hidden flex justify-between items-center px-6 py-4 border-b border-gray-200">
+        <Link to="/">
+          <img src={logo} alt="Logo" className="h-10" />
+        </Link>
+        <button onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
+          {isSidebarOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
+        </button>
+      </div>
+
+      {/* Sidebar for Small Devices */}
+      {isSidebarOpen && (
+        <>
+          {/* Overlay */}
+          <div
+            className="fixed inset-0 bg-black bg-opacity-50 z-40"
+            onClick={() => setIsSidebarOpen(false)}
+          ></div>
+          {/* Sidebar */}
+          <div className="fixed top-0 left-0 w-64 h-screen bg-white shadow-lg z-50">
+            <div className="flex justify-between items-center px-6 py-4 border-b border-gray-200">
+              <Link to="/">
+                <img src={logo} alt="Logo" className="h-10" />
+              </Link>
+              <button onClick={() => setIsSidebarOpen(false)}>
+                <FaTimes size={24} />
+              </button>
+            </div>
+            <div className="px-6 py-4">
+              {/* Render links */}
+              {links.map((link, index) => (
+                <Link
+                  key={index}
+                  to={link.to || "#"}
+                  className="block mb-4 hover:text-gray-600"
+                  onClick={() => setIsSidebarOpen(false)}
+                >
+                  {link.name}
+                </Link>
+              ))}
+              {/* Conditionally render buttons */}
+              {token && (user.role === "memeber" || user.role === "admin") ? (
+                <>
+                  <Link
+                    to={`${user?.role}/dashboard`}
+                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                  >
+                    Dashboard
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 ml-2"
+                  >
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link onClick={() => setIsSidebarOpen(false)} to="/login">
+                    Login
+                  </Link>
+                  <br />
+                  <br />
+                  <Link
+                    onClick={() => setIsSidebarOpen(false)}
+                    to={`/member/${userName ? userName : "admin"}`}
+                    className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 "
+                  >
+                    Become Member
+                  </Link>
+                </>
+              )}
+            </div>
+          </div>
+        </>
+      )}
+    </div>
+  );
+};
+
+export default Navbar;

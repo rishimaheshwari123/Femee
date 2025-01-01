@@ -7,8 +7,10 @@ import {
   FaTags,
 } from "react-icons/fa";
 import axios from "axios";
+import { useSelector } from "react-redux";
 
 const Dashboard = () => {
+  const { user } = useSelector((state) => state.auth);
   const [stats, setStats] = useState({
     totalUsers: 0,
     totalVisits: 0,
@@ -71,7 +73,7 @@ const Dashboard = () => {
 
   return (
     <div className="p-4">
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
+      {/* <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
         {data.map((item, index) => (
           <div
             key={index}
@@ -82,6 +84,10 @@ const Dashboard = () => {
             <p className="text-2xl">{item.value}</p>
           </div>
         ))}
+      </div> */}
+      <div className="flex gap-5 items-center">
+        <p>Your Link :</p>
+        <p>{`http://localhost:3000/member/${user?.userName}`}</p>
       </div>
     </div>
   );

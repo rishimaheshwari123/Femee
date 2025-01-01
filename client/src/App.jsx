@@ -10,6 +10,8 @@ import { useSelector } from "react-redux";
 import Dashboard from "./components/Admin/pages/Dashboard";
 import Layout from "./components/Admin/pages/Layout";
 import PrivateRoute from "./components/Admin/auth/PrivateRoute";
+import GetAllMembers from "./components/Admin/pages/GetAllMembers";
+import MyProfile from "./components/Admin/pages/MyProfile";
 
 const App = () => {
   const { user } = useSelector((state) => state.auth);
@@ -51,6 +53,8 @@ const App = () => {
           {user?.role === "admin" && (
             <>
               <Route path="/admin/dashboard" element={<Dashboard />} />
+              <Route path="/admin/getAll-members" element={<GetAllMembers />} />
+              <Route path="/admin/profile" element={<MyProfile />} />
             </>
           )}
         </Route>

@@ -45,7 +45,7 @@ const Navbar = () => {
             </Link>
           ))}
           {/* Conditionally render buttons */}
-          {token && (user.role === "memeber" || user.role === "admin") ? (
+          {token && (user.role === "member" || user.role === "admin") ? (
             <>
               <Link
                 to={`${user?.role}/dashboard`}
@@ -118,7 +118,7 @@ const Navbar = () => {
                 </Link>
               ))}
               {/* Conditionally render buttons */}
-              {token && (user.role === "memeber" || user.role === "admin") ? (
+              {token && (user.role === "member" || user.role === "admin") ? (
                 <>
                   <Link
                     to={`${user?.role}/dashboard`}

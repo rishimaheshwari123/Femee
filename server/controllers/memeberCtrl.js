@@ -1,6 +1,8 @@
 const bcrypt = require("bcryptjs");
 const memberModel = require("../models/memeberModel");
 const jwt = require("jsonwebtoken");
+const mailSender = require("../utils/mailSender");
+const verifyAccountTemplate = require("../templates/emailVerificationTemplate");
 
 
 
@@ -136,5 +138,129 @@ const loginMemberCtrl = async (req, res) => {
 
 
 
+const getAllMemberCtrl = async (req, res) => {
+  try {
+    const members = await memberModel.find().populate("child").exec();
+    return res.status(200).json({
+      success: true,
+      members
+    })
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong in get all member api",
+    });
+  }
+};
 
-module.exports = { registerMemberCtrl, loginMemberCtrl };
+const memberProfileCtrl = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const member = await memberModel.findById(id);
+    return res.status(200).json({
+      success: true,
+      member
+    })
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong in geting member api",
+    });
+  }
+};
+
+const verifyMemberCtrl = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updatedMember = await memberModel.findByIdAndUpdate(id, { isActive: true }, { new: true })
+
+
+    if (updatedMember) {
+      await mailSender(
+        updatedMember?.email,
+        "Verification Email",
+        verifyAccountTemplate(updatedMember?.userName, updatedMember?.email)
+      );
+    }
+    return res.status(200).json({
+      success: true,
+      message: "Member Verified Successfully!",
+      updatedMember
+    })
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong in update verify  member api",
+    });
+  }
+};
+
+const updateTierCtrl = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { tier } = req.body;
+    const updatedtier = await memberModel.findByIdAndUpdate(id, { tier }, { new: true })
+    return res.status(200).json({
+      success: true,
+      message: "Member Tier Update Successfully!",
+      updatedtier
+    })
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong in update tier  member api",
+    });
+  }
+};
+
+
+
+const updateMemberProfileCtrl = async (req, res) => {
+  const { id } = req.params;
+  const { fName, lName, email, phone, address, acc, ifsc, bankName, sContact } = req.body;
+
+  try {
+
+    const member = await memberModel.findById(id);
+
+    if (!member) {
+      return res.status(404).json({
+        success: false,
+        message: 'Member not found',
+      });
+    }
+
+    member.fName = fName || member.fName;
+    member.lName = lName || member.lName;
+    member.email = email || member.email;
+    member.phone = phone || member.phone;
+    member.address = address || member.address;
+    member.acc = acc || member.acc;
+    member.ifsc = ifsc || member.ifsc;
+    member.bankName = bankName || member.bankName;
+    member.sContact = sContact || member.sContact;
+
+    await member.save();
+
+
+    return res.status(200).json({
+      success: true,
+      message: 'Profile updated successfully',
+      updatedMember: member,
+    });
+  } catch (error) {
+    console.error('Error updating member profile:', error);
+
+    return res.status(500).json({
+      success: false,
+      message: 'Server error while updating profile',
+    });
+  }
+};
+
+
+module.exports = { registerMemberCtrl, loginMemberCtrl, getAllMemberCtrl, verifyMemberCtrl, updateTierCtrl, memberProfileCtrl, updateMemberProfileCtrl };

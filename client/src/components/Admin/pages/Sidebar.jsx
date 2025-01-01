@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { CiMenuFries } from "react-icons/ci";
 import { RxCross1 } from "react-icons/rx";
 import { AiOutlineUser } from "react-icons/ai";
@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import logo from "../../../assets/logo.png";
 import { memberLogout } from "../../../services/operations/memeber";
 import { FcBullish } from "react-icons/fc";
+import { IoPeopleSharp } from "react-icons/io5";
 
 const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(
@@ -18,19 +19,20 @@ const Sidebar = () => {
   const dispatch = useDispatch();
   const sidebarRef = useRef(null);
   const navigate = useNavigate();
-  // Function to handle logout
+
+  // Handle logout
   const handleLogout = async () => {
     dispatch(memberLogout(navigate));
   };
 
-  // Function to toggle sidebar collapse
+  // Toggle sidebar
   const handleToggle = () => {
     const collapsed = !isCollapsed;
     setIsCollapsed(collapsed);
     localStorage.setItem("sidebarCollapsed", collapsed.toString());
   };
 
-  // Effect to close sidebar when clicking outside
+  // Close sidebar on outside click
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
@@ -46,19 +48,28 @@ const Sidebar = () => {
     };
   }, []);
 
+  // Navigation items
   const navItems = [
     { to: "/", icon: <FaHome />, label: "Back To Home" },
     { to: "/admin/dashboard", icon: <FcBullish />, label: "Dashboard" },
-    user?.role === "admin"
-      ? { to: "/admin/adminField", icon: <FaHome />, label: "Test For Admin" }
-      : null,
-    user?.role === "member"
-      ? {
-          to: "/member/memberField",
-          icon: <FaHome />,
-          label: "Test For Member",
-        }
-      : null,
+    ...(user?.role === "admin"
+      ? [
+          {
+            to: "/admin/getAll-members",
+            icon: <IoPeopleSharp />,
+            label: "Get All Members",
+          },
+        ]
+      : []),
+    ...(user?.role === "member"
+      ? [
+          {
+            to: "/member/memberField",
+            icon: <FcBullish />,
+            label: "Member Section",
+          },
+        ]
+      : []),
   ];
 
   return (
@@ -69,7 +80,7 @@ const Sidebar = () => {
       } bg-gray-900 transition-all duration-300 z-50`}
     >
       <div className="flex items-center justify-between p-4">
-        {/* Logo section */}
+        {/* Logo */}
         <div
           className={`${
             isCollapsed ? "hidden" : "block"
@@ -81,7 +92,8 @@ const Sidebar = () => {
             className="w-[50px] h-[50px] lg:w-12 lg:h-12 object-cover rounded-full"
           />
         </div>
-        {/* Toggle button */}
+
+        {/* Toggle Button */}
         <button
           onClick={handleToggle}
           className="bg-transparent border-none w-8 h-8 flex justify-center items-center cursor-pointer text-white"
@@ -90,32 +102,29 @@ const Sidebar = () => {
         </button>
       </div>
 
-      {/* Navigation links */}
+      {/* Navigation Links */}
       <ul className="text-white list-none flex flex-col p-4 mb-14 overflow-y-auto">
-        {navItems.map(
-          (item, index) =>
-            item && (
-              <NavLink
-                key={index}
-                to={item.to}
-                className={({ isActive }) =>
-                  `text-white py-4 flex items-center hover:border-r-4 hover:border-black ${
-                    isActive ? "border-r-4 border-white" : ""
-                  }`
-                }
-              >
-                <div className="text-2xl">{item.icon}</div>
-                <span
-                  className={`ml-4 text-xl ${isCollapsed ? "hidden" : "block"}`}
-                >
-                  {item.label}
-                </span>
-              </NavLink>
-            )
-        )}
+        {navItems.map((item, index) => (
+          <NavLink
+            key={index}
+            to={item.to}
+            className={({ isActive }) =>
+              `text-white py-4 flex items-center hover:border-r-4 hover:border-black ${
+                isActive ? "border-r-4 border-white" : ""
+              }`
+            }
+          >
+            <div className="text-2xl">{item.icon}</div>
+            <span
+              className={`ml-4 text-xl ${isCollapsed ? "hidden" : "block"}`}
+            >
+              {item.label}
+            </span>
+          </NavLink>
+        ))}
       </ul>
 
-      {/* User and logout section */}
+      {/* User and Logout Section */}
       <div className="absolute bottom-2 left-2 right-2 overflow-hidden mt-10">
         <div
           className={`flex items-center justify-center w-full ${
@@ -124,20 +133,24 @@ const Sidebar = () => {
               : "bg-slate-400 py-2 px-4 rounded-lg"
           }`}
         >
-          <div
-            className={`cursor-pointer flex items-center justify-center text-black ${
-              isCollapsed ? "w-10 h-10 rounded-full" : ""
-            }`}
-          >
+          <div className="cursor-pointer flex items-center justify-center text-black">
             {isCollapsed ? (
-              <AiOutlineUser size={20} />
+              <Link to="/admin/profile">
+                <AiOutlineUser size={20} />
+              </Link>
             ) : (
               <span className="text-xl">
-                {user?.fName.charAt(0).toUpperCase() + user?.fName.slice(1)}
+                <Link
+                  to="/admin/profile"
+                  className="cursor-pointer flex items-center justify-center text-black"
+                >
+                  My Profile
+                </Link>
               </span>
             )}
           </div>
         </div>
+
         <button
           onClick={handleLogout}
           className={`bg-red-600 text-white text-xl flex items-center justify-center mt-2 ${

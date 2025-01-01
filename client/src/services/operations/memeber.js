@@ -3,7 +3,7 @@ import { apiConnector } from "../apiConnector";
 import { auth } from "../apis";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
-const { LOGIN_API, SIGNUP_API, IMAGE_UPLOAD } = auth;
+const { LOGIN_API, SIGNUP_API, IMAGE_UPLOAD, GET_ALL_MEMBER, UPDATE_MEMBER, UPDATE_TIER, GET_MEMBER, UPDATE_MEMBER_PROFILE } = auth;
 
 
 
@@ -159,3 +159,123 @@ export const imageUpload = async (data, token) => {
   return result;
 };
 
+
+
+export const getAllMembersApi = async () => {
+  let result = [];
+  try {
+    const response = await apiConnector("GET", GET_ALL_MEMBER);
+    if (!response?.data?.success) {
+      throw new Error(toast.error(response?.data?.message))
+    }
+    result = response?.data?.members;
+    return result;
+  } catch (error) {
+    console.log(error)
+    return result;
+  }
+}
+
+export const getMembersProfileApi = async (id) => {
+
+  try {
+    const response = await apiConnector("GET", `${GET_MEMBER}/${id}`);
+    if (!response?.data?.success) {
+      throw new Error(toast.error(response?.data?.message))
+    }
+    return response?.data?.member;
+
+  } catch (error) {
+    console.log(error)
+    return false;
+  }
+}
+
+export const updateVerifyMembersApi = async (id) => {
+  Swal.fire({
+    title: "Loading",
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+    allowEnterKey: false,
+    showConfirmButton: false,
+    didOpen: () => {
+      Swal.showLoading();
+    },
+  });
+  try {
+    const response = await apiConnector("PUT", `${UPDATE_MEMBER}/${id}`);
+    if (!response?.data?.success) {
+      throw new Error(toast.error(response?.data?.message))
+    }
+    Swal.close();
+    return response?.data?.updatedMember;
+
+  } catch (error) {
+    Swal.close();
+    console.log(error)
+    return false;
+  }
+
+
+}
+
+export const updateTierMembersApi = async (id, tier) => {
+  Swal.fire({
+    title: "Loading",
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+    allowEnterKey: false,
+    showConfirmButton: false,
+    didOpen: () => {
+      Swal.showLoading();
+    },
+  });
+  try {
+    const response = await apiConnector("PUT", `${UPDATE_TIER}/${id}`, { tier });
+    if (!response?.data?.success) {
+      throw new Error(toast.error(response?.data?.message))
+    }
+    Swal.close();
+    return response?.data?.updatedtier;
+
+  } catch (error) {
+    Swal.close();
+    console.log(error)
+    return false;
+  }
+
+
+}
+
+
+export const updateMemberProfileApi = async (id, formData) => {
+  // Exclude role from the formData
+  const { role, ...updatedData } = formData;
+
+  Swal.fire({
+    title: "Loading",
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+    allowEnterKey: false,
+    showConfirmButton: false,
+    didOpen: () => {
+      Swal.showLoading();
+    },
+  });
+
+  try {
+    const response = await apiConnector("PUT", `${UPDATE_MEMBER_PROFILE}/${id}`, updatedData);
+
+    if (!response?.data?.success) {
+      throw new Error(toast.error(response?.data?.message));
+    }
+
+    Swal.close();
+    return response?.data?.updatedMember;
+
+  } catch (error) {
+    Swal.close();
+    console.log(error);
+    return false;
+  }
+};

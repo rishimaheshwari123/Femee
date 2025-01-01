@@ -45,9 +45,8 @@ const memeberSchema = new mongoose.Schema(
 
         role: {
             type: String,
-            enum: ["memeber", "qdmin"],
-            default: "memeber",
-            required: true,
+            enum: ["member", "admin"],
+            default: "member",
         },
         tier: {
             type: String,

@@ -12,6 +12,7 @@ import Layout from "./components/Admin/pages/Layout";
 import PrivateRoute from "./components/Admin/auth/PrivateRoute";
 import GetAllMembers from "./components/Admin/pages/GetAllMembers";
 import MyProfile from "./components/Admin/pages/MyProfile";
+import Contact from "./pages/Contact";
 
 const App = () => {
   const { user } = useSelector((state) => state.auth);
@@ -27,6 +28,7 @@ const App = () => {
       {!hideNavbarAndFooter && <Navbar />}
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/contact" element={<Contact />} />
         <Route
           path="/member/:userName"
           element={

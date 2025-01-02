@@ -1,7 +1,7 @@
 // Importing required modules
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
-const User = require("../models/authModel");
+const User = require("../models/memeberModel");
 // Configuring dotenv to load environment variables from .env file
 dotenv.config();
 
@@ -51,9 +51,9 @@ exports.auth = async (req, res, next) => {
 
 exports.isMember = async (req, res, next) => {
 	try {
-		const userDetails = await User.findOne({ email: req.user.email });
+		const userDetails = await User.findOne({ userName: req.user.userName });
 
-		if (userDetails.role !== "User") {
+		if (userDetails.role !== "member") {
 			return res.status(401).json({
 				success: false,
 				message: "This is a Protected Route for Members",
@@ -69,7 +69,7 @@ exports.isMember = async (req, res, next) => {
 
 exports.isadmin = async (req, res, next) => {
 	try {
-		const userDetails = await User.findOne({ email: req.user.email });
+		const userDetails = await User.findOne({ userName: req.user.userName });
 
 		if (userDetails.role !== "admin") {
 			return res.status(401).json({

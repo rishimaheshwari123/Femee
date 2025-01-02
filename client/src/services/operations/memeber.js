@@ -3,7 +3,7 @@ import { apiConnector } from "../apiConnector";
 import { auth } from "../apis";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
-const { LOGIN_API, SIGNUP_API, IMAGE_UPLOAD, GET_ALL_MEMBER, UPDATE_MEMBER, UPDATE_TIER, GET_MEMBER, UPDATE_MEMBER_PROFILE } = auth;
+const { LOGIN_API, SIGNUP_API, IMAGE_UPLOAD, GET_ALL_MEMBER, CREATE_GALLERY, UPDATE_MEMBER, UPDATE_TIER, GET_MEMBER, UPDATE_MEMBER_PROFILE, GET_GALLERY, DELETE_GALLERY } = auth;
 
 
 
@@ -33,6 +33,7 @@ export async function memeberRegistrationApi(formData) {
       text: `Have a nice day!`,
       icon: "success",
     });
+    return response;
 
   } catch (error) {
     console.log("SIGNUP API ERROR............", error);
@@ -279,3 +280,72 @@ export const updateMemberProfileApi = async (id, formData) => {
     return false;
   }
 };
+
+
+export const createGallery = async (data, token) => {
+  let swalLoadingInstance;
+
+  Swal.fire({
+    title: "Loading...",
+    allowOutsideClick: false,
+    didOpen: () => {
+      swalLoadingInstance = Swal.showLoading();
+    },
+  });
+
+  try {
+    const response = await apiConnector("POST", CREATE_GALLERY, data);
+
+    console.log("CREATE gallery API RESPONSE............", response);
+
+    if (!response?.data?.success) {
+      throw new Error("Could Not Add Gallery Details");
+    }
+
+    Swal.fire({
+      icon: "success",
+      title: "Gallery Added Successfully",
+    });
+  } catch (error) {
+    console.log("CREATE Gallery API ERROR............", error);
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: error?.response?.data?.message,
+    });
+  } finally {
+    if (swalLoadingInstance) {
+      Swal.close();
+    }
+  }
+};
+
+
+export const getAllGalleryApi = async () => {
+  let result = [];
+  try {
+    const response = await apiConnector("GET", GET_GALLERY);
+    if (!response?.data?.success) {
+      throw new Error(toast.error(response?.data?.message))
+    }
+    result = response?.data?.gallerys;
+    return result;
+  } catch (error) {
+    console.log(error)
+    return result;
+  }
+}
+export const deleteGalleryApi = async (id) => {
+
+  try {
+    const response = await apiConnector("DELETE", `${DELETE_GALLERY}/${id}`);
+    if (!response?.data?.success) {
+      throw new Error(toast.error(response?.data?.message))
+    }
+
+    return response;
+  } catch (error) {
+    console.log(error)
+    return false;
+  }
+}

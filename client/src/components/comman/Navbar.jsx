@@ -68,7 +68,7 @@ const Navbar = () => {
                 Login
               </Link>
               <Link
-                to={`/member/${userName ? userName : "admin"}`}
+                to={`/become-member/${userName ? userName : "admin"}`}
                 onClick={() => setIsSidebarOpen(false)}
                 className="bg-yellow-500 font-bold text-white px-4 py-2 rounded hover:bg-yellow-600 ml-2"
               >
@@ -144,7 +144,7 @@ const Navbar = () => {
                   <br />
                   <Link
                     onClick={() => setIsSidebarOpen(false)}
-                    to={`/member/${userName ? userName : "admin"}`}
+                    to={`/become-member/${userName ? userName : "admin"}`}
                     className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 "
                   >
                     Become Member

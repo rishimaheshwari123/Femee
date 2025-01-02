@@ -12,4 +12,8 @@ export const auth = {
   UPDATE_MEMBER: BASE_URL + "/auth/verify",
   UPDATE_TIER: BASE_URL + "/auth/update",
   UPDATE_MEMBER_PROFILE: BASE_URL + "/auth/update-profile",
+  CREATE_GALLERY: BASE_URL + "/gallery/create",
+  GET_GALLERY: BASE_URL + "/gallery/get",
+  DELETE_GALLERY: BASE_URL + "/gallery/delete",
+
 }

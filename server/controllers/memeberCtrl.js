@@ -157,7 +157,7 @@ const getAllMemberCtrl = async (req, res) => {
 const memberProfileCtrl = async (req, res) => {
   try {
     const { id } = req.params;
-    const member = await memberModel.findById(id);
+    const member = await memberModel.findById(id).populate("child").exec();
     return res.status(200).json({
       success: true,
       member

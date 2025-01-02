@@ -10,6 +10,8 @@ import logo from "../../../assets/logo.png";
 import { memberLogout } from "../../../services/operations/memeber";
 import { FcBullish } from "react-icons/fc";
 import { IoPeopleSharp } from "react-icons/io5";
+import { FcGallery } from "react-icons/fc";
+import { GrGallery } from "react-icons/gr";
 
 const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(
@@ -51,22 +53,35 @@ const Sidebar = () => {
   // Navigation items
   const navItems = [
     { to: "/", icon: <FaHome />, label: "Back To Home" },
-    { to: "/admin/dashboard", icon: <FcBullish />, label: "Dashboard" },
     ...(user?.role === "admin"
       ? [
+          { to: "/admin/dashboard", icon: <FcBullish />, label: "Dashboard" },
+
           {
             to: "/admin/getAll-members",
             icon: <IoPeopleSharp />,
             label: "Get All Members",
           },
+          {
+            to: "/admin/add-gallery",
+            icon: <FcGallery />,
+            label: "Add Gallery",
+          },
+          {
+            to: "/admin/get-gallery",
+            icon: <GrGallery />,
+            label: "Get Gallery",
+          },
         ]
       : []),
     ...(user?.role === "member"
       ? [
+          { to: "/member/dashboard", icon: <FcBullish />, label: "Dashboard" },
+
           {
-            to: "/member/memberField",
-            icon: <FcBullish />,
-            label: "Member Section",
+            to: "/member/getAll-members",
+            icon: <IoPeopleSharp />,
+            label: "Get All Members",
           },
         ]
       : []),
@@ -141,7 +156,7 @@ const Sidebar = () => {
             ) : (
               <span className="text-xl">
                 <Link
-                  to="/admin/profile"
+                  to={`${user?.role}/profile`}
                   className="cursor-pointer flex items-center justify-center text-black"
                 >
                   My Profile

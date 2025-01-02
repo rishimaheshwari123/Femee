@@ -13,6 +13,10 @@ import PrivateRoute from "./components/Admin/auth/PrivateRoute";
 import GetAllMembers from "./components/Admin/pages/GetAllMembers";
 import MyProfile from "./components/Admin/pages/MyProfile";
 import Contact from "./pages/Contact";
+import GetAllSubMembers from "./components/Admin/pages/GetAllSubMembers";
+import AddGallery from "./components/Admin/pages/AddGallery";
+import GetGallery from "./components/Admin/pages/GetGallery";
+import Gallery from "./pages/Gallery";
 
 const App = () => {
   const { user } = useSelector((state) => state.auth);
@@ -29,8 +33,9 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/gallery" element={<Gallery />} />
         <Route
-          path="/member/:userName"
+          path="/become-member/:userName"
           element={
             <OpenRoute>
               <BecomeMembers />
@@ -57,6 +62,18 @@ const App = () => {
               <Route path="/admin/dashboard" element={<Dashboard />} />
               <Route path="/admin/getAll-members" element={<GetAllMembers />} />
               <Route path="/admin/profile" element={<MyProfile />} />
+              <Route path="/admin/add-gallery" element={<AddGallery />} />
+              <Route path="/admin/get-gallery" element={<GetGallery />} />
+            </>
+          )}
+          {user?.role === "member" && (
+            <>
+              <Route path="/member/dashboard" element={<Dashboard />} />
+              <Route path="/member/profile" element={<MyProfile />} />
+              <Route
+                path="/member/getAll-members"
+                element={<GetAllSubMembers />}
+              />
             </>
           )}
         </Route>

@@ -63,6 +63,16 @@ const Sidebar = () => {
             label: "Get All Members",
           },
           {
+            to: "/admin/add-product",
+            icon: <FcGallery />,
+            label: "Add Product",
+          },
+          {
+            to: "/admin/get-product",
+            icon: <FcGallery />,
+            label: "All Product",
+          },
+          {
             to: "/admin/add-gallery",
             icon: <FcGallery />,
             label: "Add Gallery",

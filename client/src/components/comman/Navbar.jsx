@@ -24,6 +24,7 @@ const Navbar = () => {
     { name: "Gallery", to: "/gallery" },
     { name: "Shop", to: "/shop" },
     { name: "Contact", to: "/contact" },
+    { name: "Cart", to: "/cart" },
   ];
 
   return (

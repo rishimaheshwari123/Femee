@@ -15,5 +15,6 @@ export const auth = {
   CREATE_GALLERY: BASE_URL + "/gallery/create",
   GET_GALLERY: BASE_URL + "/gallery/get",
   DELETE_GALLERY: BASE_URL + "/gallery/delete",
+  DELETE_MEMBER: BASE_URL + "/auth/delete",
 
 }

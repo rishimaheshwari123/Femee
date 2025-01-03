@@ -3,7 +3,7 @@ import { apiConnector } from "../apiConnector";
 import { auth } from "../apis";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
-const { LOGIN_API, SIGNUP_API, IMAGE_UPLOAD, GET_ALL_MEMBER, CREATE_GALLERY, UPDATE_MEMBER, UPDATE_TIER, GET_MEMBER, UPDATE_MEMBER_PROFILE, GET_GALLERY, DELETE_GALLERY } = auth;
+const { LOGIN_API, DELETE_MEMBER, SIGNUP_API, IMAGE_UPLOAD, GET_ALL_MEMBER, CREATE_GALLERY, UPDATE_MEMBER, UPDATE_TIER, GET_MEMBER, UPDATE_MEMBER_PROFILE, GET_GALLERY, DELETE_GALLERY } = auth;
 
 
 
@@ -339,6 +339,20 @@ export const deleteGalleryApi = async (id) => {
 
   try {
     const response = await apiConnector("DELETE", `${DELETE_GALLERY}/${id}`);
+    if (!response?.data?.success) {
+      throw new Error(toast.error(response?.data?.message))
+    }
+
+    return response;
+  } catch (error) {
+    console.log(error)
+    return false;
+  }
+}
+export const deleteMemberApi = async (id) => {
+
+  try {
+    const response = await apiConnector("DELETE", `${DELETE_MEMBER}/${id}`);
     if (!response?.data?.success) {
       throw new Error(toast.error(response?.data?.message))
     }

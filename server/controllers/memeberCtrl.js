@@ -3,6 +3,8 @@ const memberModel = require("../models/memeberModel");
 const jwt = require("jsonwebtoken");
 const mailSender = require("../utils/mailSender");
 const verifyAccountTemplate = require("../templates/emailVerificationTemplate");
+const memeberModel = require("../models/memeberModel");
+const accountReject = require("../templates/accountReject");
 
 
 
@@ -198,6 +200,51 @@ const verifyMemberCtrl = async (req, res) => {
   }
 };
 
+const deleteMemberCtrl = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const member = await memberModel.findById(id);
+    if (!member) {
+      return res.status(404).json({
+        success: false,
+        message: "Member not found",
+      });
+    }
+
+    if (member.parent) {
+      await memberModel.findByIdAndUpdate(
+        member.parent,
+        { $pull: { child: id } },
+        { new: true }
+      );
+    }
+
+
+    await memberModel.findByIdAndDelete(id);
+
+    if (member.email) {
+      await mailSender(
+        member.email,
+        "Account Rejected",
+        accountReject(member.userName)
+      );
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Member account rejected and deleted successfully!",
+    });
+  } catch (error) {
+    console.error("Error deleting member:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong in the delete member API.",
+    });
+  }
+};
+
+
 const updateTierCtrl = async (req, res) => {
   try {
     const { id } = req.params;
@@ -263,4 +310,4 @@ const updateMemberProfileCtrl = async (req, res) => {
 };
 
 
-module.exports = { registerMemberCtrl, loginMemberCtrl, getAllMemberCtrl, verifyMemberCtrl, updateTierCtrl, memberProfileCtrl, updateMemberProfileCtrl };
+module.exports = { registerMemberCtrl, loginMemberCtrl, getAllMemberCtrl, verifyMemberCtrl, updateTierCtrl, memberProfileCtrl, updateMemberProfileCtrl, deleteMemberCtrl };

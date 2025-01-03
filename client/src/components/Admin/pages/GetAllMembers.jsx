@@ -3,6 +3,7 @@ import {
   getAllMembersApi,
   updateVerifyMembersApi,
   updateTierMembersApi,
+  deleteMemberApi,
 } from "../../../services/operations/memeber";
 import { FaCheck } from "react-icons/fa";
 import { toast } from "react-toastify";
@@ -12,17 +13,15 @@ const tiers = ["Bronze", "Silver", "Gold", "Platinum", "Diamond"];
 const GetAllMembers = () => {
   const [members, setMembers] = useState([]);
 
-  // Fetch all members from the API
   const getMember = async () => {
     const response = await getAllMembersApi();
     setMembers(
       (response || []).sort(
-        (a, b) => new Date(b.createdAt) - new Date(a.createdAt) // Sort by createdAt descending
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
       )
     );
   };
 
-  // Handle activation of a member
   const handleActivate = async (id) => {
     try {
       const updatedMember = await updateVerifyMembersApi(id);
@@ -39,7 +38,20 @@ const GetAllMembers = () => {
     }
   };
 
-  // Handle updating the tier of a member
+  const handleDeleteRequest = async (id) => {
+    try {
+      const deleted = await deleteMemberApi(id);
+      if (deleted) {
+        setMembers((prevMembers) =>
+          prevMembers.filter((member) => member._id !== id)
+        );
+        toast.success("Member Account Rejected successfully!");
+      }
+    } catch (error) {
+      toast.error("Failed to delete the member.");
+    }
+  };
+
   const handleTierChange = async (id, tier) => {
     try {
       const updatedMember = await updateTierMembersApi(id, tier);
@@ -85,7 +97,7 @@ const GetAllMembers = () => {
           <tbody>
             {members?.map((member, index) => (
               <tr key={index} className="hover:bg-gray-50">
-                <td className="border border-gray-300 px-4 py-2">
+                <td className="border border-gray-300 px-4  py-2">
                   {member?.fName || "N/A"}
                 </td>
                 <td className="border border-gray-300 px-4 py-2">
@@ -122,16 +134,26 @@ const GetAllMembers = () => {
                   </select>
                 </td>
                 <td className="border border-gray-300 px-4 py-2 text-center">
-                  {member?.isActive ? (
-                    <FaCheck className="text-green-500" />
-                  ) : (
-                    <button
-                      onClick={() => handleActivate(member._id)}
-                      className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600"
-                    >
-                      Activate
-                    </button>
-                  )}
+                  <div className="flex items-center justify-center gap-2">
+                    {member?.isActive ? (
+                      <FaCheck className="text-green-500" />
+                    ) : (
+                      <>
+                        <button
+                          onClick={() => handleActivate(member._id)}
+                          className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600"
+                        >
+                          Activate
+                        </button>
+                        <button
+                          onClick={() => handleDeleteRequest(member._id)}
+                          className="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600"
+                        >
+                          Cancel
+                        </button>
+                      </>
+                    )}
+                  </div>
                 </td>
                 <td className="border border-gray-300 px-4 py-2">
                   {new Date(member?.createdAt)?.toLocaleString() || "N/A"}

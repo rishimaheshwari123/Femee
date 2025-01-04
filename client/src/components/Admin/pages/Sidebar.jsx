@@ -12,6 +12,9 @@ import { FcBullish } from "react-icons/fc";
 import { IoPeopleSharp } from "react-icons/io5";
 import { FcGallery } from "react-icons/fc";
 import { GrGallery } from "react-icons/gr";
+import { MdOutlineProductionQuantityLimits } from "react-icons/md";
+import { AiFillProduct } from "react-icons/ai";
+import { BiPurchaseTag } from "react-icons/bi";
 
 const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(
@@ -64,13 +67,18 @@ const Sidebar = () => {
           },
           {
             to: "/admin/add-product",
-            icon: <FcGallery />,
+            icon: <MdOutlineProductionQuantityLimits />,
             label: "Add Product",
           },
           {
             to: "/admin/get-product",
-            icon: <FcGallery />,
-            label: "All Product",
+            icon: <AiFillProduct />,
+            label: "Get All Product",
+          },
+          {
+            to: "/admin/orders",
+            icon: <BiPurchaseTag />,
+            label: "Orders",
           },
           {
             to: "/admin/add-gallery",

@@ -41,6 +41,7 @@ app.use("/api/v1/image", require("./routes/imageRoute"));
 app.use("/api/v1/gallery", require("./routes/galleryRoute"))
 app.use("/api/v1/product", productsRoutes);
 app.use("/api/v1/order", orderRoutes);
+app.use("/api/v1/rating", require("./routes/ratingReview"))
 
 
 

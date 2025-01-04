@@ -8,31 +8,30 @@ import { saveProduct } from "../../redux/product"
 
 
 const {
-    GET_ALL_PRODUCT_API,
-    GET_PRODUCT_DETAILS,
-    GET_COUPON
-} =productEndpoints
+  GET_ALL_PRODUCT_API,
+  GET_PRODUCT_DETAILS,
+  GET_COUPON
+} = productEndpoints
 
 export const getAllProduct = () => async (dispatch) => {
-   ;
+  ;
   try {
     const response = await apiConnector("GET", GET_ALL_PRODUCT_API);
     if (!response?.data?.success) {
       throw new Error("Could Not Fetch Product");
     }
     const result = response?.data?.data;
-    console.log(response)
     dispatch(saveProduct(result)); // Dispatching action to save products
     return result;
   } catch (error) {
     console.log("GET_ALL_PRODUCT_API API ERROR:", error);
     toast.error(error.message);
-     ;
+    ;
     return [];
   }
 };
 
-  
+
 export const fetchProductDetails = async (productID) => {
   //  
 
@@ -57,14 +56,14 @@ export const fetchProductDetails = async (productID) => {
   return result
 }
 //COUPON 
-  
-export const fetchCoupon = async (name,token) => {
-   
+
+export const fetchCoupon = async (name, token) => {
+
   console.log(name)
 
   let result = null
   try {
-    const response = await apiConnector("POST", GET_COUPON, {name} )
+    const response = await apiConnector("POST", GET_COUPON, { name })
     // console.log("GET_COUPON API RESPONSE............", response)
 
     if (!response.data.success) {
@@ -76,7 +75,7 @@ export const fetchCoupon = async (name,token) => {
     result = error.response.data
     toast.error(error.response.data.message);
   }
-   
+
   //   dispatch(setLoading(false));
   return result
 }

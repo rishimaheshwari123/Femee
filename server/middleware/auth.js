@@ -15,7 +15,6 @@ exports.auth = async (req, res, next) => {
 			req.body.token ||
 			req.header("Authorization").replace("Bearer ", "");
 
-		console.log(token)
 		// If JWT is missing, return 401 Unauthorized response
 		if (!token) {
 			return res.status(401).json({ success: false, message: `Token Missing` });
@@ -26,8 +25,7 @@ exports.auth = async (req, res, next) => {
 			// Verifying the JWT using the secret key stored in environment variables
 
 			const decode = await jwt.verify(token, process.env.JWT_SECRET);
-			console.log(decode);
-			// Storing the decoded JWT payload in the request object for further use
+
 			req.user = decode;
 		} catch (error) {
 			// If JWT verification fails, return 401 Unauthorized response
@@ -51,7 +49,7 @@ exports.auth = async (req, res, next) => {
 
 exports.isMember = async (req, res, next) => {
 	try {
-		const userDetails = await User.findOne({ userName: req.user.userName });
+		const userDetails = await User.findOne({ email: req.user.email });
 
 		if (userDetails.role !== "member") {
 			return res.status(401).json({
@@ -69,7 +67,7 @@ exports.isMember = async (req, res, next) => {
 
 exports.isadmin = async (req, res, next) => {
 	try {
-		const userDetails = await User.findOne({ userName: req.user.userName });
+		const userDetails = await User.findOne({ email: req.user.email });
 
 		if (userDetails.role !== "admin") {
 			return res.status(401).json({

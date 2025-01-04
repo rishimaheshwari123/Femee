@@ -54,7 +54,6 @@ exports.createProduct = async (req, res) => {
 exports.getAllProduct = async (req, res) => {
   try {
     const allProduct = await Product.find();
-    console.log(allProduct)
     res.status(200).json({
       success: true,
       data: allProduct,
@@ -100,7 +99,7 @@ exports.getProductDetails = async (req, res) => {
 
 exports.deleteProduct = async (req, res) => {
   try {
-    console.log(req.body);
+
     const { id } = req.body;
 
     // Find the product by ID and delete it

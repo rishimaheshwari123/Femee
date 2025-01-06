@@ -112,7 +112,7 @@ const Sidebar = () => {
         isCollapsed ? "w-16" : "w-64"
       } bg-gray-900 transition-all duration-300 z-50`}
     >
-      <div className="flex items-center justify-between p-4">
+      <div className="flex items-center justify-between p-4 ">
         {/* Logo */}
         <div
           className={`${
@@ -136,7 +136,7 @@ const Sidebar = () => {
       </div>
 
       {/* Navigation Links */}
-      <ul className="text-white list-none flex flex-col p-4 mb-14 overflow-y-auto">
+      <ul className="text-white list-none flex flex-col p-4 mb-14 overflow-y-auto max-h-[65vh]">
         {navItems.map((item, index) => (
           <NavLink
             key={index}

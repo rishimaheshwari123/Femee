@@ -27,6 +27,7 @@ import CheckoutForm from "./components/core/Cart/CheckoutForm";
 import { setCheckout } from "./redux/paymentSlice";
 import Modal from "./components/core/Cart/Modal";
 import Orders from "./components/Admin/Product/Orders";
+import MyOrder from "./pages/MyOrder";
 
 const App = () => {
   const { user } = useSelector((state) => state.auth);
@@ -79,6 +80,15 @@ const App = () => {
             <OpenRoute>
               <MemberLogin />
             </OpenRoute>
+          }
+        />
+
+        <Route
+          path="order"
+          element={
+            <PrivateRoute>
+              <MyOrder />
+            </PrivateRoute>
           }
         />
         <Route

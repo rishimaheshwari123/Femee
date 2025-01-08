@@ -2,7 +2,7 @@ import React from "react";
 
 const WhyUs = () => {
   return (
-    <div className="bg-[#83387b] ">
+    <div className="bg-[#843d7d] ">
       <br />
       <div className=" flex flex-col  w-full items-center">
         <h3 className=" text-2xl lg:text-4xl font-semibold  text-white mt-2">

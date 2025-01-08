@@ -22,7 +22,7 @@ export async function memeberRegistrationApi(formData) {
   try {
     const response = await apiConnector("POST", SIGNUP_API, formData);
 
-    console.log("SIGNUP API RESPONSE............", response);
+    // console.log("SIGNUP API RESPONSE............", response);
 
     if (!response.data.success) {
       throw new Error(response.data.message);
@@ -36,13 +36,15 @@ export async function memeberRegistrationApi(formData) {
     return response;
 
   } catch (error) {
-    console.log("SIGNUP API ERROR............", error);
+    console.log("SIGNUP API ERROR............", error?.response?.data?.message);
     Swal.fire({
-      title: error?.response?.data?.message,
-      icon: "false",
+      title: `Error`,
+      text: error?.response?.data?.message,
+      icon: "error",
+      
     });
   }
-  Swal.close();
+  
 
 }
 
@@ -83,7 +85,7 @@ export async function memberLoginApi(userName, password, navigate, dispatch) {
     dispatch(setUser(response.data.user));
     navigate("/admin/dashboard");
   } catch (error) {
-    console.log("LOGIN API ERROR............", error);
+    console.log("LOGIN API ERROR............", error?.response);
     Swal.fire({
       title: "Login Failed",
       text:

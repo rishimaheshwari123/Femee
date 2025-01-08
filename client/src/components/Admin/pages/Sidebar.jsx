@@ -66,15 +66,21 @@ const Sidebar = () => {
             label: "Get All Members",
           },
           {
-            to: "/admin/add-product",
-            icon: <MdOutlineProductionQuantityLimits />,
-            label: "Add Product",
-          },
-          {
             to: "/admin/get-product",
             icon: <AiFillProduct />,
             label: "Get All Product",
           },
+          {
+            to: "/admin/get-gallery",
+            icon: <GrGallery />,
+            label: "Get Gallery",
+          },
+          {
+            to: "/admin/add-product",
+            icon: <MdOutlineProductionQuantityLimits />,
+            label: "Add Product",
+          },
+        
           {
             to: "/admin/orders",
             icon: <BiPurchaseTag />,
@@ -85,11 +91,7 @@ const Sidebar = () => {
             icon: <FcGallery />,
             label: "Add Gallery",
           },
-          {
-            to: "/admin/get-gallery",
-            icon: <GrGallery />,
-            label: "Get Gallery",
-          },
+       
         ]
       : []),
     ...(user?.role === "member"
@@ -108,16 +110,16 @@ const Sidebar = () => {
   return (
     <div
       ref={sidebarRef}
-      className={`fixed h-screen top-0 ${
-        isCollapsed ? "w-16" : "w-64"
-      } bg-gray-900 transition-all duration-300 z-50`}
+      className={`fixed h-screen top-0  ${
+        isCollapsed ? "w-16 " : "w-64"
+      } bg-customGreen transition-all duration-300 z-50 text-gray-900`}
     >
       <div className="flex items-center justify-between p-4 ">
         {/* Logo */}
         <div
           className={`${
             isCollapsed ? "hidden" : "block"
-          } text-white font-bold text-xl`}
+          }  font-bold text-xl`}
         >
           <img
             src={logo}
@@ -136,18 +138,18 @@ const Sidebar = () => {
       </div>
 
       {/* Navigation Links */}
-      <ul className="text-white list-none flex flex-col p-4 mb-14 overflow-y-auto max-h-[65vh]">
+      <ul className="text-gray-900 list-none flex flex-col p-4 mb-14 overflow-y-auto max-h-[65vh] scrollbar-hide">
         {navItems.map((item, index) => (
           <NavLink
             key={index}
             to={item.to}
             className={({ isActive }) =>
-              `text-white py-4 flex items-center hover:border-r-4 hover:border-black ${
+              `text-gray-800 font-semibold  py-4 flex items-center hover:border-r-4 hover:border-black ${
                 isActive ? "border-r-4 border-white" : ""
               }`
             }
           >
-            <div className="text-2xl">{item.icon}</div>
+            <div className="text-2xl  ">{item.icon}</div>
             <span
               className={`ml-4 text-xl ${isCollapsed ? "hidden" : "block"}`}
             >

@@ -20,6 +20,7 @@ const MyProfile = () => {
     acc: "",
     ifsc: "",
     bankName: "",
+    bankHolderName: "",
     sContact: "",
   });
 
@@ -37,6 +38,7 @@ const MyProfile = () => {
         ifsc: response.ifsc || "",
         bankName: response.bankName || "",
         sContact: response.sContact || "",
+        bankHolderName: response.bankHolderName || "",
       });
     } else {
       toast.error("Failed to fetch member profile");
@@ -201,11 +203,22 @@ const MyProfile = () => {
                   />
                 </div>
                 <div>
-                  <label className="text-gray-700">Bank Name:</label>
+                  <label className="text-gray-700">Bank Branch Name:</label>
                   <input
                     type="text"
                     name="bankName"
                     value={formData.bankName}
+                    onChange={handleInputChange}
+                    disabled={!isEditing}
+                    className="w-full p-2 border rounded-md"
+                  />
+                </div>
+                <div>
+                  <label className="text-gray-700">Account Holder Name:</label>
+                  <input
+                    type="text"
+                    name="bankHolderName"
+                    value={formData.bankHolderName}
                     onChange={handleInputChange}
                     disabled={!isEditing}
                     className="w-full p-2 border rounded-md"

@@ -72,7 +72,7 @@ function BecomeMembers() {
 
     await memeberRegistrationApi(formData);
 
-    resetForm();
+    // resetForm();
     setImages([]);
   };
 

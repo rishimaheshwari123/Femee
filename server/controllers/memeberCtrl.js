@@ -142,7 +142,14 @@ const loginMemberCtrl = async (req, res) => {
 
 const getAllMemberCtrl = async (req, res) => {
   try {
-    const members = await memberModel.find().populate("child").exec();
+    const members = await memberModel.find()
+    .populate({
+      path: "parent",
+      select: "fName lName" 
+   
+      
+    })
+    .populate("child").exec();
     return res.status(200).json({
       success: true,
       members
@@ -268,7 +275,7 @@ const updateTierCtrl = async (req, res) => {
 
 const updateMemberProfileCtrl = async (req, res) => {
   const { id } = req.params;
-  const { fName, lName, email, phone, address, acc, ifsc, bankName, sContact } = req.body;
+  const { fName, lName, email, phone, address, acc, ifsc, bankName, sContact ,bankHolderName} = req.body;
 
   try {
 
@@ -289,6 +296,7 @@ const updateMemberProfileCtrl = async (req, res) => {
     member.acc = acc || member.acc;
     member.ifsc = ifsc || member.ifsc;
     member.bankName = bankName || member.bankName;
+    member.bankHolderName = bankHolderName || member.bankHolderName;
     member.sContact = sContact || member.sContact;
 
     await member.save();

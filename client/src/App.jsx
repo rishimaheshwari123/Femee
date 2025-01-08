@@ -28,6 +28,7 @@ import { setCheckout } from "./redux/paymentSlice";
 import Modal from "./components/core/Cart/Modal";
 import Orders from "./components/Admin/Product/Orders";
 import MyOrder from "./pages/MyOrder";
+import OrdersForHierarchy from "./components/Test";
 
 const App = () => {
   const { user } = useSelector((state) => state.auth);
@@ -51,7 +52,8 @@ const App = () => {
     <div>
       {!hideNavbarAndFooter && <Navbar />}
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Home />} /> 
+        <Route path="/h1" element={<OrdersForHierarchy />} /> 
         <Route path="/contact" element={<Contact />} />
         <Route path="/shop" element={<Shop />} />
         <Route path="product/:productID" element={<ProductDetails />} />

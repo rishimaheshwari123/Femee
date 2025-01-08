@@ -46,12 +46,6 @@ const Navbar = () => {
           {/* Conditionally render buttons */}
           {token && (user.role === "member" || user.role === "admin") ? (
             <>
-            <Link
-                to={`/order`}
-                className=" font-bold bg-[#83387b] text-white px-4 py-2 rounded hover:bg-[#b44faa]"
-              >
-                My Orders
-              </Link>
               <Link
                 to={`${user?.role}/dashboard`}
                 className="bg-blue-500 font-bold hover:text-[#83387b] text-white px-4 py-2 rounded hover:bg-blue-600"

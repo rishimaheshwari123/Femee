@@ -9,14 +9,14 @@ import { FaCheck } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 
-const tiers = [ "Silver", "Gold", "Platinum", "Diamond","Blue Diamond"];
+const tiers = ["Silver", "Gold", "Platinum", "Diamond", "Blue Diamond"];
 
 const GetAllMembers = () => {
   const [members, setMembers] = useState([]);
-const {user} = useSelector(state=>state.auth)
+  const { user } = useSelector((state) => state.auth);
   const getMember = async () => {
     const response = await getAllMembersApi();
-    console.log(response)
+    console.log(response);
     setMembers(
       (response || []).sort(
         (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
@@ -93,9 +93,11 @@ const {user} = useSelector(state=>state.auth)
               <th className="border border-gray-300 px-4 py-2">
                 Under Members
               </th>
-             {user?.role ==="admin" && <th className="border border-gray-300 px-4 py-2">
-                Senior Name
-              </th>}
+              {user?.role === "admin" && (
+                <th className="border border-gray-300 px-4 py-2">
+                  Affiliate Name
+                </th>
+              )}
             </tr>
           </thead>
           <tbody>
@@ -119,7 +121,7 @@ const {user} = useSelector(state=>state.auth)
                 <td className="border border-gray-300 px-4 py-2">
                   {member?.address || "N/A"}
                 </td>
-                  <td className="border border-gray-300 px-4 py-2 text-center">
+                <td className="border border-gray-300 px-4 py-2 text-center">
                   <select
                     value={member?.tier || "N/A"}
                     onChange={(e) =>
@@ -162,9 +164,11 @@ const {user} = useSelector(state=>state.auth)
                 <td className="border border-gray-300 px-4 py-2">
                   {member?.child?.length}
                 </td>
-             {user?.role ==="admin" &&   <td className="border border-gray-300 px-4 py-2">
-                  {member?.parent?.fName} {member?.parent?.lName}
-                </td>}
+                {user?.role === "admin" && (
+                  <td className="border border-gray-300 px-4 py-2">
+                    {member?.parent?.fName} {member?.parent?.lName}
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>

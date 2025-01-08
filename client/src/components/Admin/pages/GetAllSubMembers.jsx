@@ -36,6 +36,9 @@ const GetAllSubMembers = () => {
               <th className="border border-gray-300 px-4 py-2">Role</th>
               <th className="border border-gray-300 px-4 py-2">Created At</th>
               <th className="border border-gray-300 px-4 py-2">Sub Child</th>
+              <th className="border border-gray-300 px-4 py-2">
+                Affiliate Name
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -67,6 +70,9 @@ const GetAllSubMembers = () => {
                 </td>
                 <td className="border border-gray-300 px-4 py-2">
                   {child?.child.length}
+                </td>
+                <td className="border border-gray-300 px-4 py-2">
+                  {child?.parent?.fName} {child?.parent?.lName}
                 </td>
               </tr>
             ))}

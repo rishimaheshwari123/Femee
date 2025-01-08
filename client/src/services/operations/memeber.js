@@ -28,12 +28,12 @@ export async function memeberRegistrationApi(formData) {
       throw new Error(response.data.message);
     }
 
-    Swal.fire({
-      title: `Member Registered Successfully!`,
-      text: `Have a nice day!`,
-      icon: "success",
-    });
-    return response;
+    // Swal.fire({
+    //   title: `Member Registered Successfully!`,
+    //   text: `Have a nice day!`,
+    //   icon: "success",
+    // });
+    return response?.data?.user;
 
   } catch (error) {
     console.log("SIGNUP API ERROR............", error?.response?.data?.message);
@@ -41,10 +41,10 @@ export async function memeberRegistrationApi(formData) {
       title: `Error`,
       text: error?.response?.data?.message,
       icon: "error",
-      
+
     });
   }
-  
+
 
 }
 

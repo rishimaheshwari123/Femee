@@ -30,10 +30,6 @@ function MyOrder() {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <header className="bg-gradient-to-r from-blue-500 to-green-500 text-white py-6 shadow-md">
-        <h2 className="text-center text-3xl font-bold">Your Orders</h2>
-      </header>
-
       <div className="container mx-auto px-4 py-8">
         {orders.length === 0 ? (
           <div className="text-center text-2xl text-gray-600 mt-10">
@@ -91,7 +87,8 @@ function MyOrder() {
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600 flex items-center gap-2">
                     <FaMoneyBillAlt className="text-green-500" />
-                    <strong>Total Price:</strong> {formatPrice(order.totalPrice)}
+                    <strong>Total Price:</strong>{" "}
+                    {formatPrice(order.totalPrice)}
                   </span>
                   <span
                     className={`px-3 py-1 rounded-full text-sm font-medium ${

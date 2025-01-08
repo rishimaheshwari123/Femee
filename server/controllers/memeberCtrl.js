@@ -143,13 +143,13 @@ const loginMemberCtrl = async (req, res) => {
 const getAllMemberCtrl = async (req, res) => {
   try {
     const members = await memberModel.find()
-    .populate({
-      path: "parent",
-      select: "fName lName" 
-   
-      
-    })
-    .populate("child").exec();
+      .populate({
+        path: "parent",
+        select: "fName lName"
+
+
+      })
+      .populate("child").exec();
     return res.status(200).json({
       success: true,
       members
@@ -166,16 +166,30 @@ const getAllMemberCtrl = async (req, res) => {
 const memberProfileCtrl = async (req, res) => {
   try {
     const { id } = req.params;
-    const member = await memberModel.findById(id).populate("child").exec();
+    const member = await memberModel
+      .findById(id)
+      .populate({
+        path: "child",
+        populate: {
+          path: "parent",
+          select: "fName lName", // Populate the parent within the child
+        },
+      })
+      .populate({
+        path: "parent",
+        select: "fName lName", // Populate the parent of the member
+      })
+      .exec();
+
     return res.status(200).json({
       success: true,
-      member
-    })
+      member,
+    });
   } catch (error) {
     console.error(error);
     return res.status(500).json({
       success: false,
-      message: "Something went wrong in geting member api",
+      message: "Something went wrong in getting member API",
     });
   }
 };
@@ -275,7 +289,7 @@ const updateTierCtrl = async (req, res) => {
 
 const updateMemberProfileCtrl = async (req, res) => {
   const { id } = req.params;
-  const { fName, lName, email, phone, address, acc, ifsc, bankName, sContact ,bankHolderName} = req.body;
+  const { fName, lName, email, phone, address, acc, ifsc, bankName, sContact, bankHolderName } = req.body;
 
   try {
 

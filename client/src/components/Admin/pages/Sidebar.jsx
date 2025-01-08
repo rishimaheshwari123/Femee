@@ -80,18 +80,17 @@ const Sidebar = () => {
             icon: <MdOutlineProductionQuantityLimits />,
             label: "Add Product",
           },
-        
-          {
-            to: "/admin/orders",
-            icon: <BiPurchaseTag />,
-            label: "Orders",
-          },
+
           {
             to: "/admin/add-gallery",
             icon: <FcGallery />,
             label: "Add Gallery",
           },
-       
+          {
+            to: "/admin/orders",
+            icon: <BiPurchaseTag />,
+            label: "Orders",
+          },
         ]
       : []),
     ...(user?.role === "member"
@@ -102,6 +101,11 @@ const Sidebar = () => {
             to: "/member/getAll-members",
             icon: <IoPeopleSharp />,
             label: "Get All Members",
+          },
+          {
+            to: "/member/my-orders",
+            icon: <BiPurchaseTag />,
+            label: "My Orders",
           },
         ]
       : []),
@@ -117,9 +121,7 @@ const Sidebar = () => {
       <div className="flex items-center justify-between p-4 ">
         {/* Logo */}
         <div
-          className={`${
-            isCollapsed ? "hidden" : "block"
-          }  font-bold text-xl`}
+          className={`${isCollapsed ? "hidden" : "block"}  font-bold text-xl`}
         >
           <img
             src={logo}
@@ -170,7 +172,7 @@ const Sidebar = () => {
         >
           <div className="cursor-pointer flex items-center justify-center text-black">
             {isCollapsed ? (
-              <Link to="/admin/profile">
+              <Link to={`${user?.role}/profile`}>
                 <AiOutlineUser size={20} />
               </Link>
             ) : (

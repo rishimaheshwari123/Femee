@@ -215,7 +215,7 @@ const getAllOrder = async (req, res) => {
       .populate({
         path: 'orderItems.product',
         model: 'Product',
-      })
+      }).populate("user")
       .exec();
 
 

@@ -36,57 +36,13 @@ const Home = () => {
     <div>
       <Slider />
       <br />
-      <WhyUs />
       <KnowAboutUs />
+      <WhyUs />
+      <br />
+      {allRatings.length > 0 && <ReviewsSection allRatings={allRatings} />}
+      <br />
 
-   
-
-      {/* <div className="max-w-7xl mx-auto p-4">
-        <h3 className="text-center text-xl mb-4">All Reviews and Ratings</h3>
-        {allRatings.length > 0 ? (
-          allRatings.map((rating, index) => (
-            <div
-              key={index}
-              className="p-4 bg-white shadow-md rounded-lg mb-4 flex items-start space-x-4"
-            >
-              <img
-                src={rating.user?.images[0]?.url || "/default-avatar.png"}
-                alt={`${rating.userName}'s avatar`}
-                className="w-12 h-12 rounded-full"
-              />
-              <div className="flex-grow">
-                <div className="flex items-center justify-between">
-                  <h4 className="font-semibold">{rating.userName}</h4>
-                  <ReactStars
-                    count={5}
-                    value={rating.rating}
-                    size={20}
-                    edit={false}
-                    isHalf={true}
-                    activeColor="#ffd700"
-                  />
-                </div>
-                <p className="text-sm text-gray-500">
-                  {new Date(rating.createdAt).toLocaleDateString()}
-                </p>
-                <p className="mt-2 text-gray-700">{rating.review}</p>
-              </div>
-            </div>
-          ))
-        ) : (
-          <p className="text-center text-gray-500">No reviews available.</p>
-        )}
-      </div> */}
-
-
-      {
-        allRatings.length > 0  &&
-      <ReviewsSection allRatings={allRatings} />
-      }
-
-
-   {/* Add Rating Button */}
-   {["member", "admin"].includes(user?.role) && (
+      {["member", "admin"].includes(user?.role) && (
         <div className="max-w-7xl mx-auto p-4 flex justify-center">
           <button
             onClick={handleAddRating}
@@ -96,7 +52,6 @@ const Home = () => {
           </button>
         </div>
       )}
-      {/* Review Modal */}
       {reviewModal && <ReviewRating setReviewModal={setReviewModal} />}
     </div>
   );

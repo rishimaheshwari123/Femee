@@ -6,6 +6,13 @@ import { Navigation, Pagination } from "swiper/modules";
 import ReactStars from "react-rating-stars-component";
 
 const ReviewSwiper = ({ allRatings }) => {
+  const getRatingDescription = (rating) => {
+    if (rating < 2) return "Poor";
+    if (rating < 3) return "Good";
+    if (rating < 4) return "Very Good";
+    return "Excellent";
+  };
+
   return (
     <div className="max-w-7xl mx-auto p-4">
       <h3 className="text-center text-2xl font-bold mb-6">
@@ -49,6 +56,9 @@ const ReviewSwiper = ({ allRatings }) => {
                     isHalf={true}
                     activeColor="#ffd700"
                   />
+                  <p className="mt-2 text-sm text-gray-600 font-semibold">
+                    {getRatingDescription(rating.rating)}
+                  </p>
                 </div>
                 <p className="mt-4 text-gray-700">{rating.review}</p>
               </div>

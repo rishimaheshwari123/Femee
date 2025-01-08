@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import Home from "./pages/Home";
 import Navbar from "./components/comman/Navbar";
@@ -29,11 +29,16 @@ import Modal from "./components/core/Cart/Modal";
 import Orders from "./components/Admin/Product/Orders";
 import MyOrder from "./pages/MyOrder";
 import OrdersForHierarchy from "./components/Test";
+import PopupModal from "./components/comman/PopupModel";
 
 const App = () => {
   const { user } = useSelector((state) => state.auth);
   const { checkout } = useSelector((state) => state.payment);
+  const [isOpen, setIsOpen] = useState(true);
 
+  const handleClose = () => {
+    setIsOpen(false);
+  };
   const location = useLocation();
   const dispatch = useDispatch();
   // Paths where Navbar and Footer should not be shown
@@ -50,10 +55,11 @@ const App = () => {
   }, []);
   return (
     <div>
+      {isOpen && <PopupModal />}
       {!hideNavbarAndFooter && <Navbar />}
       <Routes>
-        <Route path="/" element={<Home />} /> 
-        <Route path="/h1" element={<OrdersForHierarchy />} /> 
+        <Route path="/" element={<Home />} />
+        <Route path="/h1" element={<OrdersForHierarchy />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/shop" element={<Shop />} />
         <Route path="product/:productID" element={<ProductDetails />} />
@@ -85,14 +91,6 @@ const App = () => {
           }
         />
 
-        <Route
-          path="order"
-          element={
-            <PrivateRoute>
-              <MyOrder />
-            </PrivateRoute>
-          }
-        />
         <Route
           element={
             <PrivateRoute>
@@ -144,6 +142,7 @@ const App = () => {
                 path="/member/getAll-members"
                 element={<GetAllSubMembers />}
               />
+              <Route path="/member/my-orders" element={<MyOrder />} />
             </>
           )}
         </Route>
@@ -160,6 +159,11 @@ const App = () => {
         </PrivateRoute>
       )}
       {!hideNavbarAndFooter && <Footer />}
+      <PopupModal
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        handleClose={handleClose}
+      />
     </div>
   );
 };

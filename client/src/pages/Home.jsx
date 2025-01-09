@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import ReactStars from "react-rating-stars-component";
 import { getAllReatingAPI } from "../services/operations/user";
 import ReviewsSection from "../components/comman/AllRating";
+import Details from "../components/comman/Details";
 
 const Home = () => {
   const [reviewModal, setReviewModal] = useState(false);
@@ -37,7 +38,12 @@ const Home = () => {
       <Slider />
       <br />
       <KnowAboutUs />
+
+      <Details />
+      <br />
+      <br />
       <WhyUs />
+
       <br />
       {allRatings.length > 0 && <ReviewsSection allRatings={allRatings} />}
       <br />

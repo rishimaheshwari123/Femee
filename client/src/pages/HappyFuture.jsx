@@ -1,0 +1,56 @@
+import React from "react";
+import { FaLeaf, FaHeart, FaShieldAlt } from "react-icons/fa";
+import { GiRecycle } from "react-icons/gi";
+
+const HappyFuture = () => {
+  return (
+    <div className="bg-gray-100 p-6 md:p-10 lg:p-14">
+      <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6 md:p-10">
+        <h1 className="text-2xl md:text-3xl font-bold text-center text-pink-600">
+          हर महिला की मददगार
+        </h1>
+        <p className="text-center text-gray-700 mt-4">
+          हम सब महिला इस सृष्टि का अमूल्य हिस्सा हैं।
+        </p>
+        <div className="mt-8 space-y-6">
+          <div className="flex items-center">
+            <FaHeart className="text-pink-500 text-2xl mr-4" />
+            <p className="text-gray-800">
+              सृज‌न स्वच्छता करना ही एक अच्छी जिन्दगी है। जब नारी स्वस्थ स्वच्छ
+              रहेगी तभी वह अपने परिवार को स्वस्थ व सुखी रख सकती है।
+            </p>
+          </div>
+          <div className="flex items-center">
+            <FaShieldAlt className="text-green-500 text-2xl mr-4" />
+            <p className="text-gray-800">
+              Anion Sanitary Pad, जिसमें इस्तेमाल से सभी बच्चियाँ व महिलाएँ
+              स्वस्थ व सुरक्षित रहती हैं। यह गंभीर बीमारियों की रोकथाम करता है,
+              जैसे - 'Uterine cancer'।
+            </p>
+          </div>
+          <div className="flex items-center">
+            <GiRecycle className="text-blue-500 text-2xl mr-4" />
+            <p className="text-gray-800">
+              यह Pad Biodegradable होता है। इसके इस्तेमाल से महिलाएँ पर्यावरण
+              संरक्षण में भी अपना योगदान देती हैं।
+            </p>
+          </div>
+          <div className="flex items-center">
+            <FaLeaf className="text-green-600 text-2xl mr-4" />
+            <p className="text-gray-800">
+              यह Anion chip युक्त Pad है, जिसके इस्तेमाल से सभी प्रकार की
+              बीमारियों को यह ठीक करता है।
+            </p>
+          </div>
+        </div>
+        {/* <div className="mt-8 text-center">
+          <button className="bg-pink-500 text-white py-2 px-6 rounded-lg shadow-md hover:bg-pink-600">
+            जानें अधिक
+          </button>
+        </div> */}
+      </div>
+    </div>
+  );
+};
+
+export default HappyFuture;

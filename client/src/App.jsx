@@ -30,6 +30,11 @@ import Orders from "./components/Admin/Product/Orders";
 import MyOrder from "./pages/MyOrder";
 import OrdersForHierarchy from "./components/Test";
 import PopupModal from "./components/comman/PopupModel";
+import HappyFuture from "./pages/HappyFuture";
+import FounderDetails from "./pages/FounderDetails";
+import PlasticFreeIndia from "./pages/PlasticFreeIndia";
+import PlasticFreeIndia2 from "./pages/PlasticFreeIndia2";
+import About from "./pages/About";
 
 const App = () => {
   const { user } = useSelector((state) => state.auth);
@@ -60,7 +65,12 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/h1" element={<OrdersForHierarchy />} />
+        <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/happy-future" element={<HappyFuture />} />
+        <Route path="/founder" element={<FounderDetails />} />
+        <Route path="/plastic" element={<PlasticFreeIndia />} />
+        <Route path="/natural" element={<PlasticFreeIndia2 />} />
         <Route path="/shop" element={<Shop />} />
         <Route path="product/:productID" element={<ProductDetails />} />
 

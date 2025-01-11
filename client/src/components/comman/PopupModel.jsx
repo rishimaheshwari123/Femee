@@ -8,7 +8,7 @@ const PopupModal = ({ isOpen, setIsOpen, handleClose }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-white rounded-xl shadow-xl w-11/12 md:w-2/3 lg:w-1/2 p-6 relative overflow-hidden">
+      <div className="bg-white rounded-xl shadow-xl h-[80vh] md:h-fit w-11/12 md:w-2/3 lg:w-1/2 p-6 relative overflow-hidden overflow-y-auto">
         {/* Decorative Image at Top Left */}
         <div className="absolute top-3 left-3">
           <img
@@ -60,7 +60,7 @@ const PopupModal = ({ isOpen, setIsOpen, handleClose }) => {
         </div>
 
         {/* Buttons Section */}
-        <div className="mt-6 grid grid-cols-2 gap-4">
+        <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Link
             onClick={handleClose}
             to="/happy-future"

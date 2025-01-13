@@ -20,7 +20,7 @@ const Footer = () => {
             Contact
           </h4>
           <p>
-            <span className="block">Phone: +91 7879523232, +91 9827210118</span>
+            <span className="block">Phone: +91 7879523232, +91 9575227672</span>
             <span className="block mt-2">Mail: meenusahuji1987@gmail.com</span>
           </p>
           <div className="mt-4 flex space-x-4">

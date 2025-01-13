@@ -10,7 +10,7 @@ const FounderDetails = () => {
           Creator / Founder / Organizer
         </h1>
         <p className="text-center text-gray-700 mt-2">
-          श्रीमती मीना साहू (भोपाल)
+          श्रीमती मीनू साहू (भोपाल)
         </p>
         <p className="text-center text-gray-500 mt-1">Age: 35</p>
 
@@ -18,7 +18,7 @@ const FounderDetails = () => {
           <div className="flex items-center">
             <FaHandHoldingHeart className="text-pink-500 text-3xl mr-4" />
             <p className="text-gray-800">
-              Since 1999, श्रीमती मीना साहू महिलाओं की सेवा में समर्पित हैं।
+              Since 1999, श्रीमती मीनू साहू महिलाओं की सेवा में समर्पित हैं।
               उन्होंने महिलाओं को शिक्षित बनाने और उनके स्वस्थ एवं समाज में
               स्थान दिलाने के लिए काम किया है।
             </p>
@@ -26,7 +26,7 @@ const FounderDetails = () => {
           <div className="flex items-center">
             <FaUsers className="text-purple-500 text-3xl mr-4" />
             <p className="text-gray-800">
-              Natural Pad का Business शुरू करके 5000 महिलाओं को स्वच्छता और
+              Natural Pad का Business शुरू करके 85000 महिलाओं को स्वच्छता और
               पर्यावरण संरक्षण के प्रति जागरूक किया।
             </p>
           </div>
@@ -34,7 +34,7 @@ const FounderDetails = () => {
             <FaLeaf className="text-green-500 text-3xl mr-4" />
             <p className="text-gray-800">
               Natural Pad का उपयोग महिलाओं को आत्मनिर्भर और पर्यावरण संरक्षण में
-              योगदान देने के लिए प्रेरित कर रहा है। Business Women बनाने का सपना
+              योगदान देने के लिए प्रेरित कर रहा है। एवं Business Women बनाने का सपना
               साकार हो रहा है।
             </p>
           </div>

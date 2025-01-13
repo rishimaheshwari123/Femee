@@ -55,7 +55,7 @@ function Orders() {
     doc.setFont("helvetica", "normal");
     doc.setFontSize(12);
     doc.text("Bhopal, Madhya Pradesh", 14, 35);
-    doc.text("Contact: +91 7879523232, +91 9827210118", 14, 40);
+    doc.text("Contact: +91 7879523232, +91 9575227672", 14, 40);
 
     // Shipping Info Section (To)
     doc.setFontSize(14);

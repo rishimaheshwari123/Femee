@@ -71,9 +71,9 @@ const Navbar = () => {
               <Link
                 to={`/become-member/${userName ? userName : "admin"}`}
                 onClick={() => setIsSidebarOpen(false)}
-                className="bg-yellow-500 font-bold text-white px-4 py-2 rounded hover:bg-yellow-600 ml-2"
+                className="bg-[#83387b] font-bold text-white px-4 py-2 rounded hover:bg-yellow-600 ml-2"
               >
-                Become Member
+           MemberShip
               </Link>
             </>
           )}
@@ -146,9 +146,9 @@ const Navbar = () => {
                   <Link
                     onClick={() => setIsSidebarOpen(false)}
                     to={`/become-member/${userName ? userName : "admin"}`}
-                    className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 "
+                    className="bg-[#83387b] text-white px-4 py-2 rounded hover:bg-yellow-600 "
                   >
-                    Become Member
+                   MemberShip
                   </Link>
                 </>
               )}

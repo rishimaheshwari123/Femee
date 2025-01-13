@@ -31,7 +31,7 @@ const Contact = () => {
             <span className="px-4 py-3 bg-[#83387b] text-white rounded-md  text-xl">
               <FaPhone />
             </span>
-            <span>+91 7879523232, +91 9827210118</span>
+            <span>+91 7879523232, +91 9575227672</span>
           </div>
           <div className="flex space-x-4  mt-1 lg:mt-0">
             <Link to="" target="_blank" rel="noopener noreferrer">

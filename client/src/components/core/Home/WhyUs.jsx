@@ -21,10 +21,10 @@ const WhyUs = () => {
         </div>
                   
       </div>{" "}
-      <div className="main max-w-7xl mx-auto p-5 grid lg:grid-cols-3 gap-5 lg:py-3">
+      <div className="main max-w-7xl mx-auto p-5 grid lg:grid-cols-2 gap-5 lg:py-3">
         <div className="first">
           <p className="text-center text-3xl lg:text-4xl font-semibold text-green-600">
-            50+
+            500+
           </p>
           <p className="text-center text-white text-xl mt-2">
             Active Members
@@ -34,20 +34,13 @@ const WhyUs = () => {
         </div>
         <div className="second">
           <p className="text-center text-3xl lg:text-4xl font-semibold text-green-600">
-            5000+
+            80000+
           </p>
           <p className="text-center text-white text-xl mt-2">
-            Happy <br /> Clients
+          All Over India Client
           </p>
         </div>
-        <div className="third">
-          <p className="text-center text-3xl lg:text-4xl font-semibold text-green-600">
-            20000+
-          </p>
-          <p className="text-center text-white text-xl mt-2">
-            Products <br /> Delivered
-          </p>
-        </div>
+      
       </div>
       <br />
       <br />

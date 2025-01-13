@@ -1,6 +1,7 @@
 import React from "react";
 import { FaTimes } from "react-icons/fa";
-import ganeshji from "../../assets/ganeshji.jpg";
+import ganeshji from "../../assets/ganesh.jpg";
+import bhagwan from "../../assets/bhagwan.jpg";
 import { Link } from "react-router-dom";
 
 const PopupModal = ({ isOpen, setIsOpen, handleClose }) => {
@@ -13,6 +14,13 @@ const PopupModal = ({ isOpen, setIsOpen, handleClose }) => {
         <div className="absolute top-3 left-3">
           <img
             src={ganeshji}
+            alt="Bhagwan"
+            className="rounded-full w-24 h-24 border-4 border-yellow-400 shadow-lg"
+          />
+        </div>
+        <div className="absolute top-3 right-6">
+          <img
+            src={bhagwan}
             alt="Bhagwan"
             className="rounded-full w-24 h-24 border-4 border-yellow-400 shadow-lg"
           />
@@ -44,7 +52,7 @@ const PopupModal = ({ isOpen, setIsOpen, handleClose }) => {
           <h2 className="text-lg md:text-xl font-medium text-gray-700 mt-4">
             हमारा उद्देश्यू: <br />
             <span className="text-blue-600 font-bold">
-              (हो निरोगी तन और हो घर हर घर में धन)
+              (हो निरोगी तन और हो हर घर में धन)
             </span>
           </h2>
           <p className="text-sm md:text-base text-gray-600 mt-3 leading-relaxed">
@@ -71,7 +79,7 @@ const PopupModal = ({ isOpen, setIsOpen, handleClose }) => {
           <Link
             onClick={handleClose}
             to="/founder"
-            className="bg-green-500 text-white py-2 px-4 rounded-lg shadow-md hover:bg-green-600 transition"
+            className="bg-purple-700 text-white py-2 px-4 rounded-lg shadow-md hover:bg-green-600 transition"
           >
             Creator | Founder | Organizer
           </Link>
@@ -85,7 +93,7 @@ const PopupModal = ({ isOpen, setIsOpen, handleClose }) => {
           <Link
             onClick={handleClose}
             to="/natural"
-            className="bg-red-500 text-white py-2 px-4 rounded-lg shadow-md hover:bg-red-600 transition"
+            className="bg-green-500 text-white py-2 px-4 rounded-lg shadow-md hover:bg-red-600 transition"
           >
             No Plastic No Camical Only Natural
           </Link>

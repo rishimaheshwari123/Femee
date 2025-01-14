@@ -35,6 +35,8 @@ import FounderDetails from "./pages/FounderDetails";
 import PlasticFreeIndia from "./pages/PlasticFreeIndia";
 import PlasticFreeIndia2 from "./pages/PlasticFreeIndia2";
 import About from "./pages/About";
+import UserLogin from "./pages/UserLogin";
+import RegisterUser from "./pages/RegisterUser";
 
 const App = () => {
   const { user } = useSelector((state) => state.auth);
@@ -97,6 +99,22 @@ const App = () => {
           element={
             <OpenRoute>
               <MemberLogin />
+            </OpenRoute>
+          }
+        />
+        <Route
+          path="/user-login"
+          element={
+            <OpenRoute>
+              <UserLogin />
+            </OpenRoute>
+          }
+        />
+        <Route
+          path="/register-user"
+          element={
+            <OpenRoute>
+              <RegisterUser />
             </OpenRoute>
           }
         />

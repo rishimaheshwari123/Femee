@@ -43,37 +43,59 @@ const Navbar = () => {
               {link.name}
             </Link>
           ))}
-          {/* Conditionally render buttons */}
-          {token && (user.role === "member" || user.role === "admin") ? (
+          {token ? (
             <>
-              <Link
-                to={`${user?.role}/dashboard`}
-                className="bg-blue-500 font-bold hover:text-[#83387b] text-white px-4 py-2 rounded hover:bg-blue-600"
-              >
-                Dashboard
-              </Link>
-              <button
-                onClick={handleLogout}
-                className="bg-red-500 font-bold hover:text-[#83387b] text-white px-4 py-2 rounded hover:bg-red-600 ml-2"
-              >
-                Logout
-              </button>
+              {/* Show Dashboard and Logout for admin and member roles */}
+              {(user.role === "admin" || user.role === "member") && (
+                <>
+                  <Link
+                    to={`${user?.role}/dashboard`}
+                    className="bg-blue-500 font-bold hover:text-[#83387b] text-white px-4 py-2 rounded hover:bg-blue-600"
+                  >
+                    Dashboard
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="bg-red-500 font-bold hover:text-[#83387b] text-white px-4 py-2 rounded hover:bg-red-600 ml-2"
+                  >
+                    Logout
+                  </button>
+                </>
+              )}
+
+              {/* Show only Logout for user role */}
+              {user.role === "user" && (
+                <button
+                  onClick={handleLogout}
+                  className="bg-red-500 font-bold hover:text-[#83387b] text-white px-4 py-2 rounded hover:bg-red-600 ml-2"
+                >
+                  Logout
+                </button>
+              )}
             </>
           ) : (
             <>
+              {/* Show Login and Membership options if no token */}
+              <Link
+                onClick={() => setIsSidebarOpen(false)}
+                to="/user-login"
+                className="font-bold hover:text-[#83387b]"
+              >
+                User Login
+              </Link>
               <Link
                 onClick={() => setIsSidebarOpen(false)}
                 to="/login"
                 className="font-bold hover:text-[#83387b]"
               >
-                Login
+                Member Login
               </Link>
               <Link
                 to={`/become-member/${userName ? userName : "admin"}`}
                 onClick={() => setIsSidebarOpen(false)}
                 className="bg-[#83387b] font-bold text-white px-4 py-2 rounded hover:bg-yellow-600 ml-2"
               >
-           MemberShip
+                Membership
               </Link>
             </>
           )}
@@ -121,34 +143,53 @@ const Navbar = () => {
                 </Link>
               ))}
               {/* Conditionally render buttons */}
-              {token && (user.role === "member" || user.role === "admin") ? (
+              {token ? (
                 <>
-                  <Link
-                    to={`${user?.role}/dashboard`}
-                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                  >
-                    Dashboard
-                  </Link>
-                  <button
-                    onClick={handleLogout}
-                    className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 ml-2"
-                  >
-                    Logout
-                  </button>
+                  {/* Show Dashboard and Logout for admin and member roles */}
+                  {(user.role === "admin" || user.role === "member") && (
+                    <>
+                      <Link
+                        to={`${user?.role}/dashboard`}
+                        onClick={() => setIsSidebarOpen(false)}
+                        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 block mb-2"
+                      >
+                        Dashboard
+                      </Link>
+                      <button
+                        onClick={handleLogout}
+                        className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 block"
+                      >
+                        Logout
+                      </button>
+                    </>
+                  )}
+
+                  {/* Show only Logout for user role */}
+                  {user.role === "user" && (
+                    <button
+                      onClick={handleLogout}
+                      className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 block"
+                    >
+                      Logout
+                    </button>
+                  )}
                 </>
               ) : (
                 <>
-                  <Link onClick={() => setIsSidebarOpen(false)} to="/login">
-                    Login
+                  {/* Show Login and Membership options if no token */}
+                  <Link
+                    onClick={() => setIsSidebarOpen(false)}
+                    to="/login"
+                    className="block text-[#83387b] font-bold mb-2"
+                  >
+                    Member Login
                   </Link>
-                  <br />
-                  <br />
                   <Link
                     onClick={() => setIsSidebarOpen(false)}
                     to={`/become-member/${userName ? userName : "admin"}`}
-                    className="bg-[#83387b] text-white px-4 py-2 rounded hover:bg-yellow-600 "
+                    className="bg-[#83387b] text-white px-4 py-2 rounded hover:bg-yellow-600 block"
                   >
-                   MemberShip
+                    Membership
                   </Link>
                 </>
               )}

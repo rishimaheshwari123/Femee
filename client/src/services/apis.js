@@ -17,6 +17,12 @@ export const auth = {
   DELETE_MEMBER: BASE_URL + "/auth/delete",
 
 }
+export const user = {
+  LOGIN_API: BASE_URL + "/user/login",
+  SIGNUP_API: BASE_URL + "/user/register",
+
+
+}
 
 
 

@@ -1,6 +1,8 @@
 import { toast } from "react-toastify";
 import { apiConnector } from "../apiConnector";
-import { ratingEndpoints } from "../apis";
+import { ratingEndpoints, user } from "../apis";
+import { setUser, setToken } from "../../redux/authSlice";
+import Swal from "sweetalert2";
 
 const {
   ADD_RATING_API,
@@ -8,6 +10,10 @@ const {
 
   GETALL_RATING_API,
 } = ratingEndpoints;
+const {
+  LOGIN_API,
+  SIGNUP_API
+} = user;
 
 
 
@@ -87,3 +93,93 @@ export const getAllReatingAPI = async () => {
   }
 
 };
+
+
+
+export async function userRegistrationApi(formData, dispatch) {
+  Swal.fire({
+    title: "Loading",
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+    allowEnterKey: false,
+    showConfirmButton: false,
+    didOpen: () => {
+      Swal.showLoading();
+    },
+  });
+
+  try {
+    const response = await apiConnector("POST", SIGNUP_API, formData);
+
+    if (!response.data.success) {
+      throw new Error(response.data.message || "Registration failed");
+    }
+
+    dispatch(setToken(response.data.token));
+    dispatch(setUser(response.data.user));
+
+    Swal.fire({
+      title: "Success",
+      text: "Member registered successfully!",
+      icon: "success",
+    });
+
+    return response.data.user;
+  } catch (error) {
+    console.error("SIGNUP API ERROR:", error?.response?.data?.message || error.message);
+    Swal.fire({
+      title: "Error",
+      text: error?.response?.data?.message || "An unexpected error occurred.",
+      icon: "error",
+    });
+  }
+}
+
+
+export async function userLoginApi(email, password, navigate, dispatch) {
+  Swal.fire({
+    title: "Loading",
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+    allowEnterKey: false,
+    showConfirmButton: false,
+    didOpen: () => {
+      Swal.showLoading();
+    },
+  });
+
+  try {
+    const response = await apiConnector("POST", LOGIN_API, {
+      email,
+      password,
+    });
+    Swal.close();
+    if (!response?.data?.success) {
+      await
+        Swal.fire({
+          title: "Login Failed",
+          text: response.data.message,
+          icon: "error",
+        });
+      throw new Error(response.data.message);
+    }
+
+    Swal.fire({
+      title: `Login Successfully!`,
+      text: `Have a nice day!`,
+      icon: "success",
+    });
+    dispatch(setToken(response?.data?.token));
+    dispatch(setUser(response.data.user));
+    navigate("/");
+  } catch (error) {
+    console.log("LOGIN API ERROR............", error?.response);
+    Swal.fire({
+      title: "Login Failed",
+      text:
+        error.response?.data?.message ||
+        "Something went wrong, please try again later",
+      icon: "error",
+    });
+  }
+}

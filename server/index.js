@@ -37,6 +37,7 @@ cloudinaryConnect();
 
 
 app.use("/api/v1/auth", require("./routes/memberRoute"))
+app.use("/api/v1/user", require("./routes/userRoute"))
 app.use("/api/v1/image", require("./routes/imageRoute"));
 app.use("/api/v1/gallery", require("./routes/galleryRoute"))
 app.use("/api/v1/product", productsRoutes);

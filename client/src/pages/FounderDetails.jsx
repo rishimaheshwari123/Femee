@@ -1,12 +1,22 @@
 import React from "react";
 import { FaHandHoldingHeart, FaLeaf, FaUsers } from "react-icons/fa";
 import { Link } from "react-router-dom";
-
+import founder from "../assets/mam.jpg";
 const FounderDetails = () => {
   return (
     <div className="bg-gray-100 p-8">
       <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6 md:p-10">
-        <h1 className="text-2xl md:text-3xl font-bold text-center text-blue-600">
+        {/* Founder Image */}
+        <div className="flex justify-center">
+          <img
+            src={founder}
+            alt="श्रीमती मीनू साहू"
+            className="w-32 h-32 md:w-40 md:h-40 rounded-full object-cover border-4 border-blue-500"
+          />
+        </div>
+
+        {/* Heading and Description */}
+        <h1 className="text-2xl md:text-3xl font-bold text-center text-blue-600 mt-6">
           Creator / Founder / Organizer
         </h1>
         <p className="text-center text-gray-700 mt-2">
@@ -34,8 +44,8 @@ const FounderDetails = () => {
             <FaLeaf className="text-green-500 text-3xl mr-4" />
             <p className="text-gray-800">
               Natural Pad का उपयोग महिलाओं को आत्मनिर्भर और पर्यावरण संरक्षण में
-              योगदान देने के लिए प्रेरित कर रहा है। एवं Business Women बनाने का सपना
-              साकार हो रहा है।
+              योगदान देने के लिए प्रेरित कर रहा है। एवं Business Women बनाने का
+              सपना साकार हो रहा है।
             </p>
           </div>
         </div>

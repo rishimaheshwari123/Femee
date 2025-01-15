@@ -3,7 +3,7 @@ import { FaPhone, FaTimes } from "react-icons/fa";
 import ganeshji from "../../assets/ganesh.jpg";
 import bhagwan from "../../assets/bhagwan.jpg";
 import { Link } from "react-router-dom";
-
+import founder from "../../assets/mam.jpg";
 const PopupModal = ({ isOpen, setIsOpen, handleClose }) => {
   if (!isOpen) return null;
 
@@ -43,11 +43,11 @@ const PopupModal = ({ isOpen, setIsOpen, handleClose }) => {
         </button>
 
         {/* Content Section */}
-        <div className="mt-20 text-center">
+        <div className="mt-8 text-center">
           <img
-            src="https://static.vecteezy.com/system/resources/thumbnails/002/387/693/small_2x/user-profile-icon-free-vector.jpg"
+            src={founder}
             alt="Founder"
-            className="mx-auto rounded-full w-40 h-40 border-4 border-gray-300 shadow-md"
+            className="mx-auto rounded-full w-56 h-56 border-4 border-gray-300 shadow-md"
           />
           <h2 className="text-lg md:text-xl font-medium text-gray-700 mt-4">
             हमारा उद्देश्यू: <br />

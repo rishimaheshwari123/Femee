@@ -14,7 +14,7 @@ import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import "swiper/css/autoplay";
 import "swiper/css/effect-fade";
-import s3 from "../../assets/s3.jpg";
+import s3 from "../../assets/s5.jpg";
 import s4 from "../../assets/s4.jpg";
 const Slider1 = () => {
   const [textVisible, setTextVisible] = useState(false);
@@ -111,7 +111,7 @@ const Slider1 = () => {
       </Swiper>
       <div className="absolute top-0 left-0 right-0 flex items-center justify-center bg-[#800080] bg-opacity-70 p-4 z-10">
         <p className="text-white text-base sm:text-lg font-semibold text-center max-w-xs sm:max-w-md mx-4 border border-white rounded-lg p-2 shadow-lg animate-blink">
-          सृज‌न स्वच्छता करना ही एक अच्छी जिन्दगी है।
+          स्वस्थ नारी सुरक्षित पर्यावरण जागरूकता अभियान
         </p>
       </div>
     </div>

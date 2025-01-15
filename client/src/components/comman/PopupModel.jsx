@@ -66,26 +66,28 @@ const PopupModal = ({ isOpen, setIsOpen, handleClose }) => {
             </span>
           </p>
 
-          <div className="flex items-center justify-center gap-2 mt-4 border-2 border-black   px-5 rounded-lg w-fit mx-auto py-2">
-            <FaPhone className="text-green-600" size={20} />
-            <a
-              href="tel:7879523232"
-              className="text-blue-500 font-bold   hover:text-blue-700"
-            >
-              7879523232
-            </a>
+          <div className="flex items-center justify-center gap-4 mt-4 border-2 border-black px-5 rounded-lg w-fit mx-auto py-2">
+            <div className="flex items-center gap-2">
+              <FaPhone className="text-green-600" size={20} />
+              <a
+                href="tel:7879523232"
+                className="text-blue-500 font-bold hover:text-blue-700"
+              >
+                7879523232
+              </a>
+            </div>
+            <div>
+              <a
+                href="tel:+917879523232"
+                className="bg-green-600 text-white py-2 px-6 rounded-lg shadow-md flex items-center justify-center gap-2 hover:bg-green-700 transition"
+              >
+                <FaPhone />
+                कॉल करें
+              </a>
+            </div>
           </div>
 
           {/* Call Now Button */}
-          <div className="mt-4">
-            <a
-              href="tel:+917879523232"
-              className="bg-green-600 text-white py-2 px-6 rounded-lg shadow-md flex items-center justify-center gap-2 hover:bg-green-700 transition"
-            >
-              <FaPhone />
-              कॉल करें
-            </a>
-          </div>
         </div>
 
         {/* Buttons Section */}
@@ -95,7 +97,7 @@ const PopupModal = ({ isOpen, setIsOpen, handleClose }) => {
             to="/happy-future"
             className="bg-blue-500 text-white py-2 px-4 rounded-lg shadow-md hover:bg-blue-600 transition"
           >
-            Build up your futer Happy with us.
+            Build up your future Happy with us.
           </Link>
           <Link
             onClick={handleClose}

@@ -5,6 +5,7 @@ import {
   FaEnvelope,
   FaInstagram,
   FaTimes,
+  FaYoutube,
 } from "react-icons/fa";
 import "./SocialMediaBar.css";
 
@@ -138,31 +139,25 @@ const SocialMediaBar = () => {
         )}
       </div>
       <div className="social-icon bg-blue-800">
-        <a
-          href="https://www.facebook.com"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        <a href="/" target="_blank" rel="noopener noreferrer">
           <FaFacebookF />
           <span className="icon-name">Facebook</span>
         </a>
       </div>
       <div className="social-icon bg-green-600">
-        <a
-          href="https://wa.me/+919351014634"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        <a href="/" target="_blank" rel="noopener noreferrer">
           <FaWhatsapp />
           <span className="icon-name">WhatsApp</span>
         </a>
       </div>
-      <div className="social-icon bg-red-500">
-        <a
-          href="https://www.instagram.com/rks.homes/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+      <div className="social-icon bg-red-600">
+        <a href="/" target="_blank" rel="noopener noreferrer">
+          <FaYoutube />
+          <span className="icon-name">Youtube</span>
+        </a>
+      </div>
+      <div className="social-icon bg-pink-500">
+        <a href="/" target="_blank" rel="noopener noreferrer">
           <FaInstagram />
           <span className="icon-name ">Instagram</span>
         </a>

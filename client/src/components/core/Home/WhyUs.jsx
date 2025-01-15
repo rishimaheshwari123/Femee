@@ -2,7 +2,7 @@ import React from "react";
 
 const WhyUs = () => {
   return (
-    <div className="bg-[#843d7d] ">
+    <div className="bg-[#800080] ">
       <br />
       <div className=" flex flex-col  w-full items-center">
         <h3 className=" text-2xl lg:text-4xl font-semibold  text-white mt-2">
@@ -37,10 +37,9 @@ const WhyUs = () => {
             80000+
           </p>
           <p className="text-center text-white text-xl mt-2">
-          All Over India Client
+            All Over India Client
           </p>
         </div>
-      
       </div>
       <br />
       <br />

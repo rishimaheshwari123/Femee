@@ -1,5 +1,5 @@
 import React from "react";
-import { FaTimes } from "react-icons/fa";
+import { FaPhone, FaTimes } from "react-icons/fa";
 import ganeshji from "../../assets/ganesh.jpg";
 import bhagwan from "../../assets/bhagwan.jpg";
 import { Link } from "react-router-dom";
@@ -10,7 +10,7 @@ const PopupModal = ({ isOpen, setIsOpen, handleClose }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
       <div className="bg-white rounded-xl shadow-xl h-[80vh] md:h-fit w-11/12 md:w-2/3 lg:w-1/2 p-6 relative overflow-hidden overflow-y-auto">
-        {/* Decorative Image at Top Left */}
+        {/* Decorative Images at Top */}
         <div className="absolute top-3 left-3">
           <img
             src={ganeshji}
@@ -26,10 +26,10 @@ const PopupModal = ({ isOpen, setIsOpen, handleClose }) => {
           />
         </div>
 
+        {/* Title */}
         <p className="absolute hidden lg:block top-5 left-1/2 transform -translate-x-1/2 text-orange-500 text-base sm:text-lg md:text-2xl font-extrabold tracking-wide drop-shadow-md">
           जय श्री गणेश हर हर महादेव
         </p>
-
         <p className="absolute block lg:hidden top-5 left-1/2 transform -translate-x-1/2 text-orange-500 text-base sm:text-lg md:text-2xl font-extrabold tracking-wide drop-shadow-md">
           जय श्री गणेश
         </p>
@@ -62,9 +62,30 @@ const PopupModal = ({ isOpen, setIsOpen, handleClose }) => {
             सक्षम। <br />
             <span className="text-green-600 font-semibold">
               अच्छे स्वास्थ्य के लिए एक बार जरूर Helping Her Product का इस्तेमाल
-              करके देखें। अधिक जानकारी के लिए कॉल करें: 7879523232
+              करके देखें। अधिक जानकारी के लिए कॉल करें:
             </span>
           </p>
+
+          <div className="flex items-center justify-center gap-2 mt-4 border-2 border-black   px-5 rounded-lg w-fit mx-auto py-2">
+            <FaPhone className="text-green-600" size={20} />
+            <a
+              href="tel:7879523232"
+              className="text-blue-500 font-bold   hover:text-blue-700"
+            >
+              7879523232
+            </a>
+          </div>
+
+          {/* Call Now Button */}
+          <div className="mt-4">
+            <a
+              href="tel:+917879523232"
+              className="bg-green-600 text-white py-2 px-6 rounded-lg shadow-md flex items-center justify-center gap-2 hover:bg-green-700 transition"
+            >
+              <FaPhone />
+              कॉल करें
+            </a>
+          </div>
         </div>
 
         {/* Buttons Section */}

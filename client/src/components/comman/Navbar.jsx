@@ -38,7 +38,7 @@ const Navbar = () => {
             <Link
               key={index}
               to={link.to || "#"}
-              className=" hover:text-[#83387b] text-[17px] font-bold"
+              className=" hover:text-[#800080] text-[17px] font-bold"
             >
               {link.name}
             </Link>
@@ -50,13 +50,13 @@ const Navbar = () => {
                 <>
                   <Link
                     to={`${user?.role}/dashboard`}
-                    className="bg-blue-500 font-bold hover:text-[#83387b] text-white px-4 py-2 rounded hover:bg-blue-600"
+                    className="bg-blue-500 font-bold hover:text-[#800080] text-white px-4 py-2 rounded hover:bg-blue-600"
                   >
                     Dashboard
                   </Link>
                   <button
                     onClick={handleLogout}
-                    className="bg-red-500 font-bold hover:text-[#83387b] text-white px-4 py-2 rounded hover:bg-red-600 ml-2"
+                    className="bg-red-500 font-bold hover:text-[#800080] text-white px-4 py-2 rounded hover:bg-red-600 ml-2"
                   >
                     Logout
                   </button>
@@ -67,7 +67,7 @@ const Navbar = () => {
               {user.role === "user" && (
                 <button
                   onClick={handleLogout}
-                  className="bg-red-500 font-bold hover:text-[#83387b] text-white px-4 py-2 rounded hover:bg-red-600 ml-2"
+                  className="bg-red-500 font-bold hover:text-[#800080] text-white px-4 py-2 rounded hover:bg-red-600 ml-2"
                 >
                   Logout
                 </button>
@@ -79,21 +79,21 @@ const Navbar = () => {
               <Link
                 onClick={() => setIsSidebarOpen(false)}
                 to="/user-login"
-                className="font-bold hover:text-[#83387b]"
+                className="font-bold hover:text-[#800080]"
               >
                 User Login
               </Link>
               <Link
                 onClick={() => setIsSidebarOpen(false)}
                 to="/login"
-                className="font-bold hover:text-[#83387b]"
+                className="font-bold hover:text-[#800080]"
               >
                 Member Login
               </Link>
               <Link
                 to={`/become-member/${userName ? userName : "admin"}`}
                 onClick={() => setIsSidebarOpen(false)}
-                className="bg-[#83387b] font-bold text-white px-4 py-2 rounded hover:bg-yellow-600 ml-2"
+                className="bg-[#800080] font-bold text-white px-4 py-2 rounded hover:bg-yellow-600 ml-2"
               >
                 Membership
               </Link>
@@ -180,14 +180,14 @@ const Navbar = () => {
                   <Link
                     onClick={() => setIsSidebarOpen(false)}
                     to="/login"
-                    className="block text-[#83387b] font-bold mb-2"
+                    className="block text-[#800080] font-bold mb-2"
                   >
                     Member Login
                   </Link>
                   <Link
                     onClick={() => setIsSidebarOpen(false)}
                     to={`/become-member/${userName ? userName : "admin"}`}
-                    className="bg-[#83387b] text-white px-4 py-2 rounded hover:bg-yellow-600 block"
+                    className="bg-[#800080] text-white px-4 py-2 rounded hover:bg-yellow-600 block"
                   >
                     Membership
                   </Link>

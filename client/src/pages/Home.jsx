@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import Slider from "../components/comman/Slider";
 import WhyUs from "../components/core/Home/WhyUs";
-import KnowAboutUs from "../components/comman/KnowAboutUs";
 import ReviewRating from "../components/core/Home/ReviewRating";
 import { useSelector } from "react-redux";
-import ReactStars from "react-rating-stars-component";
 import { getAllReatingAPI } from "../services/operations/user";
 import ReviewsSection from "../components/comman/AllRating";
 import Details from "../components/comman/Details";
+import About from "../components/comman/About";
+import Slider1 from "../components/comman/Slider1";
 
 const Home = () => {
   const [reviewModal, setReviewModal] = useState(false);
@@ -35,9 +35,10 @@ const Home = () => {
 
   return (
     <div>
+      <Slider1 />
       <Slider />
-      <br />
-      <KnowAboutUs />
+
+      <About />
 
       <Details />
       <br />

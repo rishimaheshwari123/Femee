@@ -37,6 +37,8 @@ import PlasticFreeIndia2 from "./pages/PlasticFreeIndia2";
 import About from "./pages/About";
 import UserLogin from "./pages/UserLogin";
 import RegisterUser from "./pages/RegisterUser";
+import SubNavbar from "./components/comman/SubNavbar";
+import SocialMediaBar from "./components/comman/SocialMedia";
 
 const App = () => {
   const { user } = useSelector((state) => state.auth);
@@ -63,6 +65,7 @@ const App = () => {
   return (
     <div>
       {isOpen && <PopupModal />}
+      {!hideNavbarAndFooter && <SubNavbar />}
       {!hideNavbarAndFooter && <Navbar />}
       <Routes>
         <Route path="/" element={<Home />} />
@@ -186,6 +189,7 @@ const App = () => {
           </Modal>
         </PrivateRoute>
       )}
+      <SocialMediaBar />
       {!hideNavbarAndFooter && <Footer />}
       <PopupModal
         isOpen={isOpen}

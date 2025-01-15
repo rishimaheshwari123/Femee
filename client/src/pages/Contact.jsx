@@ -16,33 +16,33 @@ const Contact = () => {
       <div className=" grid gap-4 main lg:grid lg:grid-cols-2 my-16 items-center">
         <div className="first flex flex-col gap-8">
           <div className="flex items-center gap-4">
-            <span className="px-4 py-3 bg-[#83387b] text-white rounded-md text-xl">
+            <span className="px-4 py-3 bg-[#800080] text-white rounded-md text-xl">
               <FaLocationDot />
             </span>
             <span>Bhopal, Madhya Pradesh</span>
           </div>
           <div className="flex items-center gap-4">
-            <span className="px-4 py-3 bg-[#83387b] text-white rounded-md  text-xl">
+            <span className="px-4 py-3 bg-[#800080] text-white rounded-md  text-xl">
               <MdEmail />
             </span>
             <span>meenusahuji1987@gmail.com</span>
           </div>
           <div className="flex items-center gap-4">
-            <span className="px-4 py-3 bg-[#83387b] text-white rounded-md  text-xl">
+            <span className="px-4 py-3 bg-[#800080] text-white rounded-md  text-xl">
               <FaPhone />
             </span>
             <span>+91 7879523232, +91 9575227672</span>
           </div>
           <div className="flex space-x-4  mt-1 lg:mt-0">
             <Link to="" target="_blank" rel="noopener noreferrer">
-              <FaFacebook className="text-3xl text-[#83387b]" />
+              <FaFacebook className="text-3xl text-[#800080]" />
             </Link>
 
             <Link to="" target="_blank" rel="noopener noreferrer">
-              <FaYoutube className="text-3xl text-[#83387b]" />
+              <FaYoutube className="text-3xl text-[#800080]" />
             </Link>
             <Link to="" target="_blank" rel="noopener noreferrer">
-              <FaInstagram className="text-3xl text-[#83387b]" />
+              <FaInstagram className="text-3xl text-[#800080]" />
             </Link>
           </div>
         </div>

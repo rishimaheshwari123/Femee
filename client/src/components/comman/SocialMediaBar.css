@@ -1,0 +1,128 @@
+.social-media-bar {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+  transition: all 0.3s ease;
+}
+
+.social-media-bar.collapsed {
+  right: -50px; /* Move the bar off the screen */
+}
+
+.toggle-button {
+  width: 50px;
+  height: 50px;
+  background-color: #000;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  outline: none;
+  position: absolute;
+  right: 100%;
+  top: 0;
+  z-index: 1001;
+}
+
+.toggle-button.toggle-open {
+  right: -50px; /* Shows the toggle button when the bar is collapsed */
+  background-color: #000;
+  color: white;
+}
+
+.social-icon {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  /* background-color: #4CAF50; */
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none; /* Ensures the link looks like a button */
+}
+
+.social-icon.contact-us {
+  background-color: #6a1b9a;
+}
+
+.social-icon:hover .icon-name {
+  right: 60px;
+  opacity: 1;
+}
+
+.icon-name {
+  position: absolute;
+  right: 10px;
+  background-color: #555;
+  padding: 5px 10px;
+  border-radius: 5px;
+  white-space: nowrap;
+  opacity: 0;
+  transition: all 0.3s ease;
+  font-size: 14px;
+}
+
+.contact-form {
+  position: absolute;
+  top: 0;
+  right: 60px;
+  width: 300px;
+  background-color: white;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  border-radius: 5px;
+  z-index: 1001;
+}
+
+.contact-form h3 {
+  margin-top: 0;
+  font-size: 18px;
+  color: #6a1b9a;
+}
+
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  font-size: 14px;
+}
+
+.contact-form .sendbutton {
+  background-color: #6a1b9a;
+  color: white;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+  border-radius: 3px;
+  width: 100%;
+  font-size: 16px;
+}
+
+.contact-form button:hover {
+  /* background-color: #5a127a; */
+}
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #6a1b9a;
+  font-size: 16px;
+}

@@ -24,13 +24,22 @@ const Footer = () => {
             <span className="block mt-2">Mail: meenusahuji1987@gmail.com</span>
           </p>
           <div className="mt-4 flex space-x-4">
-            <Link to="" className="hover:text-yellow-500">
+            <Link
+              to="https://www.facebook.com/profile.php?id=61555373810216&mibextid=kFxxJD"
+              className="hover:text-yellow-500"
+            >
               <FaFacebook className="text-xl" />
             </Link>
-            <Link to="" className="hover:text-yellow-500">
+            <Link
+              to="https://youtube.com/@femmecurehelpingher?si=YrDQTn26Aiyq5ZNh"
+              className="hover:text-yellow-500"
+            >
               <FaYoutube className="text-xl" />
             </Link>
-            <Link to="" className="hover:text-yellow-500">
+            <Link
+              to="https://www.instagram.com/meenusahuji1987?igsh=NzVlazl3bnFjcDFy"
+              className="hover:text-yellow-500"
+            >
               <FaInstagram className="text-xl" />
             </Link>
           </div>

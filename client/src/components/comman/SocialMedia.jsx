@@ -159,7 +159,11 @@ const SocialMediaBar = () => {
         </a>
       </div>
       <div className="social-icon bg-green-600">
-        <a href="+917879523232" target="_blank" rel="noopener noreferrer">
+        <a
+          href="https://wa.me/917879523232"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           <FaWhatsapp />
           <span className="icon-name">WhatsApp</span>
         </a>

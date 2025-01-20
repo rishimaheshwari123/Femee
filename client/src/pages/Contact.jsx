@@ -14,7 +14,7 @@ const Contact = () => {
   return (
     <div className="max-w-7xl mx-auto p-5">
       <div className=" grid gap-4 main lg:grid lg:grid-cols-2 my-16 items-center">
-        <div className="first flex flex-col gap-8">
+        <div className="first font-bold text-[17px] flex flex-col gap-8">
           <div className="flex items-center gap-4">
             <span className="px-4 py-3 bg-[#800080] text-white rounded-md text-xl">
               <FaLocationDot />

@@ -11,7 +11,7 @@ const About = () => {
         <h2 className="text-lg md:text-xl font-medium text-black mt-4">
           हमारा उद्देश्य <br />
           <span className="text-blue-600 font-bold">
-            (हो निरोगी तन और हो घर हर घर में धन)
+            (हो निरोगी तन और हो हर घर में धन)
           </span>
         </h2>
         <p className="text-sm md:text-base text-black mt-3 leading-relaxed">
@@ -21,7 +21,7 @@ const About = () => {
           नारी। <br />
           <span className="text-purple-600 font-semibold">
             अच्छे स्वास्थ्य के लिए एक बार जरूर Helping Her Product का इस्तेमाल
-            करके देखें। अधिक जानकारी के लिए कॉल करें: 7879523232
+            करके देखें। अधिक जानकारी के लिए कॉल करें 91 7879523232
           </span>
         </p>
         <div className="mt-8 space-y-6">

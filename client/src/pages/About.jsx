@@ -9,7 +9,7 @@ const About = () => {
           About Femme Cure
         </h1>
         <h2 className="text-lg md:text-xl font-medium text-black mt-4">
-          हमारा उद्देश्य: <br />
+          हमारा उद्देश्य <br />
           <span className="text-blue-600 font-bold">
             (हो निरोगी तन और हो घर हर घर में धन)
           </span>

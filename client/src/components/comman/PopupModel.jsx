@@ -50,7 +50,7 @@ const PopupModal = ({ isOpen, setIsOpen, handleClose }) => {
             className="mx-auto rounded-full w-56 h-56 border-4 border-gray-300 shadow-md"
           />
           <h2 className="text-lg md:text-xl font-medium text-gray-700 mt-4">
-            हमारा उद्देश्य: <br />
+            हमारा उद्देश्य <br />
             <span className="text-blue-600 font-bold">
               (हो निरोगी तन और हो हर घर में धन)
             </span>

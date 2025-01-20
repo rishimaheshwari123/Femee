@@ -17,8 +17,7 @@ const HappyFuture = () => {
             <FaHeart className="text-pink-500 text-2xl mr-4" />
             <p className="text-gray-800">
               हर महिला इस सृष्टि में सृजन करता है व जननी है । जब नारी स्वयं
-              स्वस्थ स्वच्छ रहेगी तभी वह अपने परिवार को स्वस्थ व सुखी रख सकती
-              है।
+              स्वस्थ रहेगी तभी वह अपने परिवार को स्वस्थ व सुखी रख सकती है।
             </p>
           </div>
           <div className="flex items-center">
@@ -49,7 +48,7 @@ const HappyFuture = () => {
             <FaLeaf className="text-green-600 text-2xl mr-4" />
             <p className="text-gray-800">
               यह Anion chip युक्त Pad है, जिसके इस्तेमाल से बच्चेदानी से संबंधित
-              वह महामारी से संबंधित सभी जानलेवा बीमारियों को यह ठीक करता है।
+              व महावारी से संबंधित सभी जानलेवा बीमारियों को यह ठीक करता है।
             </p>
           </div>
         </div>

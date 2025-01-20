@@ -28,10 +28,10 @@ const Slider1 = () => {
     {
       id: 1,
       image: s3,
-      title: "सृज‌न स्वच्छता",
-      headline: "नारी का स्वस्थ और स्वच्छ जीवन",
+      // title: "स्वस्थ नारी ",
+      headline: "जागरूक नारी स्वस्थ नारी ",
       description:
-        "Anion Sanitary Pad, जो महिलाओं और बच्चियों को स्वास्थ्य और सुरक्षा प्रदान करता है। गंभीर बीमारियों जैसे 'Uterine cancer' को रोकने में सहायक।",
+        "Anion sanitary pad, जो की महिलाओ और बच्चियों को स्वस्थ जीवन और सुरक्षा प्रदान करता हैं एवं uterine cancer व मासिक धर्म से सबंधित सभी जानलेबा बीमारियों को ठीक करने मे साहयक हैं",
       buttonText: "अधिक जानें",
       buttonLink: "/about",
     },
@@ -63,7 +63,7 @@ const Slider1 = () => {
           Autoplay,
           EffectFade,
         ]}
-        autoplay={{ delay: 5000, disableOnInteraction: false }}
+        autoplay={{ delay: 6000, disableOnInteraction: false }}
         effect="fade"
         fadeEffect={{ crossFade: true }}
         spaceBetween={0}

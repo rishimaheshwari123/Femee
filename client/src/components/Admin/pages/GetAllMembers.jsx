@@ -14,28 +14,32 @@ const tiers = ["Silver", "Gold", "Platinum", "Diamond", "Blue Diamond"];
 const GetAllMembers = () => {
   const [members, setMembers] = useState([]);
   const { user } = useSelector((state) => state.auth);
+
   const getMember = async () => {
-    const response = await getAllMembersApi();
-    console.log(response);
-    setMembers(
-      (response || []).sort(
-        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-      )
-    );
+    try {
+      const response = await getAllMembersApi();
+      setMembers(
+        (response || []).sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        )
+      );
+    } catch (error) {
+      toast.error("Failed to fetch members.");
+    }
   };
 
   const handleActivate = async (id) => {
     try {
       const updatedMember = await updateVerifyMembersApi(id);
       if (updatedMember) {
-        setMembers((prevMembers) =>
-          prevMembers.map((member) =>
+        setMembers((prev) =>
+          prev.map((member) =>
             member._id === id ? { ...member, isActive: true } : member
           )
         );
         toast.success("Member activated successfully!");
       }
-    } catch (error) {
+    } catch {
       toast.error("Failed to activate the member.");
     }
   };
@@ -44,12 +48,10 @@ const GetAllMembers = () => {
     try {
       const deleted = await deleteMemberApi(id);
       if (deleted) {
-        setMembers((prevMembers) =>
-          prevMembers.filter((member) => member._id !== id)
-        );
-        toast.success("Member Account Rejected successfully!");
+        setMembers((prev) => prev.filter((member) => member._id !== id));
+        toast.success("Member account rejected successfully!");
       }
-    } catch (error) {
+    } catch {
       toast.error("Failed to delete the member.");
     }
   };
@@ -58,14 +60,14 @@ const GetAllMembers = () => {
     try {
       const updatedMember = await updateTierMembersApi(id, tier);
       if (updatedMember) {
-        setMembers((prevMembers) =>
-          prevMembers.map((member) =>
+        setMembers((prev) =>
+          prev.map((member) =>
             member._id === id ? { ...member, tier } : member
           )
         );
         toast.success(`Tier updated to ${tier} successfully!`);
       }
-    } catch (error) {
+    } catch {
       toast.error("Failed to update the tier.");
     }
   };
@@ -78,7 +80,7 @@ const GetAllMembers = () => {
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">All Members</h1>
       <div className="overflow-x-auto max-h-[80vh]">
-        <table className="table-auto w-full border-collapse border border-gray-300 ">
+        <table className="table-auto w-full border-collapse border border-gray-300">
           <thead>
             <tr className="bg-gray-100">
               <th className="border border-gray-300 px-4 py-2">First Name</th>
@@ -98,12 +100,18 @@ const GetAllMembers = () => {
                   Affiliate Name
                 </th>
               )}
+              <th className="border border-gray-300 px-4 py-2">Account No.</th>
+              <th className="border border-gray-300 px-4 py-2">IFSC</th>
+              <th className="border border-gray-300 px-4 py-2">Branch Name</th>
+              <th className="border border-gray-300 px-4 py-2">
+                Bank Holder Name
+              </th>
             </tr>
           </thead>
           <tbody>
-            {members?.map((member, index) => (
-              <tr key={index} className="hover:bg-gray-50">
-                <td className="border border-gray-300 px-4  py-2">
+            {members?.map((member) => (
+              <tr key={member._id} className="hover:bg-gray-50">
+                <td className="border border-gray-300 px-4 py-2">
                   {member?.fName || "N/A"}
                 </td>
                 <td className="border border-gray-300 px-4 py-2">
@@ -123,7 +131,7 @@ const GetAllMembers = () => {
                 </td>
                 <td className="border border-gray-300 px-4 py-2 text-center">
                   <select
-                    value={member?.tier || "N/A"}
+                    value={member?.tier || ""}
                     onChange={(e) =>
                       handleTierChange(member._id, e.target.value)
                     }
@@ -137,38 +145,48 @@ const GetAllMembers = () => {
                   </select>
                 </td>
                 <td className="border border-gray-300 px-4 py-2 text-center">
-                  <div className="flex items-center justify-center gap-2">
-                    {member?.isActive ? (
-                      <FaCheck className="text-green-500" />
-                    ) : (
-                      <>
-                        <button
-                          onClick={() => handleActivate(member._id)}
-                          className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600"
-                        >
-                          Activate
-                        </button>
-                        <button
-                          onClick={() => handleDeleteRequest(member._id)}
-                          className="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600"
-                        >
-                          Cancel
-                        </button>
-                      </>
-                    )}
-                  </div>
+                  {member?.isActive ? (
+                    <FaCheck className="text-green-500" />
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => handleActivate(member._id)}
+                        className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600"
+                      >
+                        Activate
+                      </button>
+                      <button
+                        onClick={() => handleDeleteRequest(member._id)}
+                        className="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  )}
                 </td>
                 <td className="border border-gray-300 px-4 py-2">
-                  {new Date(member?.createdAt)?.toLocaleString() || "N/A"}
+                  {new Date(member?.createdAt).toLocaleString() || "N/A"}
                 </td>
                 <td className="border border-gray-300 px-4 py-2">
-                  {member?.child?.length}
+                  {member?.child?.length || 0}
                 </td>
                 {user?.role === "admin" && (
                   <td className="border border-gray-300 px-4 py-2">
                     {member?.parent?.fName} {member?.parent?.lName}
                   </td>
                 )}
+                <td className="border border-gray-300 px-4 py-2">
+                  {member?.acc || "N/A"}
+                </td>
+                <td className="border border-gray-300 px-4 py-2">
+                  {member?.ifsc || "N/A"}
+                </td>
+                <td className="border border-gray-300 px-4 py-2">
+                  {member?.bankName || "N/A"}
+                </td>
+                <td className="border border-gray-300 px-4 py-2">
+                  {member?.bankHolderName || "N/A"}
+                </td>
               </tr>
             ))}
           </tbody>

@@ -13,15 +13,15 @@ const PlasticFreeIndia2 = () => {
           <div className="flex items-center">
             <FaLeaf className="text-green-500 text-3xl mr-4" />
             <p className="text-gray-800">
-              Femme Cure यह अवसर प्रदान करता है। जागरूकता अभियान का हिस्सा बनें
-              और खुद को स्वच्छ और सक्षम बनाएं।
+              Femme Cure आप सभी को यह अवसर प्रदान करता है। की स्वस्थ नारी
+              सुरक्षित पर्यावरण जागरूकता अभियान का हिस्सा बनें और स्वयं के साथ
+              साथ दूसरों को भी स्वस्थ और सक्षम बनाएं।
             </p>
           </div>
           <div className="flex items-center">
             <FaRupeeSign className="text-yellow-500 text-3xl mr-4" />
             <p className="text-gray-800">
-              घर बैठे <strong>₹11,000 से ₹30,000</strong> तक प्रति माह धन लाभ
-              प्राप्त करें।
+              और घर बैठे ही 50000 से अधिक प्रतिमा धन कमाए
             </p>
           </div>
         </div>

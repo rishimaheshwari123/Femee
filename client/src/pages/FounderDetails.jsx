@@ -17,12 +17,12 @@ const FounderDetails = () => {
 
         {/* Heading and Description */}
         <h1 className="text-2xl md:text-3xl font-bold text-center text-blue-600 mt-6">
-          Creator / Founder / Organizer
+          Creator
         </h1>
         <p className="text-center text-gray-700 mt-2">
           श्रीमती मीनू साहू (भोपाल)
         </p>
-        <p className="text-center text-gray-500 mt-1">Age: 35</p>
+        <p className="text-center text-gray-500 mt-1">Age: 36</p>
 
         <div className="mt-6 space-y-6">
           <div className="flex items-center">
@@ -36,16 +36,16 @@ const FounderDetails = () => {
           <div className="flex items-center">
             <FaUsers className="text-purple-500 text-3xl mr-4" />
             <p className="text-gray-800">
-              Natural Pad का Business शुरू करके 85000 महिलाओं को स्वच्छता और
-              पर्यावरण संरक्षण के प्रति जागरूक किया।
+              Natural Pad का Business शुरू करके 85000 से भी अधिक महिलाओं को
+              स्वच्छता और पर्यावरण संरक्षण के प्रति जागरूक किया।
             </p>
           </div>
           <div className="flex items-center">
             <FaLeaf className="text-green-500 text-3xl mr-4" />
             <p className="text-gray-800">
-              Natural Pad का उपयोग महिलाओं को आत्मनिर्भर और पर्यावरण संरक्षण में
-              योगदान देने के लिए प्रेरित कर रहा है। एवं Business Women बनाने का
-              सपना साकार हो रहा है।
+              Natural Pad का उपयोग करके महिलाएं स्वस्थ व आत्मनिर्भर बन रही है और
+              पर्यावरण संरक्षण में अपना योगदान दे रही है एवं महिलाओं का Busines
+              Woman बनाने का हमारा सपना साकार हो रहा है
             </p>
           </div>
         </div>

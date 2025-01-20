@@ -16,16 +16,24 @@ const HappyFuture = () => {
           <div className="flex items-center">
             <FaHeart className="text-pink-500 text-2xl mr-4" />
             <p className="text-gray-800">
-              सृज‌न स्वच्छता करना ही एक अच्छी जिन्दगी है। जब नारी स्वस्थ स्वच्छ
-              रहेगी तभी वह अपने परिवार को स्वस्थ व सुखी रख सकती है।
+              हर महिला इस सृष्टि में सृजन करता है वह जाननी है । जब नारी स्वयं
+              स्वस्थ स्वच्छ रहेगी तभी वह अपने परिवार को स्वस्थ व सुखी रख सकती
+              है।
+            </p>
+          </div>
+          <div className="flex items-center">
+            <FaHeart className="text-pink-500 text-2xl mr-4" />
+            <p className="text-gray-800">
+              इसलिए हम सब की जिम्मेदारी है कि हम अपने आप को स्वस्थ व संपन्न
+              बनाएं ।
             </p>
           </div>
           <div className="flex items-center">
             <FaShieldAlt className="text-green-500 text-2xl mr-4" />
             <p className="text-gray-800">
-              Anion Sanitary Pad, जिसमें इस्तेमाल से सभी बच्चियाँ व महिलाएँ
-              स्वस्थ व सुरक्षित रहती हैं। यह गंभीर बीमारियों की रोकथाम करता है,
-              जैसे - 'Uterine cancer'।
+              Anion Sanitary Pad, जिसके इस्तेमाल से सभी बच्चियाँ व महिलाएँ
+              स्वस्थ और साथ ही साथ पर्यावरण को सुरक्षित रखती हैं। यह गंभीर
+              बीमारियों की रोकथाम करता है, जैसे - 'Uterine cancer'।
             </p>
           </div>
           <div className="flex items-center">
@@ -38,8 +46,8 @@ const HappyFuture = () => {
           <div className="flex items-center">
             <FaLeaf className="text-green-600 text-2xl mr-4" />
             <p className="text-gray-800">
-              यह Anion chip युक्त Pad है, जिसके इस्तेमाल से सभी प्रकार की
-              बीमारियों को यह ठीक करता है।
+              यह Anion chip युक्त Pad है, जिसके इस्तेमाल से बच्चेदानी से संबंधित
+              वह महामारी से संबंधित सभी जानलेवा बीमारियों को ठीक करता है।
             </p>
           </div>
         </div>

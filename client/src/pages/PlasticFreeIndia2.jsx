@@ -21,7 +21,7 @@ const PlasticFreeIndia2 = () => {
           <div className="flex items-center">
             <FaRupeeSign className="text-yellow-500 text-3xl mr-4" />
             <p className="text-gray-800">
-              और घर बैठे ही 50000 से अधिक प्रतिमा धन कमाए
+              और घर बैठे ही 50000 से अधिक प्रतिमाह धन कमाए
             </p>
           </div>
         </div>

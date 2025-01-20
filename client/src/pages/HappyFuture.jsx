@@ -16,7 +16,7 @@ const HappyFuture = () => {
           <div className="flex items-center">
             <FaHeart className="text-pink-500 text-2xl mr-4" />
             <p className="text-gray-800">
-              हर महिला इस सृष्टि में सृजन करता है वह जाननी है । जब नारी स्वयं
+              हर महिला इस सृष्टि में सृजन करता है व जननी है । जब नारी स्वयं
               स्वस्थ स्वच्छ रहेगी तभी वह अपने परिवार को स्वस्थ व सुखी रख सकती
               है।
             </p>
@@ -31,23 +31,25 @@ const HappyFuture = () => {
           <div className="flex items-center">
             <FaShieldAlt className="text-green-500 text-2xl mr-4" />
             <p className="text-gray-800">
-              Anion Sanitary Pad, जिसके इस्तेमाल से सभी बच्चियाँ व महिलाएँ
-              स्वस्थ और साथ ही साथ पर्यावरण को सुरक्षित रखती हैं। यह गंभीर
-              बीमारियों की रोकथाम करता है, जैसे - 'Uterine cancer'।
+              हम आपके लिए लाए हैं Anion Sanitary Pad, जिसके इस्तेमाल से सभी
+              बच्चियाँ व महिलाएँ स्वस्थ व सूखी रहती है और साथ ही साथ पर्यावरण को
+              भी सुरक्षित रखती हैं। और अन्य महिलाओं और बच्चियों को स्वास्थ्य के
+              प्रति जागरूक करके उन्हें भी गर्भाशय की बीमारियों जैसे - 'Uterine
+              cancer' जैसी बीमारियों से बचा रही है
             </p>
           </div>
           <div className="flex items-center">
             <GiRecycle className="text-blue-500 text-2xl mr-4" />
             <p className="text-gray-800">
-              यह Pad Biodegradable होता है। इसके इस्तेमाल से महिलाएँ पर्यावरण
-              संरक्षण में भी अपना योगदान देती हैं।
+              यह Pad Biodegradable होता है। इसलिए इसके इस्तेमाल से हर महिला
+              पर्यावरण संरक्षण में भी अपना योगदान दे रही है।
             </p>
           </div>
           <div className="flex items-center">
             <FaLeaf className="text-green-600 text-2xl mr-4" />
             <p className="text-gray-800">
               यह Anion chip युक्त Pad है, जिसके इस्तेमाल से बच्चेदानी से संबंधित
-              वह महामारी से संबंधित सभी जानलेवा बीमारियों को ठीक करता है।
+              वह महामारी से संबंधित सभी जानलेवा बीमारियों को यह ठीक करता है।
             </p>
           </div>
         </div>

@@ -43,11 +43,11 @@ const PopupModal = ({ isOpen, setIsOpen, handleClose }) => {
         </button>
 
         {/* Content Section */}
-        <div className="mt-8 text-center">
+        <div className="lg:mt-8 mt-20 text-center">
           <img
             src={founder}
             alt="Founder"
-            className="mx-auto w-32 h-28  lg:w-56 lg:h-40 border-4 border-gray-300 shadow-md"
+            className="mx-auto w-32 h-24  lg:w-56 lg:h-40 border-4 border-gray-300 shadow-md"
           />
           <h2 className="text-lg md:text-xl font-medium text-gray-700 mt-4">
             हमारा उद्देश्य <br />
@@ -79,7 +79,7 @@ const PopupModal = ({ isOpen, setIsOpen, handleClose }) => {
             <div>
               <a
                 href="tel:+917879523232"
-                className="bg-green-600 text-white py-2 px-6 rounded-lg shadow-md flex items-center justify-center gap-2 hover:bg-green-700 transition"
+                className="bg-green-600 text-white py-2 px-2 rounded-lg shadow-md flex items-center  justify-center gap-2 hover:bg-green-700 transition"
               >
                 <FaPhone />
                 कॉल करें

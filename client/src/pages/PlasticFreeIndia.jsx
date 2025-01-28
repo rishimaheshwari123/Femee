@@ -11,7 +11,7 @@ const PlasticFreeIndia = () => {
 
         <div className="mt-6 space-y-4">
           <div className="flex items-center">
-            <FaRecycle className="text-blue-500 text-3xl mr-4" />
+            {/* <FaRecycle className="text-blue-500 text-3xl mr-4" /> */}
             <p className="text-gray-800">
               भारत को प्लास्टिक से मुक्त बनाने में अपना योगदान दें। Natural Pad
               का उपयोग करें, जो पर्यावरण से प्राप्त चीजों से मिलकर बना होता है
@@ -20,7 +20,7 @@ const PlasticFreeIndia = () => {
             </p>
           </div>
           <div className="flex items-center">
-            <FaLeaf className="text-green-500 text-3xl mr-4" />
+            {/* <FaLeaf className="text-green-500 text-3xl mr-4" /> */}
             <p className="text-gray-800">
               <strong>No Plastic, No Chemical, Only Natural.</strong>
             </p>

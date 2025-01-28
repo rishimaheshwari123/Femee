@@ -26,7 +26,7 @@ const FounderDetails = () => {
 
         <div className="mt-6 space-y-6">
           <div className="flex items-center">
-            <FaHandHoldingHeart className="text-pink-500 text-3xl mr-4" />
+            {/* <FaHandHoldingHeart className="text-pink-500 text-3xl mr-4" /> */}
             <p className="text-gray-800">
               Since 1999, श्रीमती मीनू साहू महिलाओं की सेवा में समर्पित हैं।
               उन्होंने महिलाओं को शिक्षित बनाने और उनके स्वस्थ एवं समाज में
@@ -34,14 +34,14 @@ const FounderDetails = () => {
             </p>
           </div>
           <div className="flex items-center">
-            <FaUsers className="text-purple-500 text-3xl mr-4" />
+            {/* <FaUsers className="text-purple-500 text-3xl mr-4" /> */}
             <p className="text-gray-800">
               Natural Pad का Business शुरू करके 85000 से भी अधिक महिलाओं को
               स्वच्छता और पर्यावरण संरक्षण के प्रति जागरूक किया।
             </p>
           </div>
           <div className="flex items-center">
-            <FaLeaf className="text-green-500 text-3xl mr-4" />
+            {/* <FaLeaf className="text-green-500 text-3xl mr-4" /> */}
             <p className="text-gray-800">
               Natural Pad का उपयोग करके महिलाएं स्वस्थ व आत्मनिर्भर बन रही है और
               पर्यावरण संरक्षण में अपना योगदान दे रही है एवं महिलाओं का Busines

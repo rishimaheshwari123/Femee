@@ -11,7 +11,7 @@ const PlasticFreeIndia2 = () => {
 
         <div className="mt-6 space-y-4">
           <div className="flex items-center">
-            <FaLeaf className="text-green-500 text-3xl mr-4" />
+            {/* <FaLeaf className="text-green-500 text-3xl mr-4" /> */}
             <p className="text-gray-800">
               Femme Cure आप सभी को यह अवसर प्रदान करता है। की स्वस्थ नारी
               सुरक्षित पर्यावरण जागरूकता अभियान का हिस्सा बनें और स्वयं के साथ
@@ -19,7 +19,7 @@ const PlasticFreeIndia2 = () => {
             </p>
           </div>
           <div className="flex items-center">
-            <FaRupeeSign className="text-yellow-500 text-3xl mr-4" />
+            {/* <FaRupeeSign className="text-yellow-500 text-3xl mr-4" /> */}
             <p className="text-gray-800">
               और घर बैठे ही 50000 से अधिक प्रतिमाह धन कमाए
             </p>

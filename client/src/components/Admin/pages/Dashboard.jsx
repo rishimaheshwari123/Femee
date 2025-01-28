@@ -87,7 +87,7 @@ const Dashboard = () => {
       </div> */}
       <div className="flex gap-5 items-center">
         <p>Your Link :</p>
-        <p>{`http://localhost:3000/become-member/${user?.userName}`}</p>
+        <p>{`https://www.femmecurehelpingher.com/become-member/${user?.userName}`}</p>
       </div>
     </div>
   );

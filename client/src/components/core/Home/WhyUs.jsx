@@ -34,7 +34,7 @@ const WhyUs = () => {
         </div>
         <div className="second">
           <p className="text-center text-3xl lg:text-4xl font-semibold text-green-600">
-            80000+
+            85,000+
           </p>
           <p className="text-center text-white text-xl mt-2">
             All Over India Client

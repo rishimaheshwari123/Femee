@@ -31,7 +31,7 @@ const PlasticFreeIndia2 = () => {
           <br />
           आपकी,
           <br />
-          मीनू साहू (भोपाल)
+          मीनू साहू
         </p>
       </div>
     </div>

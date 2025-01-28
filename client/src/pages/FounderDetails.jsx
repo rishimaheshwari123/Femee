@@ -19,9 +19,7 @@ const FounderDetails = () => {
         <h1 className="text-2xl md:text-3xl font-bold text-center text-blue-600 mt-6">
           Creator
         </h1>
-        <p className="text-center text-gray-700 mt-2">
-          श्रीमती मीनू साहू (भोपाल)
-        </p>
+        <p className="text-center text-gray-700 mt-2">श्रीमती मीनू साहू</p>
         <p className="text-center text-gray-500 mt-1">Age: 36</p>
 
         <div className="mt-6 space-y-6">

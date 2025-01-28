@@ -73,18 +73,6 @@ const Dashboard = () => {
 
   return (
     <div className="p-4">
-      {/* <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
-        {data.map((item, index) => (
-          <div
-            key={index}
-            className={`${item.bgColor} ${item.hoverColor} flex flex-col items-center p-4 shadow-lg rounded-lg transition duration-300 ease-in-out transform hover:scale-105 text-white`}
-          >
-            <div className="mb-2">{item.icon}</div>
-            <h3 className="text-xl font-semibold">{item.title}</h3>
-            <p className="text-2xl">{item.value}</p>
-          </div>
-        ))}
-      </div> */}
       <div className="flex gap-5 items-center">
         <p>Your Link :</p>
         <p>{`https://www.femmecurehelpingher.com/become-member/${user?.userName}`}</p>

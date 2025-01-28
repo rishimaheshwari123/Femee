@@ -189,7 +189,8 @@ const App = () => {
           </Modal>
         </PrivateRoute>
       )}
-      <SocialMediaBar />
+
+      {!hideNavbarAndFooter && <SocialMediaBar />}
       {!hideNavbarAndFooter && <Footer />}
       <PopupModal
         isOpen={isOpen}

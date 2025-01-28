@@ -4,7 +4,7 @@ import * as Yup from "yup";
 import Dropzone from "react-dropzone";
 import {
   imageUpload,
-  memeberRegistrationApi,
+  memberRegistrationApi,
 } from "../services/operations/memeber";
 import { useParams } from "react-router-dom";
 
@@ -57,23 +57,26 @@ function BecomeMembers() {
     parent: userName,
   };
 
-  // Form submission
   const onSubmit = async (values, { resetForm }) => {
-    const formData = new FormData();
-    formData.append("fName", values.fName);
-    formData.append("lName", values.lName);
-    formData.append("userName", values.userName);
-    formData.append("email", values.email);
-    formData.append("phone", values.phone);
-    formData.append("password", values.password);
-    formData.append("address", values.address);
-    formData.append("parent", values.parent);
-    formData.append("images", JSON.stringify(images));
+    try {
+      const formData = new FormData();
+      formData.append("fName", values.fName);
+      formData.append("lName", values.lName);
+      formData.append("userName", values.userName);
+      formData.append("email", values.email);
+      formData.append("phone", values.phone);
+      formData.append("password", values.password);
+      formData.append("address", values.address);
+      formData.append("parent", values.parent);
+      formData.append("images", JSON.stringify(images));
 
-    await memeberRegistrationApi(formData);
+      await memberRegistrationApi(formData);
 
-    // resetForm();
-    setImages([]);
+      resetForm();
+      setImages([]);
+    } catch (error) {
+      console.error("Form Submission Error:", error.message);
+    }
   };
 
   // Formik

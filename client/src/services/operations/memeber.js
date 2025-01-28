@@ -7,8 +7,7 @@ const { LOGIN_API, DELETE_MEMBER, SIGNUP_API, IMAGE_UPLOAD, GET_ALL_MEMBER, CREA
 
 
 
-export async function memeberRegistrationApi(formData) {
-
+export async function memberRegistrationApi(formData) {
   Swal.fire({
     title: "Loading",
     allowOutsideClick: false,
@@ -19,33 +18,29 @@ export async function memeberRegistrationApi(formData) {
       Swal.showLoading();
     },
   });
+
   try {
     const response = await apiConnector("POST", SIGNUP_API, formData);
-
-    // console.log("SIGNUP API RESPONSE............", response);
 
     if (!response.data.success) {
       throw new Error(response.data.message);
     }
 
-    // Swal.fire({
-    //   title: `Member Registered Successfully!`,
-    //   text: `Have a nice day!`,
-    //   icon: "success",
-    // });
-    return response?.data?.user;
+    Swal.fire({
+      title: `Member Registered Successfully!`,
+      text: `Have a nice day!`,
+      icon: "success",
+    });
 
+    return response?.data?.user;
   } catch (error) {
-    console.log("SIGNUP API ERROR............", error?.response?.data?.message);
+    console.error("SIGNUP API ERROR:", error?.response?.data?.message || error.message);
     Swal.fire({
       title: `Error`,
-      text: error?.response?.data?.message,
+      text: error?.response?.data?.message || "Something went wrong. Please try again later.",
       icon: "error",
-
     });
   }
-
-
 }
 
 export async function memberLoginApi(userName, password, navigate, dispatch) {

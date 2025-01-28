@@ -89,7 +89,7 @@ const GetAllMembers = () => {
               <th className="border border-gray-300 px-4 py-2">Email</th>
               <th className="border border-gray-300 px-4 py-2">Phone</th>
               <th className="border border-gray-300 px-4 py-2">Address</th>
-              <th className="border border-gray-300 px-4 py-2">Tier</th>
+              <th className="border border-gray-300 px-4 py-2">Position</th>
               <th className="border border-gray-300 px-4 py-2">Active</th>
               <th className="border border-gray-300 px-4 py-2">Created At</th>
               <th className="border border-gray-300 px-4 py-2">

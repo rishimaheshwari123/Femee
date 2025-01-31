@@ -1,5 +1,6 @@
 
-const BASE_URL = process.env.REACT_APP_BASE_URL;
+// const BASE_URL = process.env.REACT_APP_BASE_URL;
+const BASE_URL = "https://femee-8iq1.onrender.com/api/v1";
 
 
 export const auth = {

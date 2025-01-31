@@ -212,6 +212,8 @@ function ProductDetails() {
           </div>
         </section>
       </div>
+      <br />
+      <br />
     </>
   );
 }

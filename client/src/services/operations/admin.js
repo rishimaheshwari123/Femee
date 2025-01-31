@@ -28,15 +28,14 @@ export const createProduct = async (data, token) => {
       "Content-Type": "multipart/form-data",
       Authorization: `Bearer ${token}`,
     })
-    console.log("CREATE PRODUCT API RESPONSE............", response)
     if (!response?.data?.success) {
       throw new Error("Could Not Add PRODUCT Details")
     }
-    toast.success("PRODUCT Details Added Successfully")
+    toast.success(response?.data?.message)
 
   } catch (error) {
     console.log("CREATE PRODUCT API ERROR............", error)
-    toast.error(error.message)
+    toast.error(error.response?.data?.message)
   }
   toast.dismiss(toastId)
 
@@ -65,18 +64,17 @@ export const editProduct = async (data, token) => {
   toast.dismiss(toastId)
 }
 
-export const deleteProduct = async (data, token) => {
+export const deleteProduct = async (id, token) => {
 
   const toastId = toast.loading("Loading...")
   try {
-    const response = await apiConnector("POST", DELETE_PRODUCT_API, data, {
+    const response = await apiConnector("POST", DELETE_PRODUCT_API, id, {
       Authorization: `Bearer ${token}`,
     })
-    // console.log("DELETE  API RESPONSE............", response)
     if (!response?.data?.success) {
       throw new Error("Could Not Delete ")
     }
-    toast.success("Category   Deleted")
+    toast.success(response?.data?.message)
 
   } catch (error) {
     console.log("DELETE  API ERROR............", error)

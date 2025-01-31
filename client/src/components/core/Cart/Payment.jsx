@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { setStep } from "../../../redux/paymentSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { BuyProduct } from "../../../services/operations/order";
+import { verifyPayment } from "../../../services/operations/order";
 import { useNavigate } from "react-router-dom";
 
 function Payment({ payable, coupon }) {
@@ -13,7 +13,7 @@ function Payment({ payable, coupon }) {
   const { cart } = useSelector((state) => state.cart);
 
   const paymentHandle = () => {
-    BuyProduct(
+    verifyPayment(
       token,
       cart,
       coupon,
@@ -24,9 +24,6 @@ function Payment({ payable, coupon }) {
       dispatch
     );
   };
-  // useEffect(()=>{
-  // console.log(addressData)
-  // },[])
 
   return (
     <div className="flex flex-col h-full justify-between">
@@ -38,7 +35,8 @@ function Payment({ payable, coupon }) {
         onClick={paymentHandle}
         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
       >
-        Pay {payable}
+        {/* Pay {payable} */}
+        Complete Order
       </button>
 
       <div>

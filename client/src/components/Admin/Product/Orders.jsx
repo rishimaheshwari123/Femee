@@ -35,6 +35,7 @@ function Orders() {
       console.error("Error updating order status:", error);
     }
   };
+
   const handleDownloadPDF = (order) => {
     const doc = new jsPDF();
     doc.setFont("helvetica", "normal");
@@ -64,14 +65,16 @@ function Orders() {
 
     doc.setFont("helvetica", "normal");
     doc.setFontSize(12);
-    doc.text(order.shippingInfo.name, 14, 55);
-    doc.text(order.shippingInfo.address, 14, 60);
+    doc.text(order.shippingInfo?.name ?? "N/A", 14, 55);
+    doc.text(order.shippingInfo?.address ?? "N/A", 14, 60);
     doc.text(
-      `${order.shippingInfo.city}, ${order.shippingInfo.state} - ${order.shippingInfo.pincode}`,
+      `${order.shippingInfo?.city ?? "N/A"}, ${
+        order.shippingInfo?.state ?? "N/A"
+      } - ${order.shippingInfo?.pincode ?? "N/A"}`,
       14,
       65
     );
-    doc.text(`Contact: ${order.user?.phone}`, 14, 70);
+    doc.text(`Contact: ${order.user?.phone ?? "N/A"}`, 14, 70);
 
     // Save the PDF
     doc.save(`Order-${order.order_id}.pdf`);
@@ -91,13 +94,19 @@ function Orders() {
                 User
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Products
+                Products Name
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Products Size
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Order Status
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Total Price (INR)
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                UTR Number
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Ordered At
@@ -114,34 +123,44 @@ function Orders() {
             {allOrders.map((order) => (
               <tr key={order._id}>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                  {order.order_id}
+                  {order._id}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {order.user.name} ({order.user.email})
+                  {order.user?.userName ?? "N/A"} ({order.user?.email ?? "N/A"})
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {order.orderItems.map((item) => (
+                  {order.orderItems?.map((item) => (
                     <div key={item._id} className="flex items-center space-x-2">
                       <img
-                        src={item.product.images[0]?.url}
-                        alt={item.product.title}
+                        src={item.product?.images[0]?.url ?? ""}
+                        alt={item.product?.title ?? "N/A"}
                         className="h-12 w-12 object-contain"
                       />
-                      <span>{item.product.title}</span>
-                      <div className="text-sm bg-green-500 p-2 rounded-full text-black">
-                        {item.quantity}
-                      </div>
+                      <span>{item.product?.title ?? "N/A"}</span>
+                    </div>
+                  ))}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  {order.orderItems?.map((item) => (
+                    <div key={item._id} className="text-sm text-gray-500">
+                      {item.product?.sizes ?? "N/A"}
                     </div>
                   ))}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {order.orderStatus}
                 </td>
+
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {new Intl.NumberFormat("en-IN", {
                     style: "currency",
                     currency: "INR",
                   }).format(order.totalPrice)}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {order?.paymentInfo?.utr}
+                  </td>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {new Date(order.createdAt).toLocaleString()}

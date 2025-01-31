@@ -20,8 +20,8 @@ export const getAllProduct = () => async (dispatch) => {
     if (!response?.data?.success) {
       throw new Error("Could Not Fetch Product");
     }
-    const result = response?.data?.data;
-    dispatch(saveProduct(result)); // Dispatching action to save products
+    const result = response?.data?.allProduct;
+    dispatch(saveProduct(result));
     return result;
   } catch (error) {
     console.log("GET_ALL_PRODUCT_API API ERROR:", error);

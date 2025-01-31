@@ -1,14 +1,14 @@
 // CheckoutForm.js
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { displayMoney, calculateTotal } from "../../../helper/utills";
+import { displayMoney } from "../../../helper/utills";
 import { FiShoppingCart } from "react-icons/fi";
 import { FaChevronUp, FaChevronDown } from "react-icons/fa";
 import { fetchCoupon } from "../../../services/operations/product";
 import Address from "./Address";
 import Payment from "./Payment";
 import { Link } from "react-router-dom";
-
+import qr from "../../../assets/qr.png";
 const CheckoutForm = ({ handleClose }) => {
   const { cart, total } = useSelector((state) => state.cart);
   const [isOpen, setIsOpen] = useState(true);
@@ -135,6 +135,11 @@ const CheckoutForm = ({ handleClose }) => {
               <div className=" flex w-full justify-between px-6 font-bold text-[12px] mt-3">
                 Payable <span> {displayMoney(payable)}</span>
               </div>
+
+              <img src={qr} alt="not fond" className="flex mx-auto mt-2" />
+              <p className="text-lg text-center mt-1 font-semibold text-gray-700">
+                Pay On this QR
+              </p>
 
               {false && (
                 <div className="mt-3 px-6 flex flex-col gap-2">

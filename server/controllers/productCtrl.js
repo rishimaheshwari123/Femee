@@ -1,12 +1,11 @@
 const Product = require("../models/Product");
-const slugify = require("slugify");
 const validateMongoDbId = require("../utils/validateMongoDbId");
 
 // Controller to create a new product
 exports.createProduct = async (req, res) => {
   try {
     // Extracting data from the request body
-    const { title, description, price, highPrice, quantity, sizes } = req.body;
+    const { title, description, price, highPrice, sizes } = req.body;
 
     const imagesArray = JSON.parse(req.body.images);
 
@@ -15,7 +14,6 @@ exports.createProduct = async (req, res) => {
       !description ||
       !price ||
       !sizes ||
-      !quantity ||
       !imagesArray
     ) {
       return res.status(400).json({
@@ -27,18 +25,16 @@ exports.createProduct = async (req, res) => {
     // Creating a new product object
     const newProduct = await Product.create({
       title,
-      slug: slugify(title),
       description,
       price,
       highPrice,
       sizes,
-      quantity,
       images: imagesArray,
     });
 
     res.status(200).json({
       success: true,
-      data: newProduct,
+      newProduct,
       message: "Product Created Successfully",
     });
   } catch (error) {
@@ -56,7 +52,7 @@ exports.getAllProduct = async (req, res) => {
     const allProduct = await Product.find();
     res.status(200).json({
       success: true,
-      data: allProduct,
+      allProduct,
     });
   } catch (error) {
     console.log(error)
@@ -102,7 +98,6 @@ exports.deleteProduct = async (req, res) => {
 
     const { id } = req.body;
 
-    // Find the product by ID and delete it
     const deletedProduct = await Product.findByIdAndDelete(id);
 
     if (!deletedProduct) {

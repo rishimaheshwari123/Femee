@@ -4,15 +4,6 @@ const mongoose = require("mongoose"); // Erase if already required
 const orderSchema = new mongoose.Schema(
   {
 
-    order_id: {
-      type: String,
-      required: true,
-    },
-  shipment_id:{
-    type: Number,
-    // required: true,
-
-  },
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Memeber",
@@ -44,14 +35,11 @@ const orderSchema = new mongoose.Schema(
       },
     },
     paymentInfo: {
-      razorpayOrderId: {
+      utr: {
         type: String,
         required: true,
       },
-      razorpayPaymentId: {
-        type: String,
-        required: true,
-      },
+
     },
     orderItems: [
       {
@@ -60,15 +48,11 @@ const orderSchema = new mongoose.Schema(
           ref: "Product",
           required: true,
         },
-     
-
-        
-
         quantity: {
           type: Number,
           required: true,
         },
-    
+
       },
     ],
     paidAt: {
@@ -83,7 +67,7 @@ const orderSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-  
+
     orderStatus: {
       type: String,
       enum: ['Ordered', 'Processing', 'Shipped', 'Delivered', 'Cancelled'],

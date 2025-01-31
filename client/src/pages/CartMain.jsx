@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { displayMoney, calculateTotal } from "../helper/utills";
 import { BsCartX } from "react-icons/bs";
@@ -11,9 +11,8 @@ function CartMain() {
   const cartQuantity = cart.length;
   const calculateCartTotal = total;
   const displayCartTotal = displayMoney(calculateCartTotal);
-  const delveryCharge = displayMoney(60);
-  const dispatch = useDispatch()
-  // total discount
+  const delveryCharge = displayMoney(0);
+  const dispatch = useDispatch();
   const cartDiscount = cart.map((item) => {
     return (item.product.price - item.product.highPrice) * item.quantity;
   });
@@ -23,12 +22,10 @@ function CartMain() {
 
   // final total amount
 
-  const displayTotalAmount = displayMoney(total + 60);
-
+  const displayTotalAmount = displayMoney(total + 0);
 
   const checkoutHandel = () => {
     dispatch(setCheckout(true));
-  
   };
 
   return (
@@ -78,22 +75,25 @@ function CartMain() {
                     </div>
                   </div>
                   <button
-                        type="button"
-                        className={`w-11/12 bg-gray-900 hover:bg-gray-950 text-white p-2 mt-3 rounded-xl mx-auto font-bold ${
-                          cartQuantity === 0
-                            ? "opacity-50 cursor-not-allowed"
-                            : "hover:scale-105"
-                        }`}
-                        onClick={checkoutHandel}
-                        disabled={cartQuantity === 0}
-                      >
-                        Checkout
-                      </button>
+                    type="button"
+                    className={`w-11/12 bg-gray-900 hover:bg-gray-950 text-white p-2 mt-3 rounded-xl mx-auto font-bold ${
+                      cartQuantity === 0
+                        ? "opacity-50 cursor-not-allowed"
+                        : "hover:scale-105"
+                    }`}
+                    onClick={checkoutHandel}
+                    disabled={cartQuantity === 0}
+                  >
+                    Checkout
+                  </button>
                 </div>
               </div>
             </div>
           )}
         </div>
+        <br />
+        <br />
+        <br />
       </section>
     </>
   );

@@ -120,77 +120,84 @@ const paymentVerification = async (req, res) => {
 
 
 
-const createOrder = asyncHandler(async (products, userId, address, razorpay_order_id, razorpay_payment_id, payable, res) => {
-  const userDetails = await User.findById(userId);
-  console.log(payable)
-  const {
-    billingCity,
-    billingPincode,
-    billingState,
-    billingCountry,
-    billingAddress,
-    billingPhone
-  } = address;
-
-
-  const email = userDetails.email;
-
+const createOrder = asyncHandler(async (req, res) => {
   try {
-    const orderId = uuidv4();
 
+    const { products, userId, address, payable } = req.body;
+
+    // Validate if address is present
+    if (!address || !address.billingCity || !address.billingPincode || !address.billingState || !address.billingAddress) {
+      return res.status(400).json({
+        success: false,
+        message: "Missing address fields. Please provide complete address.",
+      });
+    }
+
+    // Destructure address fields
+    const { billingCity, billingPincode, billingState, billingAddress, utr } = address;
+
+    // Find user by ID
+    const userDetails = await User.findById(userId);
+    if (!userDetails) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    // Create Order with utr in paymentInfo
     const order = await Order.create({
-      order_id: orderId, // Provide order_id
-      shipment_id: 123, // Example shipment_id
       user: userId,
       shippingInfo: {
-        name: `${userDetails.fName + userDetails.lName}`, // assuming user has a name field
+        name: `${userDetails.fName} ${userDetails.lName}`,
         address: billingAddress,
         city: billingCity,
         state: billingState,
         pincode: billingPincode,
       },
-      paymentInfo: {
-        razorpayOrderId: razorpay_order_id,
-        razorpayPaymentId: razorpay_payment_id,
-      },
+      paymentInfo: { utr }, // Correctly passing utr here in the paymentInfo object
       orderItems: products.map(item => ({
-        product: item.product._id,
+        product: item.product, // Directly use the product ID
         quantity: item.quantity,
       })),
-      totalPrice: payable, // Update with actual total price
+      totalPrice: payable,
+      month: new Date().getMonth() + 1, // Convert zero-based month to human-readable format
     });
 
-
-
+    // Update Stock
     for (const item of products) {
-      const product = await Product.findById(item.product._id);
+      const product = await Product.findById(item.product);
       if (!product) {
-        throw new Error(`Product with ID ${item.product._id} not found`);
+        return res.status(404).json({
+          success: false,
+          message: `Product with ID ${item.product} not found`,
+        });
+      }
+
+      if (product.quantity < item.quantity) {
+        return res.status(400).json({
+          success: false,
+          message: `Not enough stock for product: ${product.name}`,
+        });
       }
 
       product.sold += item.quantity;
       product.quantity -= item.quantity;
-
-      if (product.quantity < 0) {
-        throw new Error(`Not enough stock for product with ID ${item.product._id}`);
-      }
-
       await product.save();
     }
 
-
-
-
-
+    // Return successful response
+    return res.status(201).json({
+      success: true,
+      message: "Order placed successfully",
+      order,
+    });
 
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({
-      success: false,
-      message: "Internal Server Error",
-    });
+    console.error("Error creating order:", error);
+    return res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 });
+
+
+
 
 
 

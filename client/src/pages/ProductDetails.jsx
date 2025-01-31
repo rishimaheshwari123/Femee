@@ -86,7 +86,6 @@ function ProductDetails() {
     );
   }
 
-
   const isProductInCart = cart.some(
     (cartItem) => cartItem.product._id === productID
   );
@@ -134,12 +133,6 @@ function ProductDetails() {
                   </div>
                 </div>
 
-                {/* <div className="text-sm flex flex-wrap items-center gap-2 prod_details_ratings">
-                  <span className="text-yellow-25">{avgReviewCount}</span>
-                  <RatingStars Review_Count={avgReviewCount} Star_Size={24} />
-                  <span>{`(${ratingAndReviews.length} reviews)`}</span>
-                </div> */}
-
                 <div className="prod_details_price">
                   <div className="price_box">
                     <h2 className="price">
@@ -151,30 +144,22 @@ function ProductDetails() {
                     <p className="saved_price">
                       You save: {savedPrice} ({savedDiscount}%)
                     </p>
-                    <span className="tax_txt">(Inclusive of all taxes)</span>
+                    <span className="tax_txt">(With Shipping Charges)</span>
                   </div>
-
-                  <div className=" ">
-                    {product.quantity >= 1 ? (
-                      <span className="instock">
-                        <MdOutlineDone /> In Stock
-                      </span>
-                    ) : (
-                      <span className="outofstock">
-                        <IoClose />
-                        Out of stock
-                      </span>
-                    )}
-                  </div>
+                </div>
+                <div className="flex flex-wrap gap-2 mt-1">
+                  {product.sizes?.split(",").map((size, index) => (
+                    <button
+                      key={index}
+                      className="px-4 py-2 text-sm font-semibold border border-gray-400 rounded-lg bg-gray-100 hover:bg-gray-200 transition"
+                    >
+                      {size.trim()}
+                    </button>
+                  ))}
                 </div>
                 <div className="seprator2"></div>
 
                 <div className="productDescription">
-                  {/* <div className="productDiscriptiopn_text">
-                    <h4>Descripition :</h4>
-                    <p>{product.description}</p>
-                  </div> */}
-
                   <div className="deliveryText">
                     <MdOutlineLocalShipping />
                     We deliver! Just say when and how.
@@ -205,16 +190,22 @@ function ProductDetails() {
                     </button>
                   </div>
 
-                 { !isProductInCart ?  <button
-                    className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                    onClick={handleAddItem}
-                    disabled={product.stock <= 0}
-                  >
-                    Add to cart
-                  </button> : <Link
-                    className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                  to={'/cart'}
-                  >Go to cart</Link>}
+                  {!isProductInCart ? (
+                    <button
+                      className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                      onClick={handleAddItem}
+                      disabled={product.stock <= 0}
+                    >
+                      Add to cart
+                    </button>
+                  ) : (
+                    <Link
+                      className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                      to={"/cart"}
+                    >
+                      Go to cart
+                    </Link>
+                  )}
                 </div>
               </div>
             </div>

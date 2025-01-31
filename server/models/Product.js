@@ -8,12 +8,7 @@ const productSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    slug: {
-      type: String,
-      required: true,
-      unique: true,
-      lowercase: true,
-    },
+
     description: {
       type: String,
       required: true,
@@ -28,27 +23,18 @@ const productSchema = new mongoose.Schema(
       required: true,
     },
 
-    quantity: {
-      type: Number,
-      required: true,
-    },
-    sold: {
-      type: Number,
-      default: 0,
-    },
     images: [
       {
         public_id: String,
         url: String,
       },
     ],
-    sizes:{
+    sizes: {
       type: String,
-      // required: true,
     }
 
-,
-   
+    ,
+
   },
   { timestamps: true }
 );

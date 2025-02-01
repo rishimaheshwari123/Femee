@@ -33,6 +33,14 @@ const orderSchema = new mongoose.Schema(
         type: Number,
         required: true,
       },
+      phone1: {
+        type: Number,
+        required: true,
+      },
+      phone2: {
+        type: Number,
+        required: true,
+      },
     },
     paymentInfo: {
       utr: {

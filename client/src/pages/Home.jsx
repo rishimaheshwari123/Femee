@@ -8,6 +8,7 @@ import ReviewsSection from "../components/comman/AllRating";
 import Details from "../components/comman/Details";
 import About from "../components/comman/About";
 import Slider1 from "../components/comman/Slider1";
+import SocialMediaBar from "../components/comman/SocialMedia";
 
 const Home = () => {
   const [reviewModal, setReviewModal] = useState(false);
@@ -35,6 +36,7 @@ const Home = () => {
 
   return (
     <div>
+      <SocialMediaBar />
       <Slider1 />
       <Slider />
 

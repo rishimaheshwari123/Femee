@@ -12,8 +12,9 @@ function Address() {
     billingState: "",
     billingCountry: "",
     billingAddress: "",
-    billingPhone: "",
-    utr: "", // Added UTR field
+    phone1: "",
+    phone2: "",
+    utr: "",
   });
   const [isPincodeValid, setIsPincodeValid] = useState(false);
 
@@ -143,8 +144,22 @@ function Address() {
             <label className="block mb-1 text-gray-600 pr-10">Phone</label>
             <input
               type="number"
-              name="billingPhone"
-              value={formData.billingPhone}
+              name="phone1"
+              value={formData.phone1}
+              onChange={handleChange}
+              placeholder="Contact Number"
+              className="min-w-[80%] border rounded px-1 text-[12px] py-2 outline-1 ring-1 font-semibold placeholder:font-normal focus:ring-2 focus:ring-blue-500 placeholder-gray-400"
+              required
+            />
+          </div>
+          <div className="mb-3">
+            <label className="block mb-1 text-gray-600 pr-10">
+              Second Phone
+            </label>
+            <input
+              type="number"
+              name="phone2"
+              value={formData.phone2}
               onChange={handleChange}
               placeholder="Contact Number"
               className="min-w-[80%] border rounded px-1 text-[12px] py-2 outline-1 ring-1 font-semibold placeholder:font-normal focus:ring-2 focus:ring-blue-500 placeholder-gray-400"

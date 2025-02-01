@@ -124,7 +124,7 @@ const createOrder = asyncHandler(async (req, res) => {
   try {
 
     const { products, userId, address, payable } = req.body;
-
+    console.log(req.body)
     // Validate if address is present
     if (!address || !address.billingCity || !address.billingPincode || !address.billingState || !address.billingAddress) {
       return res.status(400).json({
@@ -134,7 +134,7 @@ const createOrder = asyncHandler(async (req, res) => {
     }
 
     // Destructure address fields
-    const { billingCity, billingPincode, billingState, billingAddress, utr } = address;
+    const { billingCity, billingPincode, billingState, billingAddress, utr, phone1, phone2 } = address;
 
     // Find user by ID
     const userDetails = await User.findById(userId);
@@ -151,6 +151,8 @@ const createOrder = asyncHandler(async (req, res) => {
         city: billingCity,
         state: billingState,
         pincode: billingPincode,
+        phone1,
+        phone2
       },
       paymentInfo: { utr }, // Correctly passing utr here in the paymentInfo object
       orderItems: products.map(item => ({

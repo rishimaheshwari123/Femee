@@ -4,6 +4,7 @@ import {
   deleteGalleryApi,
 } from "../services/operations/memeber";
 import { RiDeleteBinFill } from "react-icons/ri";
+import SocialMediaBar from "../components/comman/SocialMedia";
 
 const Gallery = () => {
   const [gallery, setGallery] = useState([]);
@@ -61,6 +62,7 @@ const Gallery = () => {
           )}
         </div>
       )}
+      <SocialMediaBar />
     </div>
   );
 };

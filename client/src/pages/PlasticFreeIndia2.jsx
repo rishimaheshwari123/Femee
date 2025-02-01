@@ -1,5 +1,6 @@
 import React from "react";
 import { FaLeaf, FaRecycle, FaRupeeSign } from "react-icons/fa";
+import SocialMediaBar from "../components/comman/SocialMedia";
 
 const PlasticFreeIndia2 = () => {
   return (
@@ -34,6 +35,7 @@ const PlasticFreeIndia2 = () => {
           मीनू साहू
         </p>
       </div>
+      <SocialMediaBar />
     </div>
   );
 };

@@ -38,7 +38,6 @@ import About from "./pages/About";
 import UserLogin from "./pages/UserLogin";
 import RegisterUser from "./pages/RegisterUser";
 import SubNavbar from "./components/comman/SubNavbar";
-import SocialMediaBar from "./components/comman/SocialMedia";
 
 const App = () => {
   const { user } = useSelector((state) => state.auth);
@@ -190,7 +189,6 @@ const App = () => {
         </PrivateRoute>
       )}
 
-      {!hideNavbarAndFooter && <SocialMediaBar />}
       {!hideNavbarAndFooter && <Footer />}
       <PopupModal
         isOpen={isOpen}

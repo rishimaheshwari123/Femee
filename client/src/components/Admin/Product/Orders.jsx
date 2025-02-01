@@ -74,7 +74,8 @@ function Orders() {
       14,
       65
     );
-    doc.text(`Contact: ${order.user?.phone ?? "N/A"}`, 14, 70);
+    doc.text(`Contact: ${order.shippingInfo?.phone1 ?? "N/A"}`, 14, 70);
+    doc.text(`Second Contact: ${order.shippingInfo?.phone2 ?? "N/A"}`, 14, 75);
 
     // Save the PDF
     doc.save(`Order-${order.order_id}.pdf`);

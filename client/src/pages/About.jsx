@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import SocialMediaBar from "../components/comman/SocialMedia";
 
 const About = () => {
   return (
@@ -48,6 +49,7 @@ const About = () => {
           </Link>
         </div>
       </div>
+      <SocialMediaBar />
     </div>
   );
 };

@@ -9,6 +9,7 @@ import { MdEmail } from "react-icons/md";
 import { FaPhone } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import femme from "../assets/femee.jpg";
+import SocialMediaBar from "../components/comman/SocialMedia";
 
 const Contact = () => {
   return (
@@ -51,6 +52,7 @@ const Contact = () => {
           <img src={femme} alt="not found" />
         </div>
       </div>
+      <SocialMediaBar />
     </div>
   );
 };

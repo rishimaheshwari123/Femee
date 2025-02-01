@@ -1,6 +1,7 @@
 import React from "react";
 import { FaLeaf, FaHeart, FaShieldAlt } from "react-icons/fa";
 import { GiRecycle } from "react-icons/gi";
+import SocialMediaBar from "../components/comman/SocialMedia";
 
 const HappyFuture = () => {
   return (
@@ -53,6 +54,7 @@ const HappyFuture = () => {
           </div>
         </div>
       </div>
+      <SocialMediaBar />
     </div>
   );
 };

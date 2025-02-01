@@ -2,6 +2,7 @@ import React from "react";
 import { FaHandHoldingHeart, FaLeaf, FaUsers } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import founder from "../assets/mam.jpg";
+import SocialMediaBar from "../components/comman/SocialMedia";
 const FounderDetails = () => {
   return (
     <div className="bg-gray-100 p-8">
@@ -57,6 +58,7 @@ const FounderDetails = () => {
           </Link>
         </div>
       </div>
+      <SocialMediaBar />
     </div>
   );
 };

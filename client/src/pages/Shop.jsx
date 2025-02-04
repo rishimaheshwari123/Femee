@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 
 import { useParams } from "react-router-dom";
 
-
 import AOS from "aos";
 import "aos/dist/aos.css";
 
@@ -68,6 +67,13 @@ function AllProduct({ products }) {
                             {" "}
                             {displayMoney(product.price)}
                           </p>
+                          <div className="flex flex-wrap gap-2 mt-1">
+                            {product.sizes?.split(",").map((size, index) => (
+                              <button key={index} className="text-sm">
+                                {size.trim()}
+                              </button>
+                            ))}
+                          </div>
                         </div>
                       </div>
                     </Link>
@@ -78,7 +84,6 @@ function AllProduct({ products }) {
           </div>
         </div>
       </div>
-   
     </>
   );
 }

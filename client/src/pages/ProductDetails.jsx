@@ -20,6 +20,7 @@ function ProductDetails() {
   const { handleActive, activeClass } = useActive(0);
   const dispatch = useDispatch();
   const [quantity, setQuantity] = useState(1);
+  const { user, token } = useSelector((state) => state.auth);
 
   const { allProduct } = useSelector((state) => state.product);
   const { cart } = useSelector((state) => state.cart);
@@ -135,18 +136,27 @@ function ProductDetails() {
 
                 <div className="prod_details_price">
                   <div className="price_box">
-                    <h2 className="price">
-                      {newPrice} &nbsp;
-                      <small className="del_price">
-                        <del>{oldPrice}</del>
-                      </small>
-                    </h2>
-                    <p className="saved_price">
-                      You save: {savedPrice} ({savedDiscount}%)
-                    </p>
-                    <span className="tax_txt">(With Shipping Charges)</span>
+                    {!token || user?.role === "user" ? (
+                      <p className="font-montserrat lg:text-sm text-gray-600">
+                        {product.highPrice}
+                      </p>
+                    ) : (
+                      <>
+                        <h2 className="price">
+                          {newPrice} &nbsp;
+                          <small className="del_price">
+                            <del>{oldPrice}</del>
+                          </small>
+                        </h2>
+                        <p className="saved_price">
+                          You save: {savedPrice} ({savedDiscount}%)
+                        </p>
+                        <span className="tax_txt">(With Shipping Charges)</span>
+                      </>
+                    )}
                   </div>
                 </div>
+
                 <div className="flex flex-wrap gap-2 mt-1">
                   {product.sizes?.split(",").map((size, index) => (
                     <button

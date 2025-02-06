@@ -16,6 +16,7 @@ function AllProduct({ products }) {
   const { query } = useParams();
 
   const { allProduct } = useSelector((state) => state.product);
+  const { user, token } = useSelector((state) => state.auth);
 
   useEffect(() => {
     AOS.init({ duraction: 5000 });
@@ -64,9 +65,11 @@ function AllProduct({ products }) {
                             {product.title}
                           </p>
                           <p className="font-montserrat lg:text-sm text-gray-600">
-                            {" "}
-                            {displayMoney(product.price)}
+                            {!token || user?.role === "user"
+                              ? displayMoney(product.highPrice)
+                              : displayMoney(product.price)}
                           </p>
+
                           <div className="flex flex-wrap gap-2 mt-1">
                             {product.sizes?.split(",").map((size, index) => (
                               <button key={index} className="text-sm">

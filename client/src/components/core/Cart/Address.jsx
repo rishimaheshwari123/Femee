@@ -74,7 +74,7 @@ function Address() {
         <h2 className="text-xl font-semibold mb-6 text-center text-gray-800">
           Billing Address
         </h2>
-        <div className="lg:w-11/12 mx-auto lg:max-h-[calc(100vh-300px)] overflow-y-auto overflow-x-hidden pl-2 p-2 billing">
+        <div className="lg:w-11/12 mx-auto lg:max-h-[calc(100vh-300px)] max-h-[400px] overflow-y-auto overflow-x-hidden pl-2 p-2 billing">
           <div className="mb-3">
             <label className="block mb-1 text-gray-600">Pincode</label>
             <input

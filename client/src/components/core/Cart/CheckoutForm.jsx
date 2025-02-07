@@ -46,16 +46,17 @@ const CheckoutForm = ({ handleClose }) => {
     }
   };
   return (
-    <div className=" w-full flex flex-wrap-reverse lg:min-h-[calc(100vh-150px)] min-h-[calc(100vh-200px)]  lg:max-h-[calc(100vh-150px)] max-h-[calc(100vh-130px)] checkout font-montserrat  ">
+    <div className=" w-full flex flex-wrap-reverse overflow-y-auto lg:min-h-[calc(100vh-150px)] min-h-[calc(100vh-200px)]  lg:max-h-[calc(100vh-150px)] max-h-[calc(100vh-130px)] checkout font-montserrat  ">
       {/* left */}
 
-      <div className=" lg:w-[65%]  w-screen border-r-2 ">
+      <div className=" lg:w-[65%]  w-screen  overflow-y-auto border-r-2 ">
         {step === 1 && <Address />}
         {step === 2 && <Payment payable={payable} coupon={couponName} />}
       </div>
 
       {/* right */}
-      <div className="   lg:w-[35%]  w-full ">
+      {/* right */}
+      <div className="lg:w-[35%] w-full max-h-[calc(100vh-130px)] overflow-y-auto">
         <div>
           <div className="w-full lg:p-4  rounded-xl text-black ">
             <button

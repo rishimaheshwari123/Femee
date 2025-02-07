@@ -162,7 +162,7 @@ const Sidebar = () => {
       </ul>
 
       {/* User and Logout Section */}
-      <div className="absolute bottom-2 left-2 right-2 overflow-hidden mt-10">
+      <div className="absolute bottom-10 left-2 right-2 overflow-hidden mt-10">
         <div
           className={`flex items-center justify-center w-full ${
             isCollapsed

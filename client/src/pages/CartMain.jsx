@@ -36,7 +36,7 @@ function CartMain() {
             <EmptyView
               icon={<BsCartX />}
               msg="Your Cart is Empty"
-              link="/all-products"
+              link="/shop"
               btnText="Start Shopping"
             />
           ) : (

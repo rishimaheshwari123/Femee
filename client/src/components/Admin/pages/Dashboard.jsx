@@ -72,10 +72,12 @@ const Dashboard = () => {
   ];
 
   return (
-    <div className="p-4">
-      <div className="flex gap-5 items-center">
-        <p>Your Link :</p>
-        <p>{`https://www.femmecurehelpingher.com/become-member/${user?.userName}`}</p>
+    <div className="px-20">
+      <div className="flex flex-col sm:flex-row gap-2 items-center">
+        <p className="font-semibold">Your Link :</p>
+        <p className="text-blue-600 break-words text-sm sm:text-base">
+          {`https://www.femmecurehelpingher.com/become-member/${user?.userName}`}
+        </p>
       </div>
     </div>
   );

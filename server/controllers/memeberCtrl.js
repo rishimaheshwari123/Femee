@@ -332,4 +332,25 @@ const updateMemberProfileCtrl = async (req, res) => {
 };
 
 
-module.exports = { registerMemberCtrl, loginMemberCtrl, getAllMemberCtrl, verifyMemberCtrl, updateTierCtrl, memberProfileCtrl, updateMemberProfileCtrl, deleteMemberCtrl };
+
+const updatePassword = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { password } = req.body;
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const updatedPassword = await memberModel.findByIdAndUpdate(id, { password: hashedPassword }, { new: true })
+    return res.status(200).json({
+      success: true,
+      message: "Password update successfully",
+      updatedPassword
+    })
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong in update tier  member api",
+    });
+  }
+};
+module.exports = { registerMemberCtrl, loginMemberCtrl, getAllMemberCtrl, verifyMemberCtrl, updateTierCtrl, memberProfileCtrl, updateMemberProfileCtrl, deleteMemberCtrl, updatePassword };

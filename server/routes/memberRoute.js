@@ -1,5 +1,5 @@
 const express = require("express")
-const { loginMemberCtrl, registerMemberCtrl, getAllMemberCtrl, verifyMemberCtrl, updateTierCtrl, memberProfileCtrl, updateMemberProfileCtrl, deleteMemberCtrl } = require("../controllers/memeberCtrl")
+const { loginMemberCtrl, registerMemberCtrl, getAllMemberCtrl, verifyMemberCtrl, updateTierCtrl, memberProfileCtrl, updateMemberProfileCtrl, deleteMemberCtrl, updatePassword } = require("../controllers/memeberCtrl")
 const router = express.Router()
 
 
@@ -11,6 +11,7 @@ router.put("/update/:id", updateTierCtrl)
 router.get("/get/:id", memberProfileCtrl);
 router.put("/update-profile/:id", updateMemberProfileCtrl)
 router.delete("/delete/:id", deleteMemberCtrl)
+router.put("/update-password/:id", updatePassword)
 
 
 

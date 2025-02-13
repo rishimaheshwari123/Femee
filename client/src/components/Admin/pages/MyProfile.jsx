@@ -14,6 +14,7 @@ const MyProfile = () => {
   const [formData, setFormData] = useState({
     fName: "",
     lName: "",
+    userName: "",
     email: "",
     phone: "",
     address: "",
@@ -31,6 +32,7 @@ const MyProfile = () => {
       setFormData({
         fName: response.fName || "",
         lName: response.lName || "",
+        userName: response.userName || "",
         email: response.email || "",
         phone: response.phone || "",
         address: response.address || "",
@@ -134,6 +136,17 @@ const MyProfile = () => {
                     type="text"
                     name="lName"
                     value={formData.lName}
+                    onChange={handleInputChange}
+                    disabled={!isEditing}
+                    className="w-full p-2 border rounded-md"
+                  />
+                </div>
+                <div>
+                  <label className="text-gray-700">User Name:</label>
+                  <input
+                    type="text"
+                    name="userName"
+                    value={formData.userName}
                     onChange={handleInputChange}
                     disabled={!isEditing}
                     className="w-full p-2 border rounded-md"

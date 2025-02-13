@@ -289,7 +289,7 @@ const updateTierCtrl = async (req, res) => {
 
 const updateMemberProfileCtrl = async (req, res) => {
   const { id } = req.params;
-  const { fName, lName, email, phone, address, acc, ifsc, bankName, sContact, bankHolderName } = req.body;
+  const { fName, lName, userName, email, phone, address, acc, ifsc, bankName, sContact, bankHolderName } = req.body;
 
   try {
 
@@ -304,6 +304,7 @@ const updateMemberProfileCtrl = async (req, res) => {
 
     member.fName = fName || member.fName;
     member.lName = lName || member.lName;
+    member.userName = userName || member.userName;
     member.email = email || member.email;
     member.phone = phone || member.phone;
     member.address = address || member.address;

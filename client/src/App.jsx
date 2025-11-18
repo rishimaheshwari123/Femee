@@ -35,6 +35,8 @@ import FounderDetails from "./pages/FounderDetails";
 import PlasticFreeIndia from "./pages/PlasticFreeIndia";
 import PlasticFreeIndia2 from "./pages/PlasticFreeIndia2";
 import About from "./pages/About";
+import UpdatePassword from "./pages/UpdatePassword";
+import ForgotPassword from "./pages/ForgotPassword";
 import UserLogin from "./pages/UserLogin";
 import RegisterUser from "./pages/RegisterUser";
 import SubNavbar from "./components/comman/SubNavbar";
@@ -117,6 +119,22 @@ const App = () => {
           element={
             <OpenRoute>
               <RegisterUser />
+            </OpenRoute>
+          }
+        />
+        <Route
+          path="forgot-password"
+          element={
+            <OpenRoute>
+              <ForgotPassword />
+            </OpenRoute>
+          }
+        />
+        <Route
+          path="update-password/:id"
+          element={
+            <OpenRoute>
+              <UpdatePassword />
             </OpenRoute>
           }
         />

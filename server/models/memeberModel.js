@@ -50,7 +50,7 @@ const memeberSchema = new mongoose.Schema(
         },
         tier: {
             type: String,
-            enum: ["Bronze", "Silver", "Gold", "Platinum", "Diamond","Blue Diamond"],
+            enum: ["Bronze", "Silver", "Gold", "Platinum", "Diamond", "Blue Diamond"],
             default: "Bronze",
             required: true,
         },
@@ -67,7 +67,7 @@ const memeberSchema = new mongoose.Schema(
         bankName: {
             type: String,
             trim: true,
-       
+
         },
         bankHolderName: {
             type: String,
@@ -93,6 +93,9 @@ const memeberSchema = new mongoose.Schema(
 
         token: {
             type: String,
+        },
+        resetPasswordExpires: {
+            type: Date,
         },
     },
     { timestamps: true }

@@ -9,6 +9,7 @@ function MemberLogin() {
   const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const validationSchema = Yup.object({
     userName: Yup.string().required("Username is required"),
     password: Yup.string()
@@ -16,19 +17,16 @@ function MemberLogin() {
       .required("Password is required"),
   });
 
-  // Initial values
   const initialValues = {
     userName: "",
     password: "",
   };
 
-  // Form submission
   const onSubmit = async (values, { resetForm }) => {
     await memberLoginApi(values.userName, values.password, navigate, dispatch);
     resetForm();
   };
 
-  // Formik
   const formik = useFormik({
     initialValues,
     onSubmit,
@@ -36,7 +34,7 @@ function MemberLogin() {
   });
 
   return (
-    <div className="max-w-lg mx-auto p-6 bg-white rounded-lg shadow-lg my-20 ">
+    <div className="max-w-lg mx-auto p-6 bg-white rounded-lg shadow-lg my-20">
       <div className="text-center mb-8">
         <h3 className="text-3xl font-semibold text-gray-900">Login Member</h3>
         <div className="flex justify-center items-center mt-4">
@@ -45,7 +43,7 @@ function MemberLogin() {
       </div>
 
       <form onSubmit={formik.handleSubmit} className="space-y-6">
-        {/* Username */}
+        {/* Username Field */}
         <div>
           <label
             htmlFor="userName"
@@ -69,7 +67,7 @@ function MemberLogin() {
           )}
         </div>
 
-        {/* Password */}
+        {/* Password Field */}
         <div>
           <label
             htmlFor="password"
@@ -102,6 +100,17 @@ function MemberLogin() {
           )}
         </div>
 
+        {/* Forgot Password Link */}
+        <div className="text-right -mt-3">
+          <span
+            onClick={() => navigate("/forgot-password")}
+            className="text-sm text-blue-600 hover:underline cursor-pointer"
+          >
+            Forgot Password?
+          </span>
+        </div>
+
+        {/* Submit Button */}
         <button
           type="submit"
           className="w-full py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"

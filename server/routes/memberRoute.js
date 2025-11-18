@@ -1,5 +1,6 @@
 const express = require("express")
 const { loginMemberCtrl, registerMemberCtrl, getAllMemberCtrl, verifyMemberCtrl, updateTierCtrl, memberProfileCtrl, updateMemberProfileCtrl, deleteMemberCtrl, updatePassword } = require("../controllers/memeberCtrl")
+const { resetPasswordTokenCtrl, resetPasswordCtrl } = require("../controllers/resetPasswordCtrl")
 const router = express.Router()
 
 
@@ -12,7 +13,9 @@ router.get("/get/:id", memberProfileCtrl);
 router.put("/update-profile/:id", updateMemberProfileCtrl)
 router.delete("/delete/:id", deleteMemberCtrl)
 router.put("/update-password/:id", updatePassword)
+router.post("/reset-password-token", resetPasswordTokenCtrl)
 
+router.post("/reset-password", resetPasswordCtrl)
 
 
 module.exports = router

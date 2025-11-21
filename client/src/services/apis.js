@@ -60,8 +60,9 @@ export const paymentEndpoints = {
 
 export const adminEndPoints = {
   ADD_PRODUCT_API: BASE_URL + "/product/create",
-  EDIT_PRODUCT_API: BASE_URL + "/product/create",
+  EDIT_PRODUCT_API: BASE_URL + "/product/update",
   DELETE_PRODUCT_API: BASE_URL + "/product/delete",
+  DASHBOARD_STATS_API: BASE_URL + "/product/dashboard-stats",
 
 
 

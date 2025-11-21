@@ -1,5 +1,5 @@
 const express = require("express")
-const { loginMemberCtrl, registerMemberCtrl, getAllMemberCtrl, verifyMemberCtrl, updateTierCtrl, memberProfileCtrl, updateMemberProfileCtrl, deleteMemberCtrl, updatePassword } = require("../controllers/memeberCtrl")
+const { loginMemberCtrl, registerMemberCtrl, getAllMemberCtrl, verifyMemberCtrl, updateTierCtrl, memberProfileCtrl, updateMemberProfileCtrl, deleteMemberCtrl, updatePassword, getReferralTreeCtrl } = require("../controllers/memeberCtrl")
 const { resetPasswordTokenCtrl, resetPasswordCtrl } = require("../controllers/resetPasswordCtrl")
 const router = express.Router()
 
@@ -14,8 +14,8 @@ router.put("/update-profile/:id", updateMemberProfileCtrl)
 router.delete("/delete/:id", deleteMemberCtrl)
 router.put("/update-password/:id", updatePassword)
 router.post("/reset-password-token", resetPasswordTokenCtrl)
-
 router.post("/reset-password", resetPasswordCtrl)
+router.get("/referral-tree/:id", getReferralTreeCtrl)
 
 
 module.exports = router

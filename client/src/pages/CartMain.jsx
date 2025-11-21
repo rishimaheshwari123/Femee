@@ -2,100 +2,155 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { displayMoney, calculateTotal } from "../helper/utills";
 import { BsCartX } from "react-icons/bs";
+import { FaShoppingBag } from "react-icons/fa";
 import EmptyView from "../components/core/Cart/EmptyView";
 import CartItems from "../components/core/Cart/CartItems";
 import { setCheckout } from "../redux/paymentSlice";
+import { Container, Card, Button, Badge } from "../components/ui";
 
 function CartMain() {
   const { cart, total } = useSelector((state) => state.cart);
   const cartQuantity = cart.length;
   const calculateCartTotal = total;
   const displayCartTotal = displayMoney(calculateCartTotal);
-  const delveryCharge = displayMoney(0);
+  const deliveryCharge = displayMoney(0);
   const dispatch = useDispatch();
+  
   const cartDiscount = cart.map((item) => {
-    return (item.product.price - item.product.highPrice) * item.quantity;
+    return (item.product.highPrice - item.product.price) * item.quantity;
   });
 
   const calculateCartDiscount = calculateTotal(cartDiscount);
   const displayCartDiscount = displayMoney(calculateCartDiscount);
-
-  // final total amount
-
   const displayTotalAmount = displayMoney(total + 0);
 
-  const checkoutHandel = () => {
+  const checkoutHandler = () => {
     dispatch(setCheckout(true));
   };
 
   return (
-    <>
-      <section id="cart" className="section mt-[140px] w-11/12 mx-auto">
-        <div className="container flex  ">
-          {cartQuantity === 0 ? (
-            <EmptyView
-              icon={<BsCartX />}
-              msg="Your Cart is Empty"
-              link="/shop"
-              btnText="Start Shopping"
-            />
-          ) : (
-            <div className="  flex w-full gap-3 justify-between flex-wrap">
-              <div className=" lg:w-[70%] md:w-[70%] w-full  bg-bg-color-2 max-h-[400px]  py-4 overflow-x-hidden overflow-y-auto scrollbar-w-[0.35vw]  ">
-                {cart.map((item) => (
-                  <CartItems key={item._id} {...item} />
-                ))}
+    <div className="min-h-screen bg-gray-50 py-8">
+      <Container>
+        {cartQuantity === 0 ? (
+          <EmptyView
+            icon={<BsCartX />}
+            msg="Your Cart is Empty"
+            link="/shop"
+            btnText="Start Shopping"
+          />
+        ) : (
+          <>
+            {/* Page Header */}
+            <div className="mb-6">
+              <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
+                <FaShoppingBag className="text-primary-500" />
+                Shopping Cart
+              </h1>
+              <p className="text-gray-600 mt-2">
+                {cartQuantity} {cartQuantity > 1 ? "items" : "item"} in your cart
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Cart Items - Left Column */}
+              <div className="lg:col-span-2">
+                <Card padding="none">
+                  <div className="divide-y divide-gray-200">
+                    {cart.map((item) => (
+                      <div key={item._id} className="p-4">
+                        <CartItems {...item} />
+                      </div>
+                    ))}
+                  </div>
+                </Card>
               </div>
 
-              <div className=" lg:w-[24%] md:w-[24%] w-full ">
-                <div className=" flex flex-col gap-10">
-                  <h3 className=" font-bold font-montserrat text-xl">
-                    Order Summary &nbsp; ( {cartQuantity}{" "}
-                    {cartQuantity > 1 ? "items" : "item"} )
-                  </h3>
-                  <div className=" flex flex-col gap-3 font-montserrat text-lg">
-                    <div className="price flex justify-between">
-                      <span className=" font-bold"> Price</span>
-                      <b>{displayCartTotal}</b>
+              {/* Order Summary - Right Column */}
+              <div className="lg:col-span-1">
+                <Card className="sticky top-24">
+                  <div className="space-y-6">
+                    {/* Header */}
+                    <div>
+                      <h2 className="text-xl font-bold text-gray-900">
+                        Order Summary
+                      </h2>
+                      <p className="text-sm text-gray-600 mt-1">
+                        {cartQuantity} {cartQuantity > 1 ? "items" : "item"}
+                      </p>
                     </div>
-                    <div className=" flex justify-between ">
-                      <span className=" font-bold">Discount</span>
-                      <b className="text-green-700"> {displayCartDiscount}</b>
+
+                    {/* Price Breakdown */}
+                    <div className="space-y-3">
+                      <div className="flex justify-between text-gray-700">
+                        <span>Subtotal</span>
+                        <span className="font-semibold">{displayCartTotal}</span>
+                      </div>
+
+                      {calculateCartDiscount > 0 && (
+                        <div className="flex justify-between text-green-600">
+                          <span>Discount</span>
+                          <span className="font-semibold">
+                            - {displayCartDiscount}
+                          </span>
+                        </div>
+                      )}
+
+                      <div className="flex justify-between text-gray-700">
+                        <span>Delivery Charges</span>
+                        <span className="font-semibold text-green-600">
+                          {deliveryCharge === "₹0" ? "FREE" : deliveryCharge}
+                        </span>
+                      </div>
+
+                      <div className="border-t border-gray-300 pt-3">
+                        <div className="flex justify-between items-center">
+                          <span className="text-lg font-bold text-gray-900">
+                            Total Amount
+                          </span>
+                          <span className="text-2xl font-bold text-primary-500">
+                            {displayTotalAmount}
+                          </span>
+                        </div>
+                      </div>
                     </div>
-                    <div className=" flex justify-between">
-                      <span className=" font-bold">Delivery</span>
-                      <b>{delveryCharge}</b>
-                    </div>
-                    <div className="my-6 border-t border-gray-600"></div>
-                    <div className="total_price flex justify-between">
-                      <b>
-                        <small>Total Price</small>
-                      </b>
-                      <b>{displayTotalAmount}</b>
-                    </div>
+
+                    {/* Savings Badge */}
+                    {calculateCartDiscount > 0 && (
+                      <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+                        <p className="text-sm text-green-800 font-medium text-center">
+                          🎉 You're saving {displayCartDiscount}!
+                        </p>
+                      </div>
+                    )}
+
+                    {/* Checkout Button */}
+                    <Button
+                      variant="primary"
+                      size="lg"
+                      fullWidth
+                      onClick={checkoutHandler}
+                      disabled={cartQuantity === 0}
+                    >
+                      Proceed to Checkout
+                    </Button>
+
+                    {/* Continue Shopping */}
+                    <Button
+                      variant="outline"
+                      size="md"
+                      fullWidth
+                      to="/shop"
+                    >
+                      Continue Shopping
+                    </Button>
                   </div>
-                  <button
-                    type="button"
-                    className={`w-11/12 bg-gray-900 hover:bg-gray-950 text-white p-2 mt-3 rounded-xl mx-auto font-bold ${
-                      cartQuantity === 0
-                        ? "opacity-50 cursor-not-allowed"
-                        : "hover:scale-105"
-                    }`}
-                    onClick={checkoutHandel}
-                    disabled={cartQuantity === 0}
-                  >
-                    Checkout
-                  </button>
-                </div>
+                </Card>
               </div>
             </div>
-          )}
-        </div>
-        <br />
-        <br />
-        <br />
-      </section>
-    </>
+          </>
+        )}
+      </Container>
+    </div>
   );
 }
 

@@ -3,32 +3,38 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import { FaEye, FaEyeSlash, FaUser, FaLock } from "react-icons/fa";
 import { userLoginApi } from "../services/operations/user";
+import { Container, Card, Button, Input } from "../components/ui";
 
 function UserLogin() {
   const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  
   const validationSchema = Yup.object({
-    email: Yup.string().required("email is required"),
+    email: Yup.string()
+      .email("Invalid email address")
+      .required("Email is required"),
     password: Yup.string()
       .min(6, "Password must be at least 6 characters")
       .required("Password is required"),
   });
 
-  // Initial values
   const initialValues = {
     email: "",
     password: "",
   };
 
-  // Form submission
-  const onSubmit = async (values, { resetForm }) => {
-    await userLoginApi(values.email, values.password, navigate, dispatch);
-    resetForm();
+  const onSubmit = async (values, { resetForm, setSubmitting }) => {
+    try {
+      await userLoginApi(values.email, values.password, navigate, dispatch);
+      resetForm();
+    } finally {
+      setSubmitting(false);
+    }
   };
 
-  // Formik
   const formik = useFormik({
     initialValues,
     onSubmit,
@@ -36,80 +42,117 @@ function UserLogin() {
   });
 
   return (
-    <div className="max-w-lg mx-auto p-6 bg-white rounded-lg shadow-lg my-20 ">
-      <div className="text-center mb-8">
-        <h3 className="text-3xl font-semibold text-gray-900">User Login</h3>
-        <div className="flex justify-center items-center mt-4">
-          <div className="h-1 w-20 bg-yellow-400 rounded-full"></div>
-        </div>
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-primary-50 to-secondary-50 py-12 px-4">
+      <Container size="sm">
+        <Card className="max-w-md mx-auto">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-primary-100 rounded-full mb-4">
+              <FaUser className="text-primary-500 text-2xl" />
+            </div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              User Login
+            </h1>
+            <p className="text-gray-600">
+              Welcome back! Please login to your account
+            </p>
+          </div>
 
-      <form onSubmit={formik.handleSubmit} className="space-y-6">
-        {/* email */}
-        <div>
-          <label
-            htmlFor="email"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Email *
-          </label>
-          <input
-            type="text"
-            id="email"
-            name="email"
-            value={formik.values.email}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          {formik.touched.email && formik.errors.email && (
-            <p className="text-red-500 text-xs mt-1">{formik.errors.email}</p>
-          )}
-        </div>
-
-        {/* Password */}
-        <div>
-          <label
-            htmlFor="password"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Password *
-          </label>
-          <div className="relative">
-            <input
-              type={showPassword ? "text" : "password"}
-              id="password"
-              name="password"
-              value={formik.values.password}
+          {/* Form */}
+          <form onSubmit={formik.handleSubmit} className="space-y-5">
+            {/* Email */}
+            <Input
+              label="Email Address"
+              type="email"
+              id="email"
+              name="email"
+              placeholder="Enter your email"
+              value={formik.values.email}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              error={formik.touched.email && formik.errors.email}
+              required
+              icon={<FaUser />}
+              iconPosition="left"
             />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute top-1/2 right-4 transform -translate-y-1/2 text-gray-500"
-            >
-              {showPassword ? "Hide" : "Show"}
-            </button>
-          </div>
-          {formik.touched.password && formik.errors.password && (
-            <p className="text-red-500 text-xs mt-1">
-              {formik.errors.password}
-            </p>
-          )}
-        </div>
-        <Link to="/register-user" className="flex justify-end text-blue-500">
-          Register User
-        </Link>
 
-        <button
-          type="submit"
-          className="w-full py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          Login Member
-        </button>
-      </form>
+            {/* Password */}
+            <div>
+              <Input
+                label="Password"
+                type={showPassword ? "text" : "password"}
+                id="password"
+                name="password"
+                placeholder="Enter your password"
+                value={formik.values.password}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                error={formik.touched.password && formik.errors.password}
+                required
+                icon={<FaLock />}
+                iconPosition="left"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-[38px] text-gray-500 hover:text-gray-700"
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </button>
+            </div>
+
+            {/* Links */}
+            <div className="flex items-center justify-between text-sm">
+              <Link
+                to="/forgot-password"
+                className="text-primary-500 hover:text-primary-600 font-medium"
+              >
+                Forgot Password?
+              </Link>
+              <Link
+                to="/register-user"
+                className="text-primary-500 hover:text-primary-600 font-medium"
+              >
+                Register User
+              </Link>
+            </div>
+
+            {/* Submit Button */}
+            <Button
+              type="submit"
+              variant="primary"
+              size="lg"
+              fullWidth
+              loading={formik.isSubmitting}
+              disabled={formik.isSubmitting}
+            >
+              {formik.isSubmitting ? "Logging in..." : "Login"}
+            </Button>
+
+            {/* Divider */}
+            <div className="relative my-6">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-300"></div>
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-white text-gray-500">
+                  Don't have an account?
+                </span>
+              </div>
+            </div>
+
+            {/* Member Login Link */}
+            <Button
+              variant="outline"
+              size="lg"
+              fullWidth
+              to="/login"
+            >
+              Member Login
+            </Button>
+          </form>
+        </Card>
+      </Container>
     </div>
   );
 }

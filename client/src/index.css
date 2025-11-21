@@ -1,40 +1,131 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Modern Reset */
 * {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
-.form-input {
-  outline: 1px;
-  outline: #2b06ff;
-
-  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0
-    var(--tw-ring-offset-width) var(--tw-ring-offset-color);
-  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0
-    calc(3px + var(--tw-ring-offset-width)) var(--tw-ring-color);
-  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow),
-    var(--tw-shadow, 0 0 #0000);
-
-  padding: 10px;
-  text-align: start !important;
-  border-radius: 10px;
+/* Root Variables */
+:root {
+  --gradient-primary: linear-gradient(135deg, #d946ef 0%, #f97316 100%);
+  --gradient-secondary: linear-gradient(135deg, #22c55e 0%, #3b82f6 100%);
+  --gradient-sunset: linear-gradient(135deg, #f97316 0%, #d946ef 100%);
+  --gradient-ocean: linear-gradient(135deg, #3b82f6 0%, #22c55e 100%);
 }
 
-.product label {
-  font-weight: 600;
+/* Base Styles */
+@layer base {
+  body {
+    @apply font-body text-dark-900 antialiased;
+    font-feature-settings: 'kern' 1, 'liga' 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display font-bold;
+    letter-spacing: -0.02em;
+  }
+
+  h1 {
+    @apply text-5xl md:text-6xl lg:text-7xl;
+  }
+
+  h2 {
+    @apply text-4xl md:text-5xl;
+  }
+
+  h3 {
+    @apply text-3xl md:text-4xl;
+  }
+
+  h4 {
+    @apply text-2xl md:text-3xl;
+  }
+
+  h5 {
+    @apply text-xl md:text-2xl;
+  }
+
+  h6 {
+    @apply text-lg md:text-xl;
+  }
 }
 
-.scrollbar-hide {
-  -ms-overflow-style: none; /* Internet Explorer 10+ */
-  scrollbar-width: none; /* Firefox */
+/* Custom Components */
+@layer components {
+  .form-input {
+    @apply px-4 py-3 border-2 border-dark-200 rounded-xl transition-all duration-300;
+    @apply focus:outline-none focus:ring-4 focus:ring-primary-100 focus:border-primary-500;
+    @apply hover:border-dark-300;
+  }
+
+  .btn-gradient {
+    @apply bg-gradient-to-r from-primary-500 to-accent-500;
+    @apply hover:from-primary-600 hover:to-accent-600;
+    @apply text-white font-semibold px-6 py-3 rounded-xl;
+    @apply transition-all duration-300 transform hover:scale-105;
+    @apply shadow-lg hover:shadow-glow;
+  }
+
+  .card-hover {
+    @apply transition-all duration-300 transform;
+    @apply hover:-translate-y-2 hover:shadow-2xl;
+  }
+
+  .gradient-text {
+    @apply bg-gradient-to-r from-primary-500 to-accent-500 bg-clip-text text-transparent;
+  }
+
+  .glass-effect {
+    @apply bg-white/80 backdrop-blur-lg border border-white/20;
+  }
 }
 
-.scrollbar-hide::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Edge */
+/* Utilities */
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .animate-gradient {
+    background-size: 200% 200%;
+    animation: gradient 8s ease infinite;
+  }
 }
 
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-dark-100;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gradient-to-b from-primary-500 to-accent-500 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply from-primary-600 to-accent-600;
+}
+
+/* Animations */
 @keyframes scroll-left-to-right {
   0% {
     transform: translateX(0);
@@ -53,6 +144,24 @@
   }
 }
 
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
 .scroll-left-to-right {
   display: flex;
   animation: scroll-left-to-right 10s linear infinite;
@@ -66,4 +175,34 @@
 .scroll-container {
   overflow: hidden;
   white-space: nowrap;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite;
+  background: linear-gradient(
+    to right,
+    #f0f0f0 0%,
+    #e0e0e0 20%,
+    #f0f0f0 40%,
+    #f0f0f0 100%
+  );
+  background-size: 1000px 100%;
+}
+
+/* Selection */
+::selection {
+  @apply bg-primary-200 text-primary-900;
+}
+
+::-moz-selection {
+  @apply bg-primary-200 text-primary-900;
+}
+
+/* Focus Visible */
+:focus-visible {
+  @apply outline-none ring-4 ring-primary-500 ring-offset-2;
 }

@@ -1,16 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { fetchProductDetails } from "../services/operations/product";
 import { Link, useParams } from "react-router-dom";
-import "./ProductDetails.css";
 import { displayMoney, calculateDiscount } from "../helper/utills";
 import useActive from "../hooks/useActive";
-import { MdOutlineDone } from "react-icons/md";
-import { IoClose } from "react-icons/io5";
-import { IoIosAdd, IoIosRemove } from "react-icons/io";
-
 import { MdOutlineLocalShipping } from "react-icons/md";
 import { addToCart } from "../redux/cartSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { Container, Button, Badge, Spinner, Card } from "../components/ui";
+import { QuantitySelector, PriceDisplay, SizeSelector } from "../components/features";
 
 function ProductDetails() {
   const [product, setProduct] = useState(null);
@@ -80,11 +77,7 @@ function ProductDetails() {
   }, [productID]);
 
   if (loading || !product) {
-    return (
-      <div className="grid min-h-[calc(100vh-3.5rem)] place-items-center">
-        <div className="spinner"></div>
-      </div>
-    );
+    return <Spinner fullScreen size="lg" />;
   }
 
   const isProductInCart = cart.some(
@@ -100,131 +93,156 @@ function ProductDetails() {
   const savedDiscount = calculateDiscount(discountedPrice, product?.price);
 
   return (
-    <>
-      <div className="prodcutDetialsContainer min-w-screen ">
-        <section className="section" id="product_details">
-          <div className="product_container">
-            <div className="wrapper prod_details_wrapper">
-              {/*=== Product Details Left-content ===*/}
-              <div className="prod_details_left_col">
-                <div className="prod_details_tabs">
-                  {product.images &&
-                    product.images.map((img, i) => (
-                      <div
-                        key={i}
-                        className={`tabs_item ${activeClass(i)}`}
-                        onClick={() => handlePreviewImg(product.images, i)}
-                      >
-                        <img src={img.url} alt="product-img" />
-                      </div>
-                    ))}
-                </div>
-                <figure className="prod_details_img">
-                  <img src={previewImg} alt="product-img" />
-                </figure>
+    <div className="min-h-screen bg-gray-50 py-8">
+      <Container>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Left Column - Images */}
+          <div className="space-y-4">
+            {/* Main Image */}
+            <Card padding="none" className="overflow-hidden">
+              <div className="aspect-square bg-white">
+                <img
+                  src={previewImg}
+                  alt={product.title}
+                  className="w-full h-full object-cover"
+                />
               </div>
-              {/*=== Product Details Right-content ===*/}
-              <div className="prod_details_right_col_001">
-                <div className="flex justify-between">
-                  <div>
-                    <h1 className="prod_details_title">{product.title}</h1>
-                    <h4 className="prod_details_info">
-                      {product.description && product.description}
-                    </h4>
-                  </div>
-                </div>
+            </Card>
 
-                <div className="prod_details_price">
-                  <div className="price_box">
-                    {!token || user?.role === "user" ? (
-                      <p className="font-montserrat lg:text-sm text-gray-600">
-                        {product.highPrice}
-                      </p>
-                    ) : (
-                      <>
-                        <h2 className="price">
-                          {newPrice} &nbsp;
-                          <small className="del_price">
-                            <del>{oldPrice}</del>
-                          </small>
-                        </h2>
-                        <p className="saved_price">
-                          You save: {savedPrice} ({savedDiscount}%)
-                        </p>
-                        <span className="tax_txt">(With Shipping Charges)</span>
-                      </>
-                    )}
-                  </div>
-                </div>
-
-                <div className="flex flex-wrap gap-2 mt-1">
-                  {product.sizes?.split(",").map((size, index) => (
-                    <button
-                      key={index}
-                      className="px-4 py-2 text-sm font-semibold border border-gray-400 rounded-lg bg-gray-100 hover:bg-gray-200 transition"
-                    >
-                      {size.trim()}
-                    </button>
-                  ))}
-                </div>
-                <div className="seprator2"></div>
-
-                <div className="productDescription">
-                  <div className="deliveryText">
-                    <MdOutlineLocalShipping />
-                    We deliver! Just say when and how.
-                  </div>
-                </div>
-                <div className="seprator2"></div>
-
-                <div className="prod_details_additem mt-2">
-                  <h5>QTY :</h5>
-                  <div className="additem">
-                    <button
-                      onClick={deceraseQuantityHandler}
-                      className="additem_decrease  text-white"
-                    >
-                      <IoIosRemove />
-                    </button>
-                    <input
-                      readOnly
-                      type="number"
-                      value={quantity}
-                      className="input"
-                    />
-                    <button
-                      onClick={increaseQuantityHandler}
-                      className="additem_increase "
-                    >
-                      <IoIosAdd />
-                    </button>
-                  </div>
-
-                  {!isProductInCart ? (
-                    <button
-                      className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                      onClick={handleAddItem}
-                      disabled={product.stock <= 0}
-                    >
-                      Add to cart
-                    </button>
-                  ) : (
-                    <Link
-                      className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                      to={"/cart"}
-                    >
-                      Go to cart
-                    </Link>
-                  )}
-                </div>
-              </div>
+            {/* Thumbnail Images */}
+            <div className="grid grid-cols-4 gap-3">
+              {product.images &&
+                product.images.map((img, i) => (
+                  <Card
+                    key={i}
+                    padding="none"
+                    className={`cursor-pointer overflow-hidden transition-all ${
+                      activeClass(i)
+                        ? "ring-2 ring-primary-500"
+                        : "hover:ring-2 hover:ring-gray-300"
+                    }`}
+                    onClick={() => handlePreviewImg(product.images, i)}
+                  >
+                    <div className="aspect-square bg-white">
+                      <img
+                        src={img.url}
+                        alt={`${product.title} ${i + 1}`}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  </Card>
+                ))}
             </div>
           </div>
-        </section>
-      </div>
-      <br />
-      <br />
-    </>
+
+          {/* Right Column - Product Info */}
+          <div className="space-y-6">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                {product.title}
+              </h1>
+              {product.description && (
+                <p className="text-gray-600 leading-relaxed">
+                  {product.description}
+                </p>
+              )}
+            </div>
+
+            {/* Price Section */}
+            <Card>
+              {!token || user?.role === "user" ? (
+                <div className="text-2xl font-bold text-gray-900">
+                  {displayMoney(product.highPrice)}
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  <PriceDisplay
+                    price={product.price}
+                    originalPrice={product.highPrice}
+                    size="lg"
+                    showDiscount
+                  />
+                  <p className="text-sm text-gray-500">
+                    (Including Shipping Charges)
+                  </p>
+                </div>
+              )}
+            </Card>
+
+            {/* Sizes */}
+            {product.sizes && (
+              <div>
+                <h3 className="text-sm font-semibold text-gray-700 mb-3">
+                  Available Sizes
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {product.sizes.split(",").map((size, index) => (
+                    <Badge
+                      key={index}
+                      variant="default"
+                      size="lg"
+                      className="px-4 py-2 cursor-pointer hover:bg-primary-100 hover:text-primary-700 transition-colors"
+                    >
+                      {size.trim()}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Delivery Info */}
+            <Card variant="outlined" className="bg-blue-50 border-blue-200">
+              <div className="flex items-center gap-3 text-blue-700">
+                <MdOutlineLocalShipping size={24} />
+                <p className="font-medium">
+                  We deliver! Just say when and how.
+                </p>
+              </div>
+            </Card>
+
+            {/* Quantity & Add to Cart */}
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Quantity
+                </label>
+                <QuantitySelector
+                  quantity={quantity}
+                  onIncrease={increaseQuantityHandler}
+                  onDecrease={deceraseQuantityHandler}
+                  max={product.stock}
+                  size="lg"
+                />
+              </div>
+
+              <div className="flex gap-3">
+                {!isProductInCart ? (
+                  <Button
+                    variant="primary"
+                    size="lg"
+                    fullWidth
+                    onClick={handleAddItem}
+                    disabled={product.stock <= 0}
+                  >
+                    {product.stock <= 0 ? "Out of Stock" : "Add to Cart"}
+                  </Button>
+                ) : (
+                  <Button variant="success" size="lg" fullWidth to="/cart">
+                    Go to Cart
+                  </Button>
+                )}
+              </div>
+
+              {product.stock > 0 && product.stock < 10 && (
+                <p className="text-sm text-orange-600 font-medium">
+                  Only {product.stock} items left in stock!
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+      </Container>
+    </div>
   );
 }
 

@@ -10,6 +10,7 @@ const {
   ADD_PRODUCT_API,
   EDIT_PRODUCT_API,
   DELETE_PRODUCT_API,
+  DASHBOARD_STATS_API,
 
 
 
@@ -43,25 +44,43 @@ export const createProduct = async (data, token) => {
 
 
 
-export const editProduct = async (data, token) => {
-
-  const toastId = toast.loading("Loading...")
+export const updateProduct = async (data, token) => {
+  const toastId = toast.loading("Updating product...")
   try {
     const response = await apiConnector("POST", EDIT_PRODUCT_API, data, {
       "Content-Type": "multipart/form-data",
       Authorization: `Bearer ${token}`,
     })
-    console.log("EDIT COURSE API RESPONSE............", response)
+    console.log("UPDATE PRODUCT API RESPONSE............", response)
     if (!response?.data?.success) {
-      throw new Error("Could Not Update Course Details")
+      throw new Error("Could Not Update Product Details")
     }
-    toast.success("Course Details Updated Successfully")
+    toast.success("Product Updated Successfully")
+    return response.data
 
   } catch (error) {
-    console.log("EDIT COURSE API ERROR............", error)
-    toast.error(error.message)
+    console.log("UPDATE PRODUCT API ERROR............", error)
+    toast.error(error.response?.data?.message || error.message)
   }
   toast.dismiss(toastId)
+}
+
+// Dashboard Stats API
+export const getDashboardStats = async (token) => {
+  try {
+    const response = await apiConnector("GET", DASHBOARD_STATS_API, null, {
+      Authorization: `Bearer ${token}`,
+    })
+    
+    if (!response?.data?.success) {
+      throw new Error("Could Not Fetch Dashboard Stats")
+    }
+    
+    return response.data.data
+  } catch (error) {
+    console.log("DASHBOARD STATS API ERROR............", error)
+    return null
+  }
 }
 
 export const deleteProduct = async (id, token) => {

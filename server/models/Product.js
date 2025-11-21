@@ -31,10 +31,25 @@ const productSchema = new mongoose.Schema(
     ],
     sizes: {
       type: String,
-    }
-
-    ,
-
+    },
+    // SEO Fields
+    slug: {
+      type: String,
+      unique: true,
+      sparse: true,
+    },
+    metaTitle: {
+      type: String,
+    },
+    metaDescription: {
+      type: String,
+    },
+    keywords: {
+      type: String,
+    },
+    tags: {
+      type: String,
+    },
   },
   { timestamps: true }
 );

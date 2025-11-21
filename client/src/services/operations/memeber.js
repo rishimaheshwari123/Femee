@@ -360,3 +360,21 @@ export const deleteMemberApi = async (id) => {
     return false;
   }
 }
+
+export const getReferralTreeApi = async (id) => {
+  try {
+    const BASE_URL = process.env.REACT_APP_BASE_URL;
+    const response = await apiConnector("GET", `${BASE_URL}/auth/referral-tree/${id}`);
+    if (!response?.data?.success) {
+      throw new Error(toast.error(response?.data?.message))
+    }
+    return {
+      upline: response?.data?.upline || [],
+      downline: response?.data?.downline || []
+    };
+  } catch (error) {
+    console.log(error)
+    toast.error("Failed to fetch referral tree");
+    return { upline: [], downline: [] };
+  }
+}

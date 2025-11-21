@@ -114,93 +114,101 @@ const Sidebar = () => {
   return (
     <div
       ref={sidebarRef}
-      className={`fixed h-screen top-0  ${
-        isCollapsed ? "w-16 " : "w-64"
-      } bg-customGreen transition-all duration-300 z-50 text-gray-900`}
+      className={`fixed h-screen top-0 ${
+        isCollapsed ? "w-20" : "w-72"
+      } bg-gradient-to-b from-green-600 via-green-700 to-green-800 shadow-2xl transition-all duration-300 z-50 text-white`}
     >
-      <div className="flex items-center justify-between p-4 ">
+      <div className="flex items-center justify-between p-4 border-b border-green-500/30">
         {/* Logo */}
         <div
-          className={`${isCollapsed ? "hidden" : "block"}  font-bold text-xl`}
+          className={`${isCollapsed ? "hidden" : "flex items-center gap-3"} font-bold text-xl`}
         >
           <img
             src={logo}
             alt="Logo"
-            className="w-[50px] h-[50px] lg:w-12 lg:h-12 object-cover rounded-full"
+            className="w-12 h-12 object-cover rounded-full ring-2 ring-white/50"
           />
+          <span className="text-white font-semibold">FemmeCure</span>
         </div>
 
         {/* Toggle Button */}
         <button
           onClick={handleToggle}
-          className="bg-transparent border-none w-8 h-8 flex justify-center items-center cursor-pointer text-white"
+          className="bg-white/10 hover:bg-white/20 backdrop-blur-sm border-none w-10 h-10 flex justify-center items-center cursor-pointer text-white rounded-lg transition-all duration-200"
         >
           {isCollapsed ? <CiMenuFries size={22} /> : <RxCross1 size={22} />}
         </button>
       </div>
 
       {/* Navigation Links */}
-      <ul className="text-gray-900 list-none flex flex-col p-4 mb-14 overflow-y-auto max-h-[65vh] scrollbar-hide">
+      <ul className="list-none flex flex-col p-3 mb-14 overflow-y-auto max-h-[65vh] scrollbar-hide space-y-1">
         {navItems.map((item, index) => (
           <NavLink
             key={index}
             to={item.to}
             className={({ isActive }) =>
-              `text-gray-800 font-semibold  py-4 flex items-center hover:border-r-4 hover:border-black ${
-                isActive ? "border-r-4 border-white" : ""
+              `group relative flex items-center py-3 px-3 rounded-xl transition-all duration-200 ${
+                isActive 
+                  ? "bg-white text-green-700 shadow-lg" 
+                  : "text-white/90 hover:bg-white/10 hover:text-white"
               }`
             }
           >
-            <div className="text-2xl  ">{item.icon}</div>
+            <div className={`text-2xl ${isCollapsed ? "mx-auto" : ""}`}>
+              {item.icon}
+            </div>
             <span
-              className={`ml-4 text-xl ${isCollapsed ? "hidden" : "block"}`}
+              className={`ml-4 font-medium ${isCollapsed ? "hidden" : "block"}`}
             >
               {item.label}
             </span>
+            {!isCollapsed && (
+              <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity">
+                →
+              </div>
+            )}
           </NavLink>
         ))}
       </ul>
 
       {/* User and Logout Section */}
-      <div className="absolute bottom-10 left-2 right-2 overflow-hidden mt-10">
-        <div
-          className={`flex items-center justify-center w-full ${
+      <div className="absolute bottom-4 left-3 right-3 space-y-2">
+        <Link
+          to={`${user?.role}/profile`}
+          className={`flex items-center justify-center w-full transition-all duration-200 ${
             isCollapsed
-              ? "w-11 h-11 rounded-full bg-slate-400"
-              : "bg-slate-400 py-2 px-4 rounded-lg"
+              ? "w-14 h-14 rounded-full bg-white/20 hover:bg-white/30 mx-auto"
+              : "bg-white/20 hover:bg-white/30 backdrop-blur-sm py-3 px-4 rounded-xl"
           }`}
         >
-          <div className="cursor-pointer flex items-center justify-center text-black">
+          <div className="cursor-pointer flex items-center justify-center text-white">
             {isCollapsed ? (
-              <Link to={`${user?.role}/profile`}>
-                <AiOutlineUser size={20} />
-              </Link>
+              <AiOutlineUser size={24} />
             ) : (
-              <span className="text-xl">
-                <Link
-                  to={`${user?.role}/profile`}
-                  className="cursor-pointer flex items-center justify-center text-black"
-                >
-                  My Profile
-                </Link>
-              </span>
+              <div className="flex items-center gap-3 w-full">
+                <AiOutlineUser size={24} />
+                <div className="flex-1">
+                  <p className="font-semibold text-sm">My Profile</p>
+                  <p className="text-xs text-white/70">{user?.userName}</p>
+                </div>
+              </div>
             )}
           </div>
-        </div>
+        </Link>
 
         <button
           onClick={handleLogout}
-          className={`bg-red-600 text-white text-xl flex items-center justify-center mt-2 ${
+          className={`bg-red-500 hover:bg-red-600 text-white flex items-center justify-center transition-all duration-200 ${
             isCollapsed
-              ? "w-12 h-12 rounded-full"
-              : "py-2 px-4 w-full rounded-lg"
+              ? "w-14 h-14 rounded-full mx-auto"
+              : "py-3 px-4 w-full rounded-xl"
           }`}
         >
           {isCollapsed ? (
-            <MdLogout />
+            <MdLogout size={24} />
           ) : (
-            <span className="flex gap-1 items-center text-xl">
-              <MdLogout /> Logout
+            <span className="flex gap-2 items-center font-semibold">
+              <MdLogout size={20} /> Logout
             </span>
           )}
         </button>

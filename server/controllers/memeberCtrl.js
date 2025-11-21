@@ -145,15 +145,43 @@ const getAllMemberCtrl = async (req, res) => {
     const members = await memberModel.find()
       .populate({
         path: "parent",
-        select: "fName lName"
-
-
+        select: "fName lName userName"
       })
-      .populate("child").exec();
+      .populate({
+        path: "child",
+        select: "fName lName userName"
+      })
+      .exec();
+
+    // Add referral chain info to each member
+    const membersWithChain = await Promise.all(
+      members.map(async (member) => {
+        const memberObj = member.toObject();
+        
+        // Get downline count (all children recursively)
+        const downlineCount = await getDownlineCount(member._id);
+        
+        return {
+          ...memberObj,
+          downlineCount,
+          parentInfo: member.parent ? {
+            id: member.parent._id,
+            name: `${member.parent.fName} ${member.parent.lName}`,
+            userName: member.parent.userName
+          } : null,
+          childInfo: member.child.map(c => ({
+            id: c._id,
+            name: `${c.fName} ${c.lName}`,
+            userName: c.userName
+          }))
+        };
+      })
+    );
+
     return res.status(200).json({
       success: true,
-      members
-    })
+      members: membersWithChain
+    });
   } catch (error) {
     console.error(error);
     return res.status(500).json({
@@ -162,6 +190,25 @@ const getAllMemberCtrl = async (req, res) => {
     });
   }
 };
+
+// Helper function to get downline count
+async function getDownlineCount(userId) {
+  let count = 0;
+  
+  async function countChildren(id) {
+    const user = await memberModel.findById(id).select('child').lean();
+    if (!user || !user.child || user.child.length === 0) return;
+    
+    count += user.child.length;
+    
+    for (let childId of user.child) {
+      await countChildren(childId);
+    }
+  }
+  
+  await countChildren(userId);
+  return count;
+}
 
 const memberProfileCtrl = async (req, res) => {
   try {
@@ -354,4 +401,82 @@ const updatePassword = async (req, res) => {
     });
   }
 };
-module.exports = { registerMemberCtrl, loginMemberCtrl, getAllMemberCtrl, verifyMemberCtrl, updateTierCtrl, memberProfileCtrl, updateMemberProfileCtrl, deleteMemberCtrl, updatePassword };
+
+// Get Complete Referral Tree (Upline + Downline)
+const getReferralTreeCtrl = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Get upline (parent chain)
+    const upline = await getUpline(id);
+
+    // Get downline (children tree)
+    const downline = await getDownline(id);
+
+    return res.status(200).json({
+      success: true,
+      upline,
+      downline
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong in getting referral tree",
+    });
+  }
+};
+
+// Get Upline (Parent → Parent → Parent...)
+async function getUpline(userId) {
+  const result = [];
+  let current = await memberModel.findById(userId).lean();
+
+  while (current && current.parent) {
+    const parent = await memberModel.findById(current.parent).lean();
+    if (!parent) break;
+
+    result.push({
+      id: parent._id,
+      name: `${parent.fName} ${parent.lName}`,
+      userName: parent.userName,
+      tier: parent.tier
+    });
+
+    current = parent;
+  }
+
+  return result;
+}
+
+// Get Downline (All children recursively with levels)
+async function getDownline(userId) {
+  const result = [];
+
+  async function fetchChildren(id, level = 0) {
+    const user = await memberModel.findById(id).lean();
+    if (!user) return;
+
+    if (level > 0) {
+      result.push({
+        id: user._id,
+        name: `${user.fName} ${user.lName}`,
+        userName: user.userName,
+        tier: user.tier,
+        level,
+        childCount: user.child ? user.child.length : 0
+      });
+    }
+
+    if (user.child && user.child.length > 0) {
+      for (let childId of user.child) {
+        await fetchChildren(childId, level + 1);
+      }
+    }
+  }
+
+  await fetchChildren(userId);
+  return result;
+}
+
+module.exports = { registerMemberCtrl, loginMemberCtrl, getAllMemberCtrl, verifyMemberCtrl, updateTierCtrl, memberProfileCtrl, updateMemberProfileCtrl, deleteMemberCtrl, updatePassword, getReferralTreeCtrl };

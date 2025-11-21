@@ -8,7 +8,9 @@ const {
   createProduct,
   getAllProduct,
   getProductDetails,
-  deleteProduct
+  deleteProduct,
+  updateProduct,
+  getDashboardStats
 } = require("../controllers/productCtrl");
 
 
@@ -19,6 +21,7 @@ const {
 
 
 router.post("/create",auth, createProduct);
+router.post("/update",auth, updateProduct);
 router.post("/delete",auth, deleteProduct);
 router.post("/getProductDetails", getProductDetails);
 router.get("/all-product", getAllProduct);
@@ -27,6 +30,7 @@ router.get("/all-product", getAllProduct);
 //admin
 router.get("/adminGetOrder",auth, getAllOrders);
 router.post("/updateOrder",auth, updateOrderStatus);
+router.get("/dashboard-stats",auth, getDashboardStats);
 
 // export all router
 module.exports = router;

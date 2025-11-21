@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
-import Navbar from "./components/comman/Navbar";
-import Footer from "./components/comman/Footer";
 import OpenRoute from "./components/Admin/auth/OpenRoute";
 import BecomeMembers from "./pages/BecomeMembers";
 import MemberLogin from "./pages/MemberLogin";
@@ -19,13 +17,13 @@ import GetGallery from "./components/Admin/pages/GetGallery";
 import Gallery from "./pages/Gallery";
 import AddProduct from "./components/Admin/Product/AddProduct";
 import AllProduct from "./components/Admin/Product/AllProduct";
+import EditProduct from "./components/Admin/Product/EditProduct";
 import { getAllProduct } from "./services/operations/product";
 import Shop from "./pages/Shop";
 import ProductDetails from "./pages/ProductDetails";
 import CartMain from "./pages/CartMain";
 import CheckoutForm from "./components/core/Cart/CheckoutForm";
 import { setCheckout } from "./redux/paymentSlice";
-import Modal from "./components/core/Cart/Modal";
 import Orders from "./components/Admin/Product/Orders";
 import MyOrder from "./pages/MyOrder";
 import OrdersForHierarchy from "./components/Test";
@@ -39,22 +37,16 @@ import UpdatePassword from "./pages/UpdatePassword";
 import ForgotPassword from "./pages/ForgotPassword";
 import UserLogin from "./pages/UserLogin";
 import RegisterUser from "./pages/RegisterUser";
-import SubNavbar from "./components/comman/SubNavbar";
+
+// New Layout Components
+import MainLayout from "./components/layout/MainLayout";
+import Modal from "./components/ui/Modal";
 
 const App = () => {
   const { user } = useSelector((state) => state.auth);
   const { checkout } = useSelector((state) => state.payment);
-  const [isOpen, setIsOpen] = useState(true);
-
-  const handleClose = () => {
-    setIsOpen(false);
-  };
-  const location = useLocation();
+  const [isPopupOpen, setIsPopupOpen] = useState(true);
   const dispatch = useDispatch();
-  // Paths where Navbar and Footer should not be shown
-  const hideNavbarAndFooter =
-    location.pathname.startsWith("/admin") ||
-    location.pathname.startsWith("/member");
 
   const getAll = async () => {
     await dispatch(getAllProduct());
@@ -63,12 +55,11 @@ const App = () => {
   useEffect(() => {
     getAll();
   }, []);
+
   return (
     <div>
-      {isOpen && <PopupModal />}
-      {!hideNavbarAndFooter && <SubNavbar />}
-      {!hideNavbarAndFooter && <Navbar />}
-      <Routes>
+      <MainLayout>
+        <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/h1" element={<OrdersForHierarchy />} />
         <Route path="/about" element={<About />} />
@@ -180,6 +171,15 @@ const App = () => {
                   </PrivateRoute>
                 }
               />
+
+              <Route
+                path="admin/edit-product/:productId"
+                element={
+                  <PrivateRoute>
+                    <EditProduct />
+                  </PrivateRoute>
+                }
+              />
             </>
           )}
           {user?.role === "member" && (
@@ -194,24 +194,28 @@ const App = () => {
             </>
           )}
         </Route>
-      </Routes>
+        </Routes>
+      </MainLayout>
 
+      {/* Checkout Modal */}
       {checkout && (
         <PrivateRoute>
           <Modal
-            show={checkout}
-            handleClose={() => dispatch(setCheckout(false))}
+            isOpen={checkout}
+            onClose={() => dispatch(setCheckout(false))}
+            title="Checkout"
+            size="lg"
           >
             <CheckoutForm handleClose={() => dispatch(setCheckout(false))} />
           </Modal>
         </PrivateRoute>
       )}
 
-      {!hideNavbarAndFooter && <Footer />}
+      {/* Popup Modal */}
       <PopupModal
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-        handleClose={handleClose}
+        isOpen={isPopupOpen}
+        setIsOpen={setIsPopupOpen}
+        handleClose={() => setIsPopupOpen(false)}
       />
     </div>
   );

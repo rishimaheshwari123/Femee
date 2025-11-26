@@ -92,3 +92,17 @@ export const ratingEndpoints = {
   UPDATE_RATING_API: BASE_URL + "/rating/edit",
   GETALL_RATING_API: BASE_URL + "/rating/getAll",
 }
+
+// PAIR REWARD SYSTEM APIS
+export const pairEndpoints = {
+  // Member APIs
+  SUBMIT_PAIR_REQUEST: BASE_URL + "/pair/submit",
+  GET_MY_PAIR_REQUESTS: BASE_URL + "/pair/my-requests",
+  GET_PAIR_DASHBOARD: BASE_URL + "/pair/dashboard",
+
+  // Admin APIs
+  GET_ALL_PAIR_REQUESTS_ADMIN: BASE_URL + "/pair/admin/all",
+  GET_PAIR_REQUEST_BY_ID_ADMIN: BASE_URL + "/pair/admin",
+  APPROVE_PAIR_REQUEST_ADMIN: BASE_URL + "/pair/admin/approve",
+  REJECT_PAIR_REQUEST_ADMIN: BASE_URL + "/pair/admin/reject",
+}

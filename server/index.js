@@ -44,6 +44,7 @@ app.use("/api/v1/product", productsRoutes);
 app.use("/api/v1/order", orderRoutes);
 app.use("/api/v1/rating", require("./routes/ratingReview"))
 app.use("/api", require("./routes/mlm"))
+app.use("/api/v1/pair", require("./routes/pairRoutes"))
 
 
 

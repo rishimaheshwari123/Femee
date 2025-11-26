@@ -15,6 +15,7 @@ import { GrGallery } from "react-icons/gr";
 import { MdOutlineProductionQuantityLimits } from "react-icons/md";
 import { AiFillProduct } from "react-icons/ai";
 import { BiPurchaseTag } from "react-icons/bi";
+import { FaTrophy, FaGift, FaUsers } from "react-icons/fa";
 
 const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(
@@ -91,6 +92,11 @@ const Sidebar = () => {
             icon: <BiPurchaseTag />,
             label: "Orders",
           },
+          {
+            to: "/admin/pair-requests",
+            icon: <FaTrophy className="text-yellow-300" />,
+            label: "Pair Requests",
+          },
         ]
       : []),
     ...(user?.role === "member"
@@ -106,6 +112,16 @@ const Sidebar = () => {
             to: "/member/my-orders",
             icon: <BiPurchaseTag />,
             label: "My Orders",
+          },
+          {
+            to: "/member/pair-rewards",
+            icon: <FaGift className="text-yellow-300" />,
+            label: "Pair Rewards",
+          },
+          {
+            to: "/member/all-members-pairs",
+            icon: <FaUsers className="text-blue-300" />,
+            label: "Members with Pairs",
           },
         ]
       : []),

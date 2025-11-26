@@ -42,6 +42,16 @@ import RegisterUser from "./pages/RegisterUser";
 import MainLayout from "./components/layout/MainLayout";
 import Modal from "./components/ui/Modal";
 
+// Pair Reward System Components
+import PairDashboard from "./components/Admin/pages/PairDashboard";
+import AdminPairRequests from "./components/Admin/pages/AdminPairRequests";
+import GetAllMembersWithPairs from "./components/Admin/pages/GetAllMembersWithPairs";
+
+// Enhanced Components
+import CheckoutFormEnhanced from "./components/core/Cart/CheckoutFormEnhanced";
+import MyOrderEnhanced from "./pages/MyOrderEnhanced";
+import OrdersEnhanced from "./components/Admin/Product/OrdersEnhanced";
+
 const App = () => {
   const { user } = useSelector((state) => state.auth);
   const { checkout } = useSelector((state) => state.payment);
@@ -158,7 +168,7 @@ const App = () => {
                 path="admin/orders"
                 element={
                   <PrivateRoute>
-                    <Orders />
+                    <OrdersEnhanced />
                   </PrivateRoute>
                 }
               />
@@ -180,6 +190,16 @@ const App = () => {
                   </PrivateRoute>
                 }
               />
+
+              {/* Pair Reward System - Admin */}
+              <Route
+                path="admin/pair-requests"
+                element={
+                  <PrivateRoute>
+                    <AdminPairRequests />
+                  </PrivateRoute>
+                }
+              />
             </>
           )}
           {user?.role === "member" && (
@@ -190,7 +210,25 @@ const App = () => {
                 path="/member/getAll-members"
                 element={<GetAllSubMembers />}
               />
-              <Route path="/member/my-orders" element={<MyOrder />} />
+              <Route path="/member/my-orders" element={<MyOrderEnhanced />} />
+
+              {/* Pair Reward System - Member */}
+              <Route
+                path="/member/pair-rewards"
+                element={
+                  <PrivateRoute>
+                    <PairDashboard />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/member/all-members-pairs"
+                element={
+                  <PrivateRoute>
+                    <GetAllMembersWithPairs />
+                  </PrivateRoute>
+                }
+              />
             </>
           )}
         </Route>
@@ -206,7 +244,7 @@ const App = () => {
             title="Checkout"
             size="lg"
           >
-            <CheckoutForm handleClose={() => dispatch(setCheckout(false))} />
+            <CheckoutFormEnhanced handleClose={() => dispatch(setCheckout(false))} />
           </Modal>
         </PrivateRoute>
       )}

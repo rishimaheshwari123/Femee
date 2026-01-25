@@ -140,8 +140,14 @@ const GetAllMembers = () => {
         ...(status !== "All" && { status })
       });
       
-      const response = await fetch(`${process.env.REACT_APP_BASE_URL}/auth/getAll?${queryParams}`);
+      const url = `${process.env.REACT_APP_BASE_URL}/auth/getAll?${queryParams}`;
+      console.log("Fetching members from:", url);
+      console.log("Search term:", search);
+      
+      const response = await fetch(url);
       const data = await response.json();
+      
+      console.log("API Response:", data);
       
       if (data.success) {
         setMembers(data.members);
@@ -149,8 +155,11 @@ const GetAllMembers = () => {
         setTotalPages(data.pagination.totalPages);
         setTotalMembers(data.pagination.totalMembers);
         setCurrentPage(data.pagination.currentPage);
+      } else {
+        toast.error(data.message || "Failed to fetch members");
       }
     } catch (error) {
+      console.error("Error fetching members:", error);
       toast.error("Failed to fetch members.");
     } finally {
       setLoading(false);

@@ -180,7 +180,7 @@ const BinaryTreeVisualizationEnhanced = ({
                     : 'bg-dark-100 text-dark-700 hover:bg-dark-200'
                 }`}
               >
-                Level View
+                Step View
               </button>
             </div>
           </div>
@@ -222,23 +222,23 @@ const BinaryTreeVisualizationEnhanced = ({
               </div>
               <div className="text-center">
                 <p className="text-2xl font-bold text-dark-900">{selectedRoot.levels.level1.filled}/{selectedRoot.levels.level1.capacity}</p>
-                <p className="text-sm text-dark-600">Level 1</p>
+                <p className="text-sm text-dark-600">Step 1</p>
               </div>
               <div className="text-center">
                 <p className="text-2xl font-bold text-dark-900">{selectedRoot.levels.level2.filled}/{selectedRoot.levels.level2.capacity}</p>
-                <p className="text-sm text-dark-600">Level 2</p>
+                <p className="text-sm text-dark-600">Step 2</p>
               </div>
               <div className="text-center">
                 <p className="text-2xl font-bold text-dark-900">{selectedRoot.levels.level3.filled}/{selectedRoot.levels.level3.capacity}</p>
-                <p className="text-sm text-dark-600">Level 3</p>
+                <p className="text-sm text-dark-600">Step 3</p>
               </div>
               <div className="text-center">
                 <p className="text-2xl font-bold text-dark-900">{selectedRoot.levels.level4.filled}/{selectedRoot.levels.level4.capacity}</p>
-                <p className="text-sm text-dark-600">Level 4</p>
+                <p className="text-sm text-dark-600">Step 4</p>
               </div>
               <div className="text-center">
                 <p className="text-2xl font-bold text-dark-900">{selectedRoot.levels.level5.filled}/{selectedRoot.levels.level5.capacity}</p>
-                <p className="text-sm text-dark-600">Level 5</p>
+                <p className="text-sm text-dark-600">Step 5</p>
               </div>
               <div className="text-center">
                 <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${
@@ -401,7 +401,7 @@ const TreeNode = ({ node, isExpanded, onToggle, expandedNodes, isRoot = false })
                 text-xs
                 ${isRoot ? 'text-white/80' : 'text-dark-600'}
               `}>
-                Level {node.level} • {node.position}
+                Step {node.level} • {node.position}
               </p>
             </div>
           </div>
@@ -518,7 +518,7 @@ const ListView = ({ parentChildList }) => {
           {Object.keys(groupedByLevel).sort((a, b) => a - b).map(level => (
             <div key={level}>
               <h3 className="text-lg font-semibold text-dark-900 mb-3">
-                Level {level} ({groupedByLevel[level].length} members)
+                Step {level} ({groupedByLevel[level].length} members)
               </h3>
               <div className="space-y-2">
                 {groupedByLevel[level].map((rel, index) => (
@@ -550,13 +550,13 @@ const ListView = ({ parentChildList }) => {
 };
 
 /**
- * Level View Component - Shows members organized by level
+ * Step View Component - Shows members organized by level
  */
 const LevelView = ({ levelWiseData }) => {
   return (
     <Card>
       <Card.Header>
-        <Card.Title>Level-wise Members</Card.Title>
+        <Card.Title>Step-wise Members</Card.Title>
         <Card.Description>All members organized by their level in the tree</Card.Description>
       </Card.Header>
       <Card.Body>
@@ -568,7 +568,7 @@ const LevelView = ({ levelWiseData }) => {
             return (
               <div key={level}>
                 <h3 className="text-lg font-semibold text-dark-900 mb-3">
-                  Level {level} ({members.length}/{capacity})
+                  Step {level} ({members.length}/{capacity})
                 </h3>
                 {members.length > 0 ? (
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">

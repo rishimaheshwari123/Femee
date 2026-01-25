@@ -179,13 +179,20 @@ const getAllMemberCtrl = async (req, res) => {
     
     // Search filter
     if (search) {
+      // Check if search term is a number for phone search
+      const isNumeric = /^\d+$/.test(search);
+      
       query.$or = [
         { fName: { $regex: search, $options: 'i' } },
         { lName: { $regex: search, $options: 'i' } },
         { userName: { $regex: search, $options: 'i' } },
-        { email: { $regex: search, $options: 'i' } },
-        { phone: { $regex: search, $options: 'i' } }
+        { email: { $regex: search, $options: 'i' } }
       ];
+      
+      // Only add phone search if search term is numeric
+      if (isNumeric) {
+        query.$or.push({ phone: parseInt(search) });
+      }
     }
     
     // Tier filter

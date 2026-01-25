@@ -19,8 +19,8 @@ const orderSchema = new mongoose.Schema(
     },
     user: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Memeber",
       required: true,
+      // Remove specific ref to allow both user types
     },
     shippingInfo: {
       name: {
@@ -105,6 +105,12 @@ const orderSchema = new mongoose.Schema(
     totalPrice: {
       type: String,
       required: true,
+    },
+
+    // Set number for specific products (saved at time of order)
+    setNumber: {
+      type: Number,
+      default: null
     },
 
     orderStatus: {

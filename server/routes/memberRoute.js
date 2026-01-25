@@ -1,10 +1,12 @@
 const express = require("express")
-const { loginMemberCtrl, registerMemberCtrl, getAllMemberCtrl, verifyMemberCtrl, updateTierCtrl, memberProfileCtrl, updateMemberProfileCtrl, deleteMemberCtrl, updatePassword, getReferralTreeCtrl, getMemberByUsernameCtrl } = require("../controllers/memeberCtrl")
+const { loginMemberCtrl, registerMemberCtrl, getAllMemberCtrl, verifyMemberCtrl, updateTierCtrl, memberProfileCtrl, updateMemberProfileCtrl, deleteMemberCtrl, updatePassword, getReferralTreeCtrl, getMemberByUsernameCtrl, getUserSetNumber } = require("../controllers/memeberCtrl")
 const { resetPasswordTokenCtrl, resetPasswordCtrl } = require("../controllers/resetPasswordCtrl")
 const { getAllProductTrees, getProductTree, getBinaryTreeVisualization, getTransactionHistory } = require("../controllers/dashboardCtrl")
 const { getBinaryTreeStructure } = require("../controllers/binaryTreeCtrl")
 const router = express.Router()
 
+
+const { auth } = require("../middleware/auth")
 
 router.post("/login", loginMemberCtrl)
 router.post("/register", registerMemberCtrl)
@@ -19,6 +21,9 @@ router.put("/update-password/:id", updatePassword)
 router.post("/reset-password-token", resetPasswordTokenCtrl)
 router.post("/reset-password", resetPasswordCtrl)
 router.get("/referral-tree/:id", getReferralTreeCtrl)
+
+// Get user's setNumber (protected route)
+router.get("/set-number", auth, getUserSetNumber)
 
 // Dashboard API endpoints (supports both FLAT and ROOT systems)
 router.get("/:memberId/product-trees", getAllProductTrees)

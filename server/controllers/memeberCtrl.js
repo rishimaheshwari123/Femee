@@ -616,4 +616,32 @@ const getMemberByUsernameCtrl = async (req, res) => {
   }
 };
 
-module.exports = { registerMemberCtrl, loginMemberCtrl, getAllMemberCtrl, verifyMemberCtrl, updateTierCtrl, memberProfileCtrl, updateMemberProfileCtrl, deleteMemberCtrl, updatePassword, getReferralTreeCtrl, getMemberByUsernameCtrl };
+// Get user's setNumber
+const getUserSetNumber = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    
+    const user = await memeberModel.findById(userId).select('setNumber');
+    
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found"
+      });
+    }
+    
+    return res.status(200).json({
+      success: true,
+      setNumber: user.setNumber || 0
+    });
+    
+  } catch (error) {
+    console.error("Error fetching user setNumber:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error"
+    });
+  }
+};
+
+module.exports = { registerMemberCtrl, loginMemberCtrl, getAllMemberCtrl, verifyMemberCtrl, updateTierCtrl, memberProfileCtrl, updateMemberProfileCtrl, deleteMemberCtrl, updatePassword, getReferralTreeCtrl, getMemberByUsernameCtrl, getUserSetNumber };

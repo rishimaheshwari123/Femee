@@ -4,7 +4,7 @@ import { apiConnector } from "../apiConnector"
 import { paymentEndpoints } from "../apis"
 import rzpLogo from "../../assets/femee.jpg"
 import { resetCart } from "../../redux/cartSlice"
-import { setCheckout } from "../../redux/paymentSlice"
+import { setCheckout, resetPayment } from "../../redux/paymentSlice"
 import { getReferralData, clearReferralData } from "./referral"
 
 const {
@@ -142,7 +142,12 @@ export async function verifyPayment(
   });
 
   try {
-    const response = await apiConnector(
+    // Add timeout to prevent hanging
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => reject(new Error('Request timeout - please try again')), 30000); // 30 second timeout
+    });
+
+    const apiPromise = apiConnector(
       "POST",
       PRODUCT_VERIFY_API,
       { 
@@ -156,6 +161,8 @@ export async function verifyPayment(
         Authorization: `Bearer ${token}`,
       }
     );
+
+    const response = await Promise.race([apiPromise, timeoutPromise]);
 
     // Log the response data to ensure it's coming back as expected
     console.log("VERIFY PAYMENT RESPONSE:", response.data);
@@ -171,11 +178,15 @@ export async function verifyPayment(
     // Clear referral data after successful purchase
     clearReferralData();
     
-    navigate("/");
-
-    // Dispatch actions to reset cart and update checkout state
-    dispatch(resetCart());
-    dispatch(setCheckout(false));
+    // Small delay to show success message, then reset and navigate
+    setTimeout(() => {
+      // Dispatch actions to reset cart and checkout state completely
+      dispatch(resetCart());
+      dispatch(resetPayment()); // This will reset step to 1, checkout to false, and clear addressData
+      
+      // Navigate to home page
+      navigate("/");
+    }, 1500); // 1.5 second delay
 
   } catch (error) {
     // Log the error for better debugging

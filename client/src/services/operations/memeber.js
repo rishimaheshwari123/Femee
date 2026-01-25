@@ -378,3 +378,21 @@ export const getReferralTreeApi = async (id) => {
     return { upline: [], downline: [] };
   }
 }
+
+// Get user's setNumber
+export const getUserSetNumber = async (token) => {
+  try {
+    const response = await apiConnector("GET", auth.GET_SET_NUMBER, null, {
+      Authorization: `Bearer ${token}`,
+    });
+    
+    if (!response?.data?.success) {
+      throw new Error(response?.data?.message || "Could not fetch setNumber");
+    }
+    
+    return response?.data?.setNumber;
+  } catch (error) {
+    console.log("GET SET NUMBER API ERROR:", error);
+    return 0; // Return 0 as default if error occurs
+  }
+};

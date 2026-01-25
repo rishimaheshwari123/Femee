@@ -185,6 +185,12 @@ const memeberSchema = new mongoose.Schema(
         wallet: { type: Number, default: 0 },
         totalEarnings: { type: Number, default: 0 },
 
+        // Set number for specific products (6974e56fb4cd79b66bc76118 and 6974e699b4cd79b66bc76130)
+        setNumber: {
+            type: Number,
+            default: 0
+        },
+
         token: {
             type: String,
         },

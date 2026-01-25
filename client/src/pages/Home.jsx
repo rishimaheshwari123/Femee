@@ -237,14 +237,14 @@ const Home = () => {
 
             <div data-aos="fade-left">
               <Card variant="glass" className="p-8">
-                <h3 className="text-2xl font-display font-bold mb-6 text-white">
+                <h3 className="text-2xl font-display font-bold mb-6 text-black">
                   Our Commitments
                 </h3>
                 <div className="space-y-4">
                   {benefits.map((benefit, index) => (
                     <div key={index} className="flex items-start gap-3">
-                      <FaCheckCircle className="text-green-400 text-xl flex-shrink-0 mt-1" />
-                      <span className="text-white/90">{benefit}</span>
+                      <FaCheckCircle className="text-black text-xl flex-shrink-0 mt-1" />
+                      <span className="text-black">{benefit}</span>
                     </div>
                   ))}
                 </div>
@@ -275,13 +275,13 @@ const Home = () => {
                 data-aos="zoom-in"
                 data-aos-delay={index * 100}
               >
-                <div className="text-5xl mb-4 text-white group-hover:scale-110 transition-transform">
+                <div className="text-5xl mb-4 text-black group-hover:scale-110 transition-transform">
                   {stat.icon}
                 </div>
-                <div className="text-4xl font-bold mb-2 text-white">
+                <div className="text-4xl font-bold mb-2 text-black">
                   {stat.number}
                 </div>
-                <div className="text-white/80 font-medium">
+                <div className="text-black font-medium">
                   {stat.label}
                 </div>
               </Card>

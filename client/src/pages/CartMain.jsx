@@ -16,7 +16,7 @@ function CartMain() {
   const deliveryCharge = displayMoney(0);
   const dispatch = useDispatch();
   
-  const cartDiscount = cart.map((item) => {
+  const cartDiscount = cart.map((item, index) => {
     return (item.product.highPrice - item.product.price) * item.quantity;
   });
 
@@ -25,7 +25,9 @@ function CartMain() {
   const displayTotalAmount = displayMoney(total + 0);
 
   const checkoutHandler = () => {
+    console.log("Checkout button clicked"); // Debug log
     dispatch(setCheckout(true));
+    console.log("setCheckout(true) dispatched"); // Debug log
   };
 
   return (
@@ -56,8 +58,8 @@ function CartMain() {
               <div className="lg:col-span-2">
                 <Card padding="none">
                   <div className="divide-y divide-gray-200">
-                    {cart.map((item) => (
-                      <div key={item._id} className="p-4">
+                    {cart.map((item, index) => (
+                      <div key={`${item.product?._id || item._id}-${index}`} className="p-4">
                         <CartItems {...item} />
                       </div>
                     ))}

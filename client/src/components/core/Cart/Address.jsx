@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setStep, setAddressData } from "../../../redux/paymentSlice";
+import { getUserSetNumber } from "../../../services/operations/memeber";
 import axios from "axios";
 import toast from "react-hot-toast";
 
 function Address() {
   const dispatch = useDispatch();
+  const { cart } = useSelector((state) => state.cart);
+  const { token } = useSelector((state) => state.auth);
   const [formData, setFormData] = useState({
     billingCity: "",
     billingPincode: "",
@@ -15,11 +18,52 @@ function Address() {
     phone1: "",
     phone2: "",
     utr: "",
+    setNumber: "",
   });
   const [isPincodeValid, setIsPincodeValid] = useState(false);
+  const [currentSetNumber, setCurrentSetNumber] = useState(0);
+
+  // Define the specific product IDs that require setNumber
+  const setNumberProductIds = ['6974e56fb4cd79b66bc76118', '6974e699b4cd79b66bc76130'];
+  
+  // Check if cart contains any setNumber products
+  const hasSetNumberProduct = cart.some(item => 
+    setNumberProductIds.includes(item.product._id)
+  );
+
+  // Fetch current setNumber when component mounts
+  useEffect(() => {
+    const fetchCurrentSetNumber = async () => {
+      if (hasSetNumberProduct && token) {
+        try {
+          const userSetNumber = await getUserSetNumber(token);
+          setCurrentSetNumber(userSetNumber);
+          // Pre-populate with next set number (current + 1)
+          setFormData(prev => ({
+            ...prev,
+            setNumber: (userSetNumber + 1).toString()
+          }));
+        } catch (error) {
+          console.error("Error fetching setNumber:", error);
+          setCurrentSetNumber(0);
+          setFormData(prev => ({
+            ...prev,
+            setNumber: "1"
+          }));
+        }
+      }
+    };
+
+    fetchCurrentSetNumber();
+  }, [hasSetNumberProduct, token]);
 
   const areAllFieldsFilled = () => {
-    return Object.values(formData).every((value) => value.trim() !== "");
+    const requiredFields = hasSetNumberProduct 
+      ? Object.values(formData).every((value) => value.trim() !== "")
+      : Object.entries(formData)
+          .filter(([key]) => key !== 'setNumber')
+          .every(([, value]) => value.trim() !== "");
+    return requiredFields;
   };
 
   useEffect(() => {
@@ -66,6 +110,22 @@ function Address() {
     }
     dispatch(setAddressData(formData));
     dispatch(setStep(2));
+  };
+
+  // Function to reset form data
+  const resetForm = () => {
+    setFormData({
+      billingCity: "",
+      billingPincode: "",
+      billingState: "",
+      billingCountry: "",
+      billingAddress: "",
+      phone1: "",
+      phone2: "",
+      utr: "",
+      setNumber: "",
+    });
+    setCurrentSetNumber(0);
   };
 
   return (
@@ -179,6 +239,27 @@ function Address() {
               required
             />
           </div>
+
+          {/* Show setNumber input only for specific products */}
+          {hasSetNumberProduct && (
+            <div className="mb-3">
+              <label className="block mb-1 text-gray-600">Set Number</label>
+              <input
+                type="number"
+                name="setNumber"
+                value={formData.setNumber}
+                onChange={handleChange}
+                placeholder="Enter your Set Number"
+                className="w-full border rounded px-3 py-2 outline-1 ring-1 focus:outline-none focus:ring-2 font-semibold focus:ring-blue-500 placeholder-gray-400"
+                required
+                min="1"
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                Current Set Number: <span className="font-semibold text-blue-600">{currentSetNumber}</span> | 
+                Next: <span className="font-semibold text-green-600">{currentSetNumber + 1}</span>
+              </p>
+            </div>
+          )}
         </div>
       </div>
       <div className="flex justify-center mt-">

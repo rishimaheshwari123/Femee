@@ -15,7 +15,7 @@ export const auth = {
   GET_GALLERY: BASE_URL + "/gallery/get",
   DELETE_GALLERY: BASE_URL + "/gallery/delete",
   DELETE_MEMBER: BASE_URL + "/auth/delete",
-  GET_SET_NUMBER: BASE_URL + "/auth/set-number",
+
 }
 export const user = {
   LOGIN_API: BASE_URL + "/user/login",

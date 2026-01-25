@@ -48,50 +48,37 @@ function Orders() {
 
     doc.setTextColor(0, 0, 0); // Reset color to black for the rest
 
-    // Order Information
-    doc.setFontSize(14);
-    doc.setFont("helvetica", "bold");
-    doc.text("Order Information:", 14, 30);
-
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(12);
-    doc.text(`Order Number: ${order.orderNumber || `FEME-${order._id?.slice(-6)}`}`, 14, 35);
-    doc.text(`Order Date: ${new Date(order.createdAt).toLocaleDateString('en-IN')}`, 14, 40);
-    if (order.setNumber) {
-      doc.text(`Set Number: #${order.setNumber}`, 14, 45);
-    }
-
     // Company Address (From)
     doc.setFontSize(14);
     doc.setFont("helvetica", "bold");
-    doc.text("From:", 14, order.setNumber ? 55 : 50);
+    doc.text("From:", 14, 30);
 
     doc.setFont("helvetica", "normal");
     doc.setFontSize(12);
-    doc.text("Bhopal, Madhya Pradesh", 14, order.setNumber ? 60 : 55);
-    doc.text("Contact: +91 7879523232, +91 9575227672", 14, order.setNumber ? 65 : 60);
+    doc.text("Bhopal, Madhya Pradesh", 14, 35);
+    doc.text("Contact: +91 7879523232, +91 9575227672", 14, 40);
 
     // Shipping Info Section (To)
     doc.setFontSize(14);
     doc.setFont("helvetica", "bold");
-    doc.text("To:", 14, order.setNumber ? 75 : 70);
+    doc.text("To:", 14, 50);
 
     doc.setFont("helvetica", "normal");
     doc.setFontSize(12);
-    doc.text(order.shippingInfo?.name ?? "N/A", 14, order.setNumber ? 80 : 75);
-    doc.text(order.shippingInfo?.address ?? "N/A", 14, order.setNumber ? 85 : 80);
+    doc.text(order.shippingInfo?.name ?? "N/A", 14, 55);
+    doc.text(order.shippingInfo?.address ?? "N/A", 14, 60);
     doc.text(
       `${order.shippingInfo?.city ?? "N/A"}, ${
         order.shippingInfo?.state ?? "N/A"
       } - ${order.shippingInfo?.pincode ?? "N/A"}`,
       14,
-      order.setNumber ? 90 : 85
+      65
     );
-    doc.text(`Contact: ${order.shippingInfo?.phone1 ?? "N/A"}`, 14, order.setNumber ? 95 : 90);
-    doc.text(`Second Contact: ${order.shippingInfo?.phone2 ?? "N/A"}`, 14, order.setNumber ? 100 : 95);
+    doc.text(`Contact: ${order.shippingInfo?.phone1 ?? "N/A"}`, 14, 70);
+    doc.text(`Second Contact: ${order.shippingInfo?.phone2 ?? "N/A"}`, 14, 75);
 
     // Save the PDF
-    doc.save(`FemmeCure_Order_${order.orderNumber || order._id.slice(-8)}.pdf`);
+    doc.save(`Order-${order.order_id}.pdf`);
   };
 
   return (
@@ -106,9 +93,6 @@ function Orders() {
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 User
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Phone Numbers
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Products Name
@@ -143,27 +127,7 @@ function Orders() {
                   {order._id}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  <div>
-                    {order.user?.userName || 
-                     (order.user?.fName && order.user?.lName ? 
-                      `${order.user.fName} ${order.user.lName}` : 
-                      "N/A")}
-                  </div>
-                  <div className="text-xs">
-                    {order.user?.email || "N/A"}
-                  </div>
-                  <div className="text-xs text-blue-600 font-medium">
-                    Role: {order.user?.role || "N/A"}
-                  </div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  <div>Primary: {order.shippingInfo?.phone1 || "N/A"}</div>
-                  <div>Secondary: {order.shippingInfo?.phone2 || "N/A"}</div>
-                  {order.user?.phone && (
-                    <div className="text-xs text-blue-600">
-                      Profile: {order.user.phone}
-                    </div>
-                  )}
+                  {order.user?.userName ?? "N/A"} ({order.user?.email ?? "N/A"})
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {order.orderItems?.map((item) => (

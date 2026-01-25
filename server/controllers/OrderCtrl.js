@@ -13,7 +13,6 @@ const crypto = require("crypto")
 
 const Coupon = require("../models/Coupon")
 const User = require("../models/memeberModel")
-const RegularUser = require("../models/userModel")
 
 
 
@@ -125,175 +124,266 @@ const paymentVerification = async (req, res) => {
 
 
 const createOrder = asyncHandler(async (req, res) => {
-  // Simplified order creation for better performance
+  // Wrap the entire order creation in retry logic to handle concurrent updates
   try {
-    // Start a MongoDB session for transaction
-    const session = await mongoose.startSession();
-    
-    try {
-      // Start transaction
-      session.startTransaction();
+    const result = await retryTransaction(async () => {
+      // Start a MongoDB session for transaction
+      const session = await mongoose.startSession();
+      
+      try {
+        // Start transaction
+        session.startTransaction();
 
-      const { products, userId, address, payable, referrerId } = req.body;
-      
-      // Define the specific product IDs that require setNumber FIRST
-      const setNumberProductIds = ['6974e56fb4cd79b66bc76118', '6974e699b4cd79b66bc76130'];
-      
-      // Check if any product in the order requires setNumber
-      const hasSetNumberProduct = products.some(item => 
-        setNumberProductIds.includes(item.product.toString())
-      );
-      
-      console.log("Creating order for:", { userId, products: products.length, payable, hasSetNumber: hasSetNumberProduct });
-      
-      // Validate if address is present
-      if (!address || !address.billingCity || !address.billingPincode || !address.billingState || !address.billingAddress) {
-        await session.abortTransaction();
-        session.endSession();
-        throw new Error("Missing address fields. Please provide complete address.");
-      }
+        const { products, userId, address, payable, referrerId } = req.body;
+        console.log(req.body)
+        
+        // Validate referrerId if provided (server-side validation)
+        let validatedReferrerId = null;
+        if (referrerId) {
+          try {
+            // Check valid ObjectId format
+            if (!mongoose.Types.ObjectId.isValid(referrerId)) {
+              console.warn(`Invalid referrer ID format: ${referrerId}`);
+            }
+            // Check not self-referral
+            else if (referrerId.toString() === userId.toString()) {
+              console.warn(`Self-referral attempt blocked for user ${userId}`);
+            }
+            // Check referrer exists
+            else {
+              const referrerExists = await User.findById(referrerId).session(session);
+              if (!referrerExists) {
+                console.warn(`Referrer not found: ${referrerId}`);
+              } else {
+                validatedReferrerId = referrerId;
+              }
+            }
+          } catch (validationError) {
+            console.error(`Referrer validation error:`, validationError);
+          }
+        }
+        
+        // Validate if address is present
+        if (!address || !address.billingCity || !address.billingPincode || !address.billingState || !address.billingAddress) {
+          await session.abortTransaction();
+          session.endSession();
+          throw new Error("Missing address fields. Please provide complete address.");
+        }
 
-      // Destructure address fields
-      const { billingCity, billingPincode, billingState, billingAddress, utr, phone1, phone2, setNumber } = address;
+        // Destructure address fields
+        const { billingCity, billingPincode, billingState, billingAddress, utr, phone1, phone2 } = address;
 
-      // Find user by ID - check both member and regular user models
-      let userDetails = await User.findById(userId).session(session);
-      if (!userDetails) {
-        // If not found in member model, try regular user model
-        userDetails = await RegularUser.findById(userId).session(session);
+        // Find user by ID
+        const userDetails = await User.findById(userId).session(session);
         if (!userDetails) {
           await session.abortTransaction();
           session.endSession();
           throw new Error("User not found");
         }
-      }
 
-      // Process each product for order items
-      const processedOrderItems = [];
-      let currentSetNumber = null;
-      
-      // Handle setNumber logic FIRST (before complex operations)
-      if (hasSetNumberProduct) {
-        console.log("Processing setNumber for user:", userId);
+        // Import services for product-wise processing
+        const BinaryTreeService = require("../services/BinaryTreeService");
+        const VolumeService = require("../services/VolumeService");
+        const MatchingBonusService = require("../services/MatchingBonusService");
+
+        // Process each product separately for binary tree tracking
+        const processedOrderItems = [];
         
-        // Try to find user in member model first (members have setNumber field)
-        let userForSetNumber = await User.findById(userId).session(session);
-        if (!userForSetNumber) {
-          // If not a member, check if it's a regular user
-          const regularUser = await RegularUser.findById(userId).session(session);
-          if (regularUser) {
-            // Regular users don't have setNumber, so we'll skip setNumber logic
-            console.log("Regular user detected, skipping setNumber logic");
-            currentSetNumber = null;
-          }
-        } else {
-          // User is a member, process setNumber normally
-          const manualSetNumber = setNumber ? parseInt(setNumber) : null;
+        for (const item of products) {
+          const productId = item.product;
+          const quantity = item.quantity;
           
-          if (manualSetNumber && manualSetNumber > 0) {
-            // Use the manually entered setNumber and update user's setNumber
-            currentSetNumber = manualSetNumber;
-            userForSetNumber.setNumber = manualSetNumber;
-            await userForSetNumber.save({ session });
-            console.log("Set manual setNumber:", manualSetNumber);
-          } else {
-            // If no manual input, increment existing setNumber
-            const existingSetNumber = userForSetNumber.setNumber || 0;
-            currentSetNumber = existingSetNumber + 1;
-            userForSetNumber.setNumber = currentSetNumber;
-            await userForSetNumber.save({ session });
-            console.log("Auto-incremented setNumber to:", currentSetNumber);
+          // Get product details
+          const product = await Product.findById(productId).session(session);
+          if (!product) {
+            await session.abortTransaction();
+            session.endSession();
+            throw new Error(`Product with ID ${productId} not found`);
           }
+
+          // Check stock availability
+          if (product.quantity < quantity) {
+            await session.abortTransaction();
+            session.endSession();
+            throw new Error(`Not enough stock for product: ${product.title}`);
+          }
+
+          // Calculate item amount
+          const itemAmount = product.price * quantity;
+
+          // Check if this is the first purchase of this product for the user
+          const isFirstPurchase = await BinaryTreeService.isFirstPurchaseOfProduct(userId, productId);
+
+          // Prepare order item with referral tracking (use validated referrer)
+          const orderItem = {
+            product: productId,
+            quantity: quantity,
+            price: product.price, // Store price at time of purchase
+            referrerId: validatedReferrerId || null,
+            isFirstPurchase: isFirstPurchase,
+            placedInLeg: 'none' // Will be updated during binary placement
+          };
+
+          processedOrderItems.push({
+            orderItem,
+            productId,
+            itemAmount,
+            isFirstPurchase
+          });
         }
-      }
-      
-      // Process products for order items (simplified)
-      for (const item of products) {
-        const productId = item.product;
-        const quantity = item.quantity;
+
+        // Create Order with processed items (within transaction)
+        // Generate unique order number (with sequence and encrypted display)
+        const orderNumberData = await generateOrderNumber();
         
-        // Get product details
-        const product = await Product.findById(productId).session(session);
-        if (!product) {
-          await session.abortTransaction();
-          session.endSession();
-          throw new Error(`Product with ID ${productId} not found`);
-        }
-
-        // Check stock availability
-        if (product.quantity < quantity) {
-          await session.abortTransaction();
-          session.endSession();
-          throw new Error(`Not enough stock for product: ${product.title}`);
-        }
-
-        // Update product stock immediately
-        product.sold += quantity;
-        product.quantity -= quantity;
-        await product.save({ session });
-
-        // Prepare simplified order item
-        const orderItem = {
-          product: productId,
-          quantity: quantity,
-          price: product.price,
-          referrerId: referrerId || null,
-          isFirstPurchase: false, // Simplified for now
-          placedInLeg: 'none'
+        const orderData = {
+          orderNumber: orderNumberData.displayNumber,        // FEME-7A2K9 (customer sees this)
+          sequenceNumber: orderNumberData.sequenceNumber,    // 1, 2, 3... (admin tracking)
+          internalNumber: orderNumberData.internalNumber,    // FEME-0001 (admin reference)
+          user: userId,
+          shippingInfo: {
+            name: `${userDetails.fName} ${userDetails.lName}`,
+            address: billingAddress,
+            city: billingCity,
+            state: billingState,
+            pincode: billingPincode,
+            phone1,
+            phone2
+          },
+          paymentInfo: { utr },
+          orderItems: processedOrderItems.map(item => item.orderItem),
+          totalPrice: payable,
+          month: new Date().getMonth() + 1,
         };
 
-        processedOrderItems.push(orderItem);
+        const orders = await Order.create([orderData], { session });
+        const order = orders[0];
+
+        // Update Stock and process binary tree operations
+        for (const processedItem of processedOrderItems) {
+          const { productId, itemAmount, isFirstPurchase, orderItem } = processedItem;
+          
+          // Update product stock (within transaction)
+          const product = await Product.findById(productId).session(session);
+          product.sold += orderItem.quantity;
+          product.quantity -= orderItem.quantity;
+          await product.save({ session });
+
+          // Process product-wise binary tree operations
+          try {
+            // Get or create product tree for the buyer
+            await BinaryTreeService.findOrCreateProductTree(userId, productId);
+
+            // Add purchase to member's product tree
+            const member = await User.findById(userId).session(session);
+            const productTree = member.productBinaryTrees.find(
+              tree => tree.productId.toString() === productId.toString()
+            );
+
+            if (productTree) {
+              // Add purchase to history (use validated referrer)
+              productTree.purchases.push({
+                orderId: order._id,
+                amount: itemAmount,
+                quantity: orderItem.quantity,
+                purchaseDate: new Date(),
+                referrerId: validatedReferrerId || null,
+                isFirstPurchase: isFirstPurchase
+              });
+
+              // Update product-specific stats
+              productTree.totalPurchases += 1;
+              productTree.totalSpent += itemAmount;
+              
+              if (isFirstPurchase) {
+                productTree.firstPurchaseDate = new Date();
+                productTree.isActive = true;
+              }
+              productTree.lastPurchaseDate = new Date();
+
+              await member.save({ session });
+            }
+
+            // Handle binary placement and volume propagation (use validated referrer)
+            if (validatedReferrerId && validatedReferrerId !== userId) {
+              // Validate referrer exists
+              const referrer = await User.findById(validatedReferrerId).session(session);
+              if (referrer) {
+                if (isFirstPurchase) {
+                  // First purchase: place in binary tree
+                  const placementResult = await BinaryTreeService.placeMemberInBinaryTree(
+                    validatedReferrerId,
+                    userId,
+                    productId,
+                    itemAmount
+                  );
+
+                  // Update the order item with placement leg (extract only 'leg' field)
+                  const orderItemIndex = order.orderItems.findIndex(
+                    oi => oi.product.toString() === productId.toString()
+                  );
+                  if (orderItemIndex !== -1) {
+                    order.orderItems[orderItemIndex].placedInLeg = placementResult.leg; // Only store 'left' or 'right'
+                  }
+
+                  // Propagate volume up the upline chain
+                  await VolumeService.propagateVolumeUpline(userId, productId, itemAmount, validatedReferrerId);
+                } else {
+                  // Repeat purchase: only update volumes
+                  await VolumeService.propagateVolumeUpline(userId, productId, itemAmount, validatedReferrerId);
+                }
+
+                // Trigger matching bonus calculation for the referrer and upline
+                const uplineChain = await BinaryTreeService.getUplineChain(userId, productId);
+                for (const ancestorId of uplineChain) {
+                  try {
+                    await MatchingBonusService.calculateMatchingBonus(ancestorId, productId);
+                  } catch (bonusError) {
+                    console.error(`Error calculating bonus for member ${ancestorId}:`, bonusError.message);
+                    // Continue with other members even if one fails
+                  }
+                }
+              }
+            }
+          } catch (binaryError) {
+            console.error(`Error processing binary tree for product ${productId}:`, binaryError.message);
+            // Rollback transaction on binary processing error
+            await session.abortTransaction();
+            session.endSession();
+            throw new Error(`Error processing binary tree operations: ${binaryError.message}`);
+          }
+        }
+
+        // Save order with updated placement legs (within transaction)
+        await order.save({ session });
+
+        // Commit transaction
+        await session.commitTransaction();
+        session.endSession();
+
+        // Return the order for the response
+        return order;
+
+      } catch (error) {
+        // Rollback transaction on any error
+        if (session.inTransaction()) {
+          await session.abortTransaction();
+        }
+        session.endSession();
+        throw error;
       }
+    }, {
+      maxRetries: 3,
+      initialDelay: 200,
+      maxDelay: 3000
+    });
 
-      // Create Order with processed items (within transaction)
-      // Generate unique order number (with sequence and encrypted display)
-      const orderNumberData = await generateOrderNumber();
-      
-      const orderData = {
-        orderNumber: orderNumberData.displayNumber,
-        sequenceNumber: orderNumberData.sequenceNumber,
-        internalNumber: orderNumberData.internalNumber,
-        user: userId,
-        shippingInfo: {
-          name: `${userDetails.fName} ${userDetails.lName}`,
-          address: billingAddress,
-          city: billingCity,
-          state: billingState,
-          pincode: billingPincode,
-          phone1,
-          phone2
-        },
-        paymentInfo: { utr },
-        orderItems: processedOrderItems,
-        totalPrice: payable,
-        month: new Date().getMonth() + 1,
-        setNumber: currentSetNumber // Save setNumber if applicable
-      };
-
-      const orders = await Order.create([orderData], { session });
-      const order = orders[0];
-
-      console.log("Order created successfully:", order._id);
-
-      // Commit transaction
-      await session.commitTransaction();
-      session.endSession();
-
-      // Return the order for the response
-      return res.status(201).json({
-        success: true,
-        message: "Order placed successfully",
-        order: order,
-      });
-
-    } catch (error) {
-      // Rollback transaction on any error
-      if (session.inTransaction()) {
-        await session.abortTransaction();
-      }
-      session.endSession();
-      throw error;
-    }
+    // Return successful response
+    return res.status(201).json({
+      success: true,
+      message: "Order placed successfully",
+      order: result,
+    });
 
   } catch (error) {
     console.error("Error creating order:", error);
@@ -308,10 +398,19 @@ const createOrder = asyncHandler(async (req, res) => {
     
     return res.status(statusCode).json({ 
       success: false, 
-      message: error.message || "Failed to create order",
+      message: error.message || "Failed to create order after multiple attempts",
     });
   }
 });
+
+
+
+
+
+
+
+
+
 
 
 const getAllOrder = async (req, res) => {
@@ -331,32 +430,10 @@ const getAllOrder = async (req, res) => {
         path: 'orderItems.product',
         model: 'Product',
       })
-      .sort({ createdAt: -1 }) // Sort by creation date descending (latest first)
-      .lean() // Convert to plain objects
+      .populate("user")
+      .sort({ orderNumber: -1 }) // Sort by order number descending
       .exec();
 
-    // Manually populate user data from both models
-    for (let order of orders) {
-      let userData = await User.findById(order.user).lean();
-      if (!userData) {
-        userData = await RegularUser.findById(order.user).lean();
-      }
-      if (userData) {
-        console.log("User data found for member order:", { 
-          id: userData._id, 
-          userName: userData.userName, 
-          fName: userData.fName, 
-          lName: userData.lName, 
-          role: userData.role,
-          phone: userData.phone
-        });
-        // Attach user data to order
-        order.user = userData;
-      } else {
-        console.log("No user data found for member order:", order._id);
-        order.user = null;
-      }
-    }
 
     return res.status(200).json({
       orders,

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import { displayMoney } from "../../../helper/utills";
 import { FiShoppingCart, FiPackage, FiCreditCard } from "react-icons/fi";
 import { FaChevronUp, FaChevronDown, FaCheckCircle, FaTruck } from "react-icons/fa";
@@ -12,7 +12,6 @@ import qr from "../../../assets/qr.png";
 
 const CheckoutFormEnhanced = ({ handleClose }) => {
   const { cart, total } = useSelector((state) => state.cart);
-  const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(true);
   const [payable, setPayable] = useState(total);
   const [couponName, setCouponName] = useState("");

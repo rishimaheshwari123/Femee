@@ -61,9 +61,6 @@ const App = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(true);
   const dispatch = useDispatch();
 
-  // Debug log for checkout state
-  console.log("App.jsx - checkout state:", checkout);
-
   const getAll = async () => {
     await dispatch(getAllProduct());
   };
@@ -254,21 +251,17 @@ const App = () => {
 
       {/* Checkout Modal */}
       {checkout && (
-        <Modal
-          isOpen={checkout}
-          onClose={() => {
-            dispatch(setCheckout(false));
-          }}
-          title="Checkout"
-          size="xl"
-          className="max-h-[90vh]"
-        >
-          <PrivateRoute>
-            <CheckoutFormEnhanced handleClose={() => {
-              dispatch(setCheckout(false));
-            }} />
-          </PrivateRoute>
-        </Modal>
+        <PrivateRoute>
+          <Modal
+            isOpen={checkout}
+            onClose={() => dispatch(setCheckout(false))}
+            title="Checkout"
+            size="xl"
+            className="max-h-[90vh]"
+          >
+            <CheckoutFormEnhanced handleClose={() => dispatch(setCheckout(false))} />
+          </Modal>
+        </PrivateRoute>
       )}
 
       {/* Popup Modal */}

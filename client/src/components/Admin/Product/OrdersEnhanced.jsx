@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { getAllOrders, updateOrder } from "../../../services/operations/admin";
 import { jsPDF } from "jspdf";
-import autoTable from "jspdf-autotable";
+import "jspdf-autotable";
 import { 
   FaDownload, 
   FaBox, 
@@ -27,7 +27,6 @@ function OrdersEnhanced() {
       try {
         setLoading(true);
         const orders = await getAllOrders(token);
-        console.log("Fetched orders:", orders); // Debug log
         setAllOrders(orders);
         setFilteredOrders(orders);
       } catch (error) {
@@ -73,227 +72,124 @@ function OrdersEnhanced() {
     }
   };
 
-  // Helper function to format price without currency symbol
-  const formatPriceNumber = (price) => {
-    return new Intl.NumberFormat("en-IN").format(price);
-  };
-
   const handleDownloadPDF = (order) => {
     const doc = new jsPDF();
-    const pageWidth = doc.internal.pageSize.width;
-    const pageHeight = doc.internal.pageSize.height;
     
-    // Professional Header
-    doc.setFillColor(41, 128, 185); // Professional blue
-    doc.rect(0, 0, pageWidth, 50, 'F');
+    // Header with gradient effect
+    doc.setFillColor(34, 197, 94);
+    doc.rect(0, 0, 210, 40, 'F');
     
-    // Company Name
+    // Company Logo/Name
     doc.setTextColor(255, 255, 255);
-    doc.setFontSize(28);
+    doc.setFontSize(24);
     doc.setFont("helvetica", "bold");
-    doc.text("FEMMECURE", 20, 25);
+    doc.text("FemmeCure", 105, 20, { align: "center" });
     
-    // Tagline
-    doc.setFontSize(11);
-    doc.setFont("helvetica", "normal");
-    doc.text("Your Trusted Health Partner", 20, 35);
-    
-    // Order Number (Right aligned)
-    doc.setFontSize(14);
-    doc.setFont("helvetica", "bold");
-    doc.text("ORDER DETAILS", pageWidth - 20, 25, { align: "right" });
-    doc.setFontSize(10);
-    doc.setFont("helvetica", "normal");
-    doc.text(`#${order.orderNumber || `FEME-${order._id?.slice(-6)}`}`, pageWidth - 20, 35, { align: "right" });
-    
-    // Reset text color
-    doc.setTextColor(0, 0, 0);
-    
-    // Order Details Section
-    const startY = 65;
     doc.setFontSize(12);
-    doc.setFont("helvetica", "bold");
-    doc.text("Order Information", 20, startY);
+    doc.setFont("helvetica", "normal");
+    doc.text("Your Trusted Health Partner", 105, 28, { align: "center" });
     
-    // Details box - make it taller to accommodate more info
-    doc.setDrawColor(200, 200, 200);
+    // Order Title
+    doc.setTextColor(0, 0, 0);
+    doc.setFontSize(20);
+    doc.setFont("helvetica", "bold");
+    doc.text("ORDER DETAILS", 105, 55, { align: "center" });
+    
+    // Order Info Box
+    doc.setDrawColor(34, 197, 94);
     doc.setLineWidth(0.5);
-    doc.rect(20, startY + 5, pageWidth - 40, order.setNumber ? 40 : 30);
+    doc.rect(15, 65, 180, 25);
     
     doc.setFontSize(10);
     doc.setFont("helvetica", "normal");
-    doc.text(`Order Number: ${order.orderNumber || `FEME-${order._id?.slice(-6)}`}`, 25, startY + 15);
-    doc.text(`Order Date: ${new Date(order.createdAt).toLocaleDateString('en-IN', {
-      day: '2-digit',
-      month: 'short',
-      year: 'numeric'
-    })}`, 25, startY + 23);
+    doc.text(`Order ID: ${order._id}`, 20, 73);
+    doc.text(`Order Date: ${new Date(order.createdAt).toLocaleDateString('en-IN')}`, 20, 80);
+    doc.text(`Status: ${order.orderStatus}`, 120, 73);
+    doc.text(`UTR: ${order.paymentInfo?.utr || 'N/A'}`, 120, 80);
     
-    doc.text(`UTR: ${order.paymentInfo?.utr || 'N/A'}`, pageWidth/2 + 10, startY + 15);
-    doc.text(`Customer: ${order.user?.userName || 'N/A'}`, pageWidth/2 + 10, startY + 23);
-    
-    // Add set number and order status on new lines if set number exists
-    if (order.setNumber) {
-      doc.text(`Set Number: #${order.setNumber}`, 25, startY + 31);
-      doc.text(`Order Status: ${order.orderStatus}`, pageWidth/2 + 10, startY + 31);
-    } else {
-      doc.text(`Order Status: ${order.orderStatus}`, pageWidth/2 + 10, startY + 31);
-    }
-    
-    // Company Information Section
-    const companyY = startY + (order.setNumber ? 55 : 45);
-    const sectionWidth = (pageWidth - 50) / 2;
-    
-    // TO Section (Left side)
-    doc.setFillColor(248, 249, 250);
-    doc.rect(20, companyY, sectionWidth, 45, 'F');
-    doc.setDrawColor(200, 200, 200);
-    doc.rect(20, companyY, sectionWidth, 45);
-    
-    doc.setFontSize(11);
+    // From Section
+    doc.setFillColor(240, 240, 240);
+    doc.rect(15, 95, 85, 35, 'F');
     doc.setFont("helvetica", "bold");
-    doc.setTextColor(41, 128, 185);
-    doc.text("TO", 25, companyY + 10);
-    
-    doc.setTextColor(0, 0, 0);
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(10);
-    doc.text((order.shippingInfo?.name || "N/A").toUpperCase(), 25, companyY + 20);
+    doc.setFontSize(12);
+    doc.text("From:", 20, 103);
     
     doc.setFont("helvetica", "normal");
-    doc.setFontSize(9);
-    if (order.shippingInfo?.address) {
-      const addressLines = doc.splitTextToSize(order.shippingInfo.address, sectionWidth - 10);
-      doc.text(addressLines, 25, companyY + 28);
-    }
-    doc.text(`${order.shippingInfo?.city || ''}, ${order.shippingInfo?.state || ''}`, 25, companyY + 36);
-    doc.text(`PIN: ${order.shippingInfo?.pincode || 'N/A'}`, 25, companyY + 42);
-    
-    // FROM Section (Right side)
-    doc.setFillColor(248, 249, 250);
-    doc.rect(pageWidth/2 + 5, companyY, sectionWidth, 45, 'F');
-    doc.setDrawColor(200, 200, 200);
-    doc.rect(pageWidth/2 + 5, companyY, sectionWidth, 45);
-    
-    doc.setFontSize(11);
-    doc.setFont("helvetica", "bold");
-    doc.setTextColor(41, 128, 185);
-    doc.text("FROM", pageWidth/2 + 10, companyY + 10);
-    
-    doc.setTextColor(0, 0, 0);
-    doc.setFont("helvetica", "bold");
     doc.setFontSize(10);
-    doc.text("FEMMECURE", pageWidth/2 + 10, companyY + 20);
+    doc.text("FemmeCure", 20, 111);
+    doc.text("Bhopal, Madhya Pradesh", 20, 117);
+    doc.text("Contact: +91 7879523232", 20, 123);
+    
+    // To Section
+    doc.setFillColor(240, 240, 240);
+    doc.rect(110, 95, 85, 35, 'F');
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(12);
+    doc.text("To:", 115, 103);
     
     doc.setFont("helvetica", "normal");
-    doc.setFontSize(9);
-    doc.text("Bhopal, Madhya Pradesh", pageWidth/2 + 10, companyY + 28);
-    doc.text("India", pageWidth/2 + 10, companyY + 34);
-    doc.text("Phone: +91-7879523232", pageWidth/2 + 10, companyY + 40);
+    doc.setFontSize(10);
+    doc.text(order.shippingInfo?.name || "N/A", 115, 111);
+    doc.text(order.shippingInfo?.address || "N/A", 115, 117);
+    doc.text(`${order.shippingInfo?.city}, ${order.shippingInfo?.state}`, 115, 123);
     
     // Order Items Table
-    const tableStartY = companyY + 60;
     const tableData = order.orderItems.map((item, index) => [
-      (index + 1).toString(),
+      index + 1,
       item.product?.title || "N/A",
-      item.quantity.toString(),
-      formatPriceNumber(item.product?.price || 0),
-      formatPriceNumber((item.product?.price || 0) * item.quantity)
+      item.quantity,
+      `₹${item.product?.price || 0}`,
+      `₹${(item.product?.price || 0) * item.quantity}`
     ]);
     
-    autoTable(doc, {
-      startY: tableStartY,
-      head: [['S.No.', 'Product Name', 'Qty', 'Unit Price', 'Amount']],
+    doc.autoTable({
+      startY: 140,
+      head: [['#', 'Product', 'Qty', 'Price', 'Total']],
       body: tableData,
-      theme: 'striped',
+      theme: 'grid',
       headStyles: {
-        fillColor: [41, 128, 185],
+        fillColor: [34, 197, 94],
         textColor: [255, 255, 255],
         fontStyle: 'bold',
-        fontSize: 10,
-        halign: 'center'
+        fontSize: 11
       },
       bodyStyles: {
-        fontSize: 9,
-        cellPadding: 4
+        fontSize: 10
       },
       columnStyles: {
-        0: { cellWidth: 18, halign: 'center' },
-        1: { cellWidth: 90, halign: 'left' },
-        2: { cellWidth: 18, halign: 'center' },
-        3: { cellWidth: 28, halign: 'right' },
-        4: { cellWidth: 28, halign: 'right' }
+        0: { cellWidth: 15, halign: 'center' },
+        1: { cellWidth: 80 },
+        2: { cellWidth: 20, halign: 'center' },
+        3: { cellWidth: 35, halign: 'right' },
+        4: { cellWidth: 35, halign: 'right' }
       },
-      margin: { left: 20, right: 20 },
-      alternateRowStyles: {
-        fillColor: [248, 249, 250]
-      }
+      margin: { left: 15, right: 15 }
     });
     
-    // Calculate totals
-    const finalY = doc.lastAutoTable.finalY + 15;
-    const subtotal = order.totalPrice;
-    const deliveryCharges = 0;
-    const grandTotal = subtotal + deliveryCharges;
+    const finalY = doc.lastAutoTable.finalY + 10;
     
-    // Summary Section
-    const summaryX = pageWidth - 90;
-    const summaryWidth = 70;
-    
-    // Summary box
-    doc.setDrawColor(200, 200, 200);
+    // Total Box
+    doc.setDrawColor(34, 197, 94);
     doc.setLineWidth(0.5);
-    doc.rect(summaryX, finalY, summaryWidth, 35);
+    doc.rect(120, finalY, 75, 20);
     
-    // Summary content
-    doc.setFontSize(10);
-    doc.setFont("helvetica", "normal");
-    doc.text("Subtotal:", summaryX + 5, finalY + 10);
-    doc.text(formatPriceNumber(subtotal), summaryX + summaryWidth - 5, finalY + 10, { align: "right" });
-    
-    doc.text("Delivery Charges:", summaryX + 5, finalY + 18);
-    doc.text("FREE", summaryX + summaryWidth - 5, finalY + 18, { align: "right" });
-    
-    // Divider line
-    doc.setDrawColor(150, 150, 150);
-    doc.line(summaryX + 5, finalY + 22, summaryX + summaryWidth - 5, finalY + 22);
-    
-    // Grand Total
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(11);
-    doc.text("GRAND TOTAL:", summaryX + 5, finalY + 30);
-    doc.text(formatPriceNumber(grandTotal), summaryX + summaryWidth - 5, finalY + 30, { align: "right" });
+    doc.setFontSize(12);
+    doc.text("Grand Total:", 125, finalY + 12);
+    doc.text(`₹${order.totalPrice}`, 185, finalY + 12, { align: "right" });
     
-    // Admin Notes Section
-    const notesY = finalY + 50;
-    doc.setFontSize(10);
-    doc.setFont("helvetica", "bold");
-    doc.setTextColor(41, 128, 185);
-    doc.text("ADMIN NOTES", 20, notesY);
-    
-    doc.setTextColor(0, 0, 0);
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(8);
-    doc.text(`• Customer Email: ${order.user?.email || 'N/A'}`, 20, notesY + 8);
-    doc.text(`• Order ID: ${order._id}`, 20, notesY + 14);
-    doc.text(`• Payment UTR: ${order.paymentInfo?.utr || 'N/A'}`, 20, notesY + 20);
-    
-    // Professional Footer
-    doc.setFillColor(41, 128, 185);
-    doc.rect(0, pageHeight - 30, pageWidth, 30, 'F');
+    // Footer
+    const pageHeight = doc.internal.pageSize.height;
+    doc.setFillColor(34, 197, 94);
+    doc.rect(0, pageHeight - 25, 210, 25, 'F');
     
     doc.setTextColor(255, 255, 255);
-    doc.setFontSize(10);
-    doc.setFont("helvetica", "bold");
-    doc.text("FemmeCure - Admin Order Details", pageWidth/2, pageHeight - 18, { align: "center" });
-    
-    doc.setFontSize(8);
+    doc.setFontSize(9);
     doc.setFont("helvetica", "normal");
-    doc.text("Email: support@femmecure.com | Phone: +91-7879523232", pageWidth/2, pageHeight - 10, { align: "center" });
-    doc.text("Visit us: www.femmecure.com", pageWidth/2, pageHeight - 4, { align: "center" });
+    doc.text("Thank you for your order!", 105, pageHeight - 15, { align: "center" });
+    doc.text("For support: support@femmecure.com | +91-7879523232", 105, pageHeight - 8, { align: "center" });
     
-    // Save PDF
-    doc.save(`FemmeCure_Order_${order.orderNumber || order._id.slice(-8)}.pdf`);
+    doc.save(`Order_${order._id}.pdf`);
   };
 
   const getStatusColor = (status) => {
@@ -400,16 +296,10 @@ function OrdersEnhanced() {
                     Customer
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">
-                    Phone Numbers
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">
                     Products
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">
                     Total
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">
-                    Set Number
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">
                     Status
@@ -444,31 +334,11 @@ function OrdersEnhanced() {
                     
                     <td className="px-6 py-4">
                       <div className="text-sm font-medium text-gray-900">
-                        {order.user?.userName || 
-                         (order.user?.fName && order.user?.lName ? 
-                          `${order.user.fName} ${order.user.lName}` : 
-                          "N/A")}
+                        {order.user?.userName || "N/A"}
                       </div>
                       <div className="text-xs text-gray-500">
                         {order.user?.email || "N/A"}
                       </div>
-                      <div className="text-xs text-blue-600 font-medium">
-                        Role: {order.user?.role || "N/A"}
-                      </div>
-                    </td>
-                    
-                    <td className="px-6 py-4">
-                      <div className="text-sm font-medium text-gray-900">
-                        Primary: {order.shippingInfo?.phone1 || "N/A"}
-                      </div>
-                      <div className="text-sm text-gray-600">
-                        Secondary: {order.shippingInfo?.phone2 || "N/A"}
-                      </div>
-                      {order.user?.phone && (
-                        <div className="text-xs text-blue-600">
-                          Profile: {order.user.phone}
-                        </div>
-                      )}
                     </td>
                     
                     <td className="px-6 py-4">
@@ -502,18 +372,6 @@ function OrdersEnhanced() {
                       <div className="text-sm font-bold text-green-600">
                         {formatPrice(order.totalPrice)}
                       </div>
-                    </td>
-                    
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {order.setNumber ? (
-                        <div className="text-sm font-bold text-blue-600">
-                          #{order.setNumber}
-                        </div>
-                      ) : (
-                        <div className="text-sm text-gray-400">
-                          N/A
-                        </div>
-                      )}
                     </td>
                     
                     <td className="px-6 py-4 whitespace-nowrap">

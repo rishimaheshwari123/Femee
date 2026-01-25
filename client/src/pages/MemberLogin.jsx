@@ -29,8 +29,8 @@ function MemberLogin() {
 
   const validationSchema = Yup.object({
     userName: Yup.string()
-      .min(3, "Username must be at least 3 characters")
-      .required("Username is required"),
+      .min(3, "Must be at least 3 characters")
+      .required("Username, email or phone is required"),
     password: Yup.string()
       .min(6, "Password must be at least 6 characters")
       .required("Password is required"),
@@ -133,14 +133,14 @@ function MemberLogin() {
 
               {/* Form */}
               <form onSubmit={formik.handleSubmit} className="space-y-7">
-                {/* Username Field */}
+                {/* Username/Email/Phone Field */}
                 <div>
                   <Input
-                    label="Username"
+                    label="Username, Email or Phone"
                     type="text"
                     id="userName"
                     name="userName"
-                    placeholder="Enter your username"
+                    placeholder="Enter username, email or phone number"
                     value={formik.values.userName}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}

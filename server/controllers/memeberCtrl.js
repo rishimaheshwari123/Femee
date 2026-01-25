@@ -100,16 +100,35 @@ const registerMemberCtrl = async (req, res) => {
 
 const loginMemberCtrl = async (req, res) => {
   try {
-    const { userName, password } = req.body;
+    // Accept identifier (username, email, or phone) instead of just userName
+    const { userName, password } = req.body; // Keep userName for backward compatibility
+    const identifier = userName; // userName field will contain username/email/phone
 
-    if (!userName || !password) {
+    if (!identifier || !password) {
       return res.status(400).json({
         success: false,
         message: "Please fill out all required fields.",
       });
     }
 
-    const user = await memberModel.findOne({ userName });
+    // Build query to search by username, email, OR phone
+    let query = {};
+    
+    // Check if identifier is email (contains @)
+    if (identifier.includes('@')) {
+      query = { email: identifier };
+    } 
+    // Check if identifier is phone (all digits)
+    else if (/^\d+$/.test(identifier)) {
+      query = { phone: parseInt(identifier) };
+    } 
+    // Otherwise treat as username
+    else {
+      query = { userName: identifier };
+    }
+
+    // Find user by username, email, or phone
+    const user = await memberModel.findOne(query);
 
     if (!user) {
       return res.status(401).json({

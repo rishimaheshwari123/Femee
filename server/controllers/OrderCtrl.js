@@ -201,6 +201,20 @@ const createOrder = asyncHandler(async (req, res) => {
             throw new Error(`Product with ID ${productId} not found`);
           }
 
+          // Check for duplicate order within 30 minutes
+          const thirtyMinutesAgo = new Date(Date.now() - 30 * 60 * 1000);
+          const recentOrder = await Order.findOne({
+            user: userId,
+            'orderItems.product': productId,
+            createdAt: { $gte: thirtyMinutesAgo }
+          }).session(session);
+
+          if (recentOrder) {
+            await session.abortTransaction();
+            session.endSession();
+            throw new Error(`You have already ordered "${product.title}" in the last 30 minutes. Please wait before ordering again.`);
+          }
+
           // Check stock availability
           if (product.quantity < quantity) {
             await session.abortTransaction();

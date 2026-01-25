@@ -16,7 +16,7 @@ ROOT 1:
 
 ### When Level 1 is Complete
 ```
-ROOT 1: (COMPLETE)
+ROOT 1: (COMPLETE)  
     Anita (ROOT)
     ├── Member A (Left)
     └── Member B (Right)

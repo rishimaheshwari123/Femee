@@ -118,16 +118,16 @@ const Sidebar = () => {
             icon: <FaSitemap className="text-purple-300" />,
             label: "Binary Trees",
           },
-          {
-            to: "/member/pair-rewards",
-            icon: <FaGift className="text-yellow-300" />,
-            label: "Pair Rewards",
-          },
-          {
-            to: "/member/all-members-pairs",
-            icon: <FaUsers className="text-blue-300" />,
-            label: "Members with Pairs",
-          },
+          // {
+          //   to: "/member/pair-rewards",
+          //   icon: <FaGift className="text-yellow-300" />,
+          //   label: "Pair Rewards",
+          // },
+          // {
+          //   to: "/member/all-members-pairs",
+          //   icon: <FaUsers className="text-blue-300" />,
+          //   label: "Members with Pairs",
+          // },
         ]
       : []),
   ];

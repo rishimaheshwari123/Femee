@@ -30,8 +30,31 @@ const cartSlice = createSlice({
         toast.error("Product already in cart")
         return
       }
-      let quant =  action.payload.quantity !== undefined ? action.payload.quantity : 1 
-      state.cart.push({product,quantity: quant, })
+      
+      let quant = action.payload.quantity !== undefined ? action.payload.quantity : 1
+      
+      // Get referral data from localStorage
+      let referrerId = null;
+      try {
+        const referralDataStr = localStorage.getItem("referralData");
+        if (referralDataStr) {
+          const referralData = JSON.parse(referralDataStr);
+          // Check if referral data is for this product
+          if (referralData.productId === product._id) {
+            referrerId = referralData.referrerId;
+            console.log("Adding to cart with referrerId:", referrerId);
+          }
+        }
+      } catch (error) {
+        console.error("Error reading referral data:", error);
+      }
+      
+      // Add product to cart with referrerId
+      state.cart.push({
+        product,
+        quantity: quant,
+        referrerId: referrerId  // Store referrerId with cart item
+      })
 
       state.totalItems++
       state.total += Number(product.price * quant)

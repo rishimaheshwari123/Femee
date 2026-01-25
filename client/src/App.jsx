@@ -52,6 +52,9 @@ import CheckoutFormEnhanced from "./components/core/Cart/CheckoutFormEnhanced";
 import MyOrderEnhanced from "./pages/MyOrderEnhanced";
 import OrdersEnhanced from "./components/Admin/Product/OrdersEnhanced";
 
+// Binary Tree Dashboard
+import MemberDashboard from "./pages/MemberDashboard";
+
 const App = () => {
   const { user } = useSelector((state) => state.auth);
   const { checkout } = useSelector((state) => state.payment);
@@ -80,6 +83,7 @@ const App = () => {
         <Route path="/natural" element={<PlasticFreeIndia2 />} />
         <Route path="/shop" element={<Shop />} />
         <Route path="product/:productID" element={<ProductDetails />} />
+        <Route path="product/:productID/:referrerId" element={<ProductDetails />} />
 
         <Route
           path="/cart"
@@ -212,6 +216,16 @@ const App = () => {
               />
               <Route path="/member/my-orders" element={<MyOrderEnhanced />} />
 
+              {/* Binary Tree Dashboard */}
+              <Route
+                path="/member/binary-trees"
+                element={
+                  <PrivateRoute>
+                    <MemberDashboard />
+                  </PrivateRoute>
+                }
+              />
+
               {/* Pair Reward System - Member */}
               <Route
                 path="/member/pair-rewards"
@@ -242,7 +256,8 @@ const App = () => {
             isOpen={checkout}
             onClose={() => dispatch(setCheckout(false))}
             title="Checkout"
-            size="lg"
+            size="xl"
+            className="max-h-[90vh]"
           >
             <CheckoutFormEnhanced handleClose={() => dispatch(setCheckout(false))} />
           </Modal>

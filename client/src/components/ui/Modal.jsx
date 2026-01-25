@@ -78,7 +78,7 @@ const Modal = ({
         )}
 
         {/* Body */}
-        <div className="p-6">
+        <div className={title === 'Checkout' ? '' : 'p-6'}>
           {children}
         </div>
       </div>

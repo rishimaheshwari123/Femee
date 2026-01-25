@@ -6,7 +6,9 @@ const {
 
 } = require("../middleware/auth")
 
-
+const {
+    validateNoSelfReferral
+} = require("../middleware/binaryValidation")
 
 const {
     capturePayment,
@@ -19,7 +21,7 @@ const {
 
 router.post("/capturePayment", auth, capturePayment)
 // router.post("/verifyPayment",auth, paymentVerification)
-router.post("/verifyPayment", auth, createOrder)
+router.post("/verifyPayment", auth, validateNoSelfReferral(), createOrder)
 router.get("/get", auth, getAllOrder)
 
 module.exports = router

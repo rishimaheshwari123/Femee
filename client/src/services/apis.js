@@ -106,3 +106,15 @@ export const pairEndpoints = {
   APPROVE_PAIR_REQUEST_ADMIN: BASE_URL + "/pair/admin/approve",
   REJECT_PAIR_REQUEST_ADMIN: BASE_URL + "/pair/admin/reject",
 }
+
+// REFERRAL SYSTEM APIS
+export const referralEndpoints = {
+  GENERATE_REFERRAL_LINK_API: BASE_URL + "/referral/generate",
+  VALIDATE_REFERRAL_LINK_API: BASE_URL + "/referral/validate",
+  GET_REFERRAL_STATS_API: BASE_URL + "/referral/stats",
+}
+
+// MEMBER/BINARY TREE APIS
+export const memberEndpoints = {
+  GET_BINARY_TREE_STRUCTURE: BASE_URL + "/auth/:memberId/binary-tree/:productId",
+}

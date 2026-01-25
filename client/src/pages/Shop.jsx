@@ -20,26 +20,26 @@ function Shop() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-accent-50">
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-primary-600 to-accent-600 text-white py-16">
-        <Container>
-          <div className="text-center" data-aos="fade-down">
-            <div className="inline-flex items-center justify-center w-20 h-20 bg-white/20 backdrop-blur-lg rounded-full mb-6 animate-float">
-              <FaShoppingBag className="text-4xl" />
+        {/* <div className="bg-gradient-to-r from-primary-600 to-accent-600 text-white py-16">
+          <Container>
+            <div className="text-center" data-aos="fade-down">
+              <div className="inline-flex items-center justify-center w-20 h-20 bg-white/20 backdrop-blur-lg rounded-full mb-6 animate-float">
+                <FaShoppingBag className="text-4xl" />
+              </div>
+              <h1 className="text-5xl md:text-6xl font-display font-bold mb-4">
+                Our Products
+              </h1>
+              <p className="text-xl md:text-2xl text-white/90 max-w-2xl mx-auto">
+                Discover our premium collection of health & wellness products
+              </p>
+              <div className="flex items-center justify-center mt-6 gap-2">
+                <div className="h-1 w-20 bg-white/50 rounded-full"></div>
+                <div className="h-2 w-2 bg-white rounded-full"></div>
+                <div className="h-1 w-20 bg-white/50 rounded-full"></div>
+              </div>
             </div>
-            <h1 className="text-5xl md:text-6xl font-display font-bold mb-4">
-              Our Products
-            </h1>
-            <p className="text-xl md:text-2xl text-white/90 max-w-2xl mx-auto">
-              Discover our premium collection of health & wellness products
-            </p>
-            <div className="flex items-center justify-center mt-6 gap-2">
-              <div className="h-1 w-20 bg-white/50 rounded-full"></div>
-              <div className="h-2 w-2 bg-white rounded-full"></div>
-              <div className="h-1 w-20 bg-white/50 rounded-full"></div>
-            </div>
-          </div>
-        </Container>
-      </div>
+          </Container>
+        </div> */}
 
       {/* Products Section */}
       <div className="py-12">

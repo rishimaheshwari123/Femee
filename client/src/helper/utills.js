@@ -2,14 +2,15 @@
 // Display Money in Indian Format
 export const displayMoney = (n) => {
     if (n === null || n === undefined) {
-        return 0; // or return a default value
+        return '₹0'; // return a default string value
       }
     const numFormat = new Intl.NumberFormat('en-IN', {
         style: 'currency',
         currency: 'INR',
     });
 
-    return numFormat.format(n).split('.', 1);
+    // Return string without decimals (split and take first part)
+    return numFormat.format(n).split('.')[0];
 };
 
 

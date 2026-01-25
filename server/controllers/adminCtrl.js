@@ -105,12 +105,14 @@ const getMonthWiseOrderIncome = asyncHandler(async (req, res) => {
 
   const getAllOrders = asyncHandler(async (req, res) => {
       try {
-      const orders = await Order.find().populate("user").populate({
-        path: 'orderItems.product',
-        model: 'Product',
-    });
-      // .populate("orderItems.product")
-      // .populate("orderItems.color");
+      const orders = await Order.find()
+        .populate("user")
+        .populate({
+          path: 'orderItems.product',
+          model: 'Product',
+        })
+        .sort({ orderNumber: -1 }); // Sort by order number descending (latest first)
+      
       res.status(200).json({
         success: true,
         data: orders,

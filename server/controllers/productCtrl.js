@@ -1,5 +1,6 @@
 const Product = require("../models/Product");
 const validateMongoDbId = require("../utils/validateMongoDbId");
+const { getValidTiers, isValidCommissionRate } = require("../utils/commissionConfig");
 
 // Controller to create a new product
 exports.createProduct = async (req, res) => {
@@ -262,3 +263,192 @@ function getTimeAgo(date) {
   if (seconds < 86400) return `${Math.floor(seconds / 3600)} hours ago`;
   return `${Math.floor(seconds / 86400)} days ago`;
 }
+
+// Set root member for a product's binary tree
+exports.setProductRoot = async (req, res) => {
+  try {
+    const { productId } = req.params;
+    const { rootMemberId } = req.body;
+
+    // Validate product ID
+    if (!productId) {
+      return res.status(400).json({
+        success: false,
+        message: "Product ID is required"
+      });
+    }
+
+    validateMongoDbId(productId);
+
+    // Validate root member ID
+    if (!rootMemberId) {
+      return res.status(400).json({
+        success: false,
+        message: "Root member ID is required"
+      });
+    }
+
+    validateMongoDbId(rootMemberId);
+
+    // Check if product exists
+    const product = await Product.findById(productId);
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: "Product not found"
+      });
+    }
+
+    // Check if root member exists
+    const Member = require("../models/memeberModel");
+    const rootMember = await Member.findById(rootMemberId);
+    if (!rootMember) {
+      return res.status(404).json({
+        success: false,
+        message: "Root member not found"
+      });
+    }
+
+    // Initialize root member's product tree if needed
+    const BinaryTreeService = require("../services/BinaryTreeService");
+    const productTree = await BinaryTreeService.initializeRootMember(rootMemberId, productId);
+
+    // Update product's binary config with root member
+    product.binaryConfig = product.binaryConfig || {};
+    product.binaryConfig.rootMemberId = rootMemberId;
+    
+    // Initialize other config fields if not present
+    if (!product.binaryConfig.matchingPercentage) {
+      product.binaryConfig.matchingPercentage = {
+        Bronze: 10,
+        Silver: 12,
+        Gold: 15,
+        Platinum: 18,
+        Diamond: 20,
+        "Blue Diamond": 22
+      };
+    }
+    
+    if (product.binaryConfig.isActive === undefined) {
+      product.binaryConfig.isActive = true;
+    }
+    
+    if (!product.binaryConfig.totalMembers) {
+      product.binaryConfig.totalMembers = 0;
+    }
+    
+    if (!product.binaryConfig.totalVolume) {
+      product.binaryConfig.totalVolume = 0;
+    }
+
+    await product.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Product root member set successfully",
+      data: {
+        productId: product._id,
+        rootMemberId: rootMemberId,
+        productTree: productTree
+      }
+    });
+  } catch (error) {
+    console.error("Error setting product root:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to set product root member",
+      error: error.message
+    });
+  }
+};
+
+// Update commission rates for a product
+exports.updateCommissionRates = async (req, res) => {
+  try {
+    const { productId } = req.params;
+    const { matchingPercentage } = req.body;
+
+    // Validate product ID
+    if (!productId) {
+      return res.status(400).json({
+        success: false,
+        message: "Product ID is required"
+      });
+    }
+
+    validateMongoDbId(productId);
+
+    // Validate matching percentage object
+    if (!matchingPercentage || typeof matchingPercentage !== 'object') {
+      return res.status(400).json({
+        success: false,
+        message: "Matching percentage configuration is required"
+      });
+    }
+
+    // Get valid tiers
+    const validTiers = getValidTiers();
+
+    // Validate tier names and percentage values
+    const errors = [];
+    for (const [tier, percentage] of Object.entries(matchingPercentage)) {
+      // Check if tier is valid
+      if (!validTiers.includes(tier)) {
+        errors.push(`Invalid tier name: ${tier}. Valid tiers are: ${validTiers.join(', ')}`);
+      }
+
+      // Check if percentage is valid
+      if (!isValidCommissionRate(percentage)) {
+        errors.push(`Invalid percentage value for tier ${tier}: ${percentage}. Must be a number between 0 and 100`);
+      }
+    }
+
+    // If there are validation errors, return them
+    if (errors.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Validation errors",
+        errors: errors
+      });
+    }
+
+    // Check if product exists
+    const product = await Product.findById(productId);
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: "Product not found"
+      });
+    }
+
+    // Initialize binaryConfig if it doesn't exist
+    if (!product.binaryConfig) {
+      product.binaryConfig = {};
+    }
+
+    // Update matching percentage configuration
+    product.binaryConfig.matchingPercentage = {
+      ...product.binaryConfig.matchingPercentage,
+      ...matchingPercentage
+    };
+
+    // Save the updated product
+    await product.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Commission rates updated successfully",
+      data: {
+        productId: product._id,
+        matchingPercentage: product.binaryConfig.matchingPercentage
+      }
+    });
+  } catch (error) {
+    console.error("Error updating commission rates:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to update commission rates",
+      error: error.message
+    });
+  }
+};

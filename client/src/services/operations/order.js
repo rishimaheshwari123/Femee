@@ -5,6 +5,7 @@ import { paymentEndpoints } from "../apis"
 import rzpLogo from "../../assets/femee.jpg"
 import { resetCart } from "../../redux/cartSlice"
 import { setCheckout } from "../../redux/paymentSlice"
+import { getReferralData, clearReferralData } from "./referral"
 
 const {
   PRODUCT_PAYMENT_API,
@@ -111,24 +112,46 @@ export async function verifyPayment(
 ) {
   const toastId = toast.loading("Verifying Payment...");
 
+  // Get referral data from localStorage (fallback)
+  const referralData = getReferralData();
+
   // Extract product IDs from the cart
   const products = cart.map(item => ({
     product: item.product._id,  // Assuming the product ID is under `product._id`
-    quantity: item.quantity,
+    quantity: item.quantity
   }));
+
+  // Get referrerId from cart item (preferred) or fallback to localStorage
+  // Use the first cart item's referrerId if available
+  let referrerId = null;
+  if (cart.length > 0 && cart[0].referrerId) {
+    referrerId = cart[0].referrerId;
+    console.log("Using referrerId from cart:", referrerId);
+  } else if (referralData?.referrerId) {
+    referrerId = referralData.referrerId;
+    console.log("Using referrerId from localStorage:", referrerId);
+  }
 
   // Log the data you're sending for verification
   console.log({
     products,
     address: addressData,
     payable,
+    referrerId,
+    cart
   });
 
   try {
     const response = await apiConnector(
       "POST",
       PRODUCT_VERIFY_API,
-      { products, address: addressData, payable, userId: user._id },
+      { 
+        products, 
+        address: addressData, 
+        payable, 
+        userId: user._id,
+        referrerId: referrerId  // Send referrerId at top level
+      },
       {
         Authorization: `Bearer ${token}`,
       }
@@ -144,6 +167,10 @@ export async function verifyPayment(
 
     // Success toast and redirect
     toast.success("Payment Successful. Order Placed!");
+    
+    // Clear referral data after successful purchase
+    clearReferralData();
+    
     navigate("/");
 
     // Dispatch actions to reset cart and update checkout state

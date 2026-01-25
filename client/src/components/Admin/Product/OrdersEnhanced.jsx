@@ -287,7 +287,10 @@ function OrdersEnhanced() {
               <thead className="bg-gradient-to-r from-green-600 to-green-700">
                 <tr>
                   <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">
-                    Order ID
+                    Order Number
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">
+                    Sequence #
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">
                     Customer
@@ -314,10 +317,18 @@ function OrdersEnhanced() {
                   <tr key={order._id} className="hover:bg-gray-50 transition-colors">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm font-medium text-gray-900">
-                        {order._id.slice(-8)}
+                        {order.orderNumber || `FEME-${order._id.slice(-6)}`}
                       </div>
                       <div className="text-xs text-gray-500">
-                        UTR: {order.paymentInfo?.utr || 'N/A'}
+                        Customer sees this
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm font-semibold text-blue-600">
+                        #{order.sequenceNumber || 'N/A'}
+                      </div>
+                      <div className="text-xs text-gray-500">
+                        {order.internalNumber || 'N/A'}
                       </div>
                     </td>
                     

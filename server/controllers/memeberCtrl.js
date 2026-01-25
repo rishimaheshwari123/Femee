@@ -11,7 +11,7 @@ const accountReject = require("../templates/accountReject");
 
 const registerMemberCtrl = async (req, res) => {
   try {
-    const { fName, lName, userName, email, phone, password, images, address, parent } = req.body;
+    let { fName, lName, userName, email, phone, password, images, address, parent } = req.body;
     const imagesArray = typeof images === 'string' ? JSON.parse(images) : images;
 
     if (!fName || !lName || !userName || !phone || !email || !address || !password || !imagesArray) {
@@ -21,11 +21,31 @@ const registerMemberCtrl = async (req, res) => {
       });
     }
 
+    // Clean username: replace spaces with underscores and remove special characters
+    userName = userName.trim().replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
+
+    // Validate username format (only letters, numbers and underscores)
+    const usernameRegex = /^[a-zA-Z0-9_]+$/;
+    if (!usernameRegex.test(userName)) {
+      return res.status(400).json({
+        success: false,
+        message: "Username can only contain letters, numbers and underscores. Special characters are not allowed.",
+      });
+    }
+
+    // Check minimum length
+    if (userName.length < 3) {
+      return res.status(400).json({
+        success: false,
+        message: "Username must be at least 3 characters long.",
+      });
+    }
+
     const existingUser = await memberModel.findOne({ userName });
     if (existingUser) {
       return res.status(400).json({
         success: false,
-        message: "User already exists. Please sign in to continue.",
+        message: "Username already exists. Please choose a different username.",
       });
     }
 
@@ -33,12 +53,14 @@ const registerMemberCtrl = async (req, res) => {
 
     // Check if parent is provided
     let parentUser = null;
-    if (parent) {
-      parentUser = await memberModel.findOne({ userName: parent });
+    if (parent && parent.trim() !== '') {
+      // Decode parent username in case it comes URL encoded
+      const decodedParent = decodeURIComponent(parent);
+      parentUser = await memberModel.findOne({ userName: decodedParent });
       if (!parentUser) {
         return res.status(404).json({
           success: false,
-          message: `Parent user with userName "${parent}" not found.`,
+          message: `Parent user with userName "${decodedParent}" not found.`,
         });
       }
     }
@@ -479,4 +501,42 @@ async function getDownline(userId) {
   return result;
 }
 
-module.exports = { registerMemberCtrl, loginMemberCtrl, getAllMemberCtrl, verifyMemberCtrl, updateTierCtrl, memberProfileCtrl, updateMemberProfileCtrl, deleteMemberCtrl, updatePassword, getReferralTreeCtrl };
+// Get member by username (for referral verification)
+const getMemberByUsernameCtrl = async (req, res) => {
+  try {
+    const { userName } = req.params;
+    
+    // Decode username in case it's URL encoded
+    const decodedUserName = decodeURIComponent(userName);
+    
+    const member = await memberModel.findOne({ userName: decodedUserName })
+      .select('fName lName userName email isActive')
+      .lean();
+
+    if (!member) {
+      return res.status(404).json({
+        success: false,
+        message: `Member with username "${decodedUserName}" not found.`,
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      member: {
+        id: member._id,
+        name: `${member.fName} ${member.lName}`,
+        userName: member.userName,
+        email: member.email,
+        isActive: member.isActive
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong while fetching member",
+    });
+  }
+};
+
+module.exports = { registerMemberCtrl, loginMemberCtrl, getAllMemberCtrl, verifyMemberCtrl, updateTierCtrl, memberProfileCtrl, updateMemberProfileCtrl, deleteMemberCtrl, updatePassword, getReferralTreeCtrl, getMemberByUsernameCtrl };

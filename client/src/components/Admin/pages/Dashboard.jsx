@@ -34,33 +34,80 @@ const Dashboard = () => {
     totalReviews: 0,
     avgRating: 4.8,
   });
+  const [memberOrders, setMemberOrders] = useState({
+    total: 0,
+    pending: 0,
+    completed: 0,
+  });
   const [loading, setLoading] = useState(true);
   const BASE_URL = process.env.REACT_APP_BASE_URL;
+
+  // Fetch member-specific orders
+  useEffect(() => {
+    const fetchMemberOrders = async () => {
+      if (user?.role === "member" && user?._id) {
+        try {
+          const response = await axios.get(`${BASE_URL}/product/orders`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          if (response.data.success) {
+            // Filter orders for this specific member
+            const userOrders = response.data.data.filter(
+              order => order.userId?._id === user._id || order.userId === user._id
+            );
+
+            const pending = userOrders.filter(
+              order => order.status === "pending" || order.status === "processing"
+            ).length;
+
+            const completed = userOrders.filter(
+              order => order.status === "delivered" || order.status === "completed"
+            ).length;
+
+            setMemberOrders({
+              total: userOrders.length,
+              pending: pending,
+              completed: completed,
+            });
+          }
+        } catch (error) {
+          console.error("Failed to fetch member orders", error);
+        }
+      }
+    };
+
+    fetchMemberOrders();
+  }, [user, token, BASE_URL]);
 
   useEffect(() => {
     const fetchStats = async () => {
       try {
         setLoading(true);
         
-        // Fetch dashboard stats from API
-        const response = await axios.get(`${BASE_URL}/product/dashboard-stats`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (response.data.success) {
-          setStats({
-            totalUsers: response.data.data.totalUsers || 0,
-            totalOrders: response.data.data.totalOrders || 0,
-            totalRevenue: response.data.data.totalRevenue || 0,
-            totalProducts: response.data.data.totalProducts || allProduct?.length || 0,
-            pendingOrders: response.data.data.pendingOrders || 0,
-            completedOrders: response.data.data.completedOrders || 0,
-            totalReviews: response.data.data.totalReviews || 0,
-            avgRating: parseFloat(response.data.data.avgRating) || 4.8,
+        // Only fetch admin stats if user is admin
+        if (user?.role === "admin") {
+          const response = await axios.get(`${BASE_URL}/product/dashboard-stats`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           });
-          setRecentActivity(response.data.data.recentActivity || []);
+
+          if (response.data.success) {
+            setStats({
+              totalUsers: response.data.data.totalUsers || 0,
+              totalOrders: response.data.data.totalOrders || 0,
+              totalRevenue: response.data.data.totalRevenue || 0,
+              totalProducts: response.data.data.totalProducts || allProduct?.length || 0,
+              pendingOrders: response.data.data.pendingOrders || 0,
+              completedOrders: response.data.data.completedOrders || 0,
+              totalReviews: response.data.data.totalReviews || 0,
+              avgRating: parseFloat(response.data.data.avgRating) || 4.8,
+            });
+            setRecentActivity(response.data.data.recentActivity || []);
+          }
         }
       } catch (error) {
         console.error("Failed to fetch dashboard statistics", error);
@@ -77,9 +124,10 @@ const Dashboard = () => {
     if (token) {
       fetchStats();
     }
-  }, [allProduct, token]);
+  }, [allProduct, token, user]);
 
-  const statsCards = [
+  // Stats cards - different for admin and member
+  const statsCards = user?.role === "admin" ? [
     {
       title: "Total Users",
       value: stats.totalUsers,
@@ -112,9 +160,10 @@ const Dashboard = () => {
       change: "+5",
       isPositive: true,
     },
-  ];
+  ] : [];
 
-  const quickActions = [
+  // Quick actions - different for admin and member
+  const quickActions = user?.role === "admin" ? [
     {
       title: "Add Product",
       icon: <FaBoxOpen />,
@@ -139,6 +188,31 @@ const Dashboard = () => {
       link: "/admin/getAll-members",
       color: "dark",
     },
+  ] : [
+    {
+      title: "My Orders",
+      icon: <FaShoppingCart />,
+      link: "/member/my-orders",
+      color: "primary",
+    },
+    {
+      title: "Shop Products",
+      icon: <FaBoxOpen />,
+      link: "/shop",
+      color: "secondary",
+    },
+    {
+      title: "My Team",
+      icon: <FaUsers />,
+      link: "/member/getAll-members",
+      color: "accent",
+    },
+    {
+      title: "Binary Tree",
+      icon: <FaChartLine />,
+      link: "/member/binary-trees",
+      color: "dark",
+    },
   ];
 
   const [recentActivity, setRecentActivity] = useState([]);
@@ -156,53 +230,76 @@ const Dashboard = () => {
               Welcome back, <span className="font-semibold">{user?.userName}</span>!
             </p>
           </div>
-          <div className="flex gap-3">
-            <Button to="/admin/add-product" variant="primary" size="md">
-              <FaBoxOpen className="mr-2" />
-              Add Product
-            </Button>
-          </div>
+          {user?.role === "admin" && (
+            <div className="flex gap-3">
+              <Button to="/admin/add-product" variant="primary" size="md">
+                <FaBoxOpen className="mr-2" />
+                Add Product
+              </Button>
+            </div>
+          )}
         </div>
 
-        {/* Referral Link */}
-        <Card variant="gradient" className="border-0">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div>
-              <h3 className="text-lg font-semibold text-dark-900 mb-2">
-                Your Referral Link
-              </h3>
-              <p className="text-sm text-dark-600 break-all">
-                https://www.femmecurehelpingher.com/become-member/{user?.userName}
-              </p>
+        {/* Referral Link - Only for Members */}
+        {user?.role === "member" && (
+          <Card variant="gradient" className="border-0">
+            <div className="flex flex-col gap-4">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div className="flex-1">
+                  <h3 className="text-lg font-semibold text-dark-900 mb-2">
+                    Your Referral Link
+                  </h3>
+                  <p className="text-sm text-dark-600 break-all">
+                    https://www.femmecurehelpingher.com/become-member/{user?.userName}
+                  </p>
+                </div>
+                <Button
+                  variant="dark"
+                  size="sm"
+                  onClick={() => {
+                    navigator.clipboard.writeText(
+                      `https://www.femmecurehelpingher.com/become-member/${user?.userName}`
+                    );
+                    alert("Link copied!");
+                  }}
+                >
+                  Copy Link
+                </Button>
+              </div>
+              
+              {/* Order Count */}
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 pt-4 border-t border-dark-200">
+                <div className="bg-white/50 rounded-xl p-4">
+                  <p className="text-xs text-dark-600 mb-1">Total Orders</p>
+                  <p className="text-2xl font-bold text-dark-900">{memberOrders.total}</p>
+                </div>
+                <div className="bg-white/50 rounded-xl p-4">
+                  <p className="text-xs text-dark-600 mb-1">Pending Orders</p>
+                  <p className="text-2xl font-bold text-orange-600">{memberOrders.pending}</p>
+                </div>
+                <div className="bg-white/50 rounded-xl p-4">
+                  <p className="text-xs text-dark-600 mb-1">Completed Orders</p>
+                  <p className="text-2xl font-bold text-green-600">{memberOrders.completed}</p>
+                </div>
+              </div>
             </div>
-            <Button
-              variant="dark"
-              size="sm"
-              onClick={() => {
-                navigator.clipboard.writeText(
-                  `https://www.femmecurehelpingher.com/become-member/${user?.userName}`
-                );
-                alert("Link copied!");
-              }}
-            >
-              Copy Link
-            </Button>
-          </div>
-        </Card>
+          </Card>
+        )}
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {statsCards.map((stat, index) => (
-            <Card
-              key={index}
-              hover
-              className="relative overflow-hidden group"
-            >
-              <div className={`absolute inset-0 bg-gradient-to-br ${stat.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-300`}></div>
-              <div className="relative">
-                <div className="flex items-start justify-between mb-4">
-                  <div className={`p-3 bg-gradient-to-br ${stat.gradient} text-white rounded-2xl text-2xl`}>
-                    {stat.icon}
+        {/* Stats Cards - Only for Admin */}
+        {user?.role === "admin" && statsCards.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {statsCards.map((stat, index) => (
+              <Card
+                key={index}
+                hover
+                className="relative overflow-hidden group"
+              >
+                <div className={`absolute inset-0 bg-gradient-to-br ${stat.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-300`}></div>
+                <div className="relative">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className={`p-3 bg-gradient-to-br ${stat.gradient} text-white rounded-2xl text-2xl`}>
+                      {stat.icon}
                   </div>
                   <Badge
                     variant={stat.isPositive ? "success" : "danger"}
@@ -219,7 +316,8 @@ const Dashboard = () => {
               </div>
             </Card>
           ))}
-        </div>
+          </div>
+        )}
 
         {/* Quick Actions & Recent Activity */}
         <div className="grid lg:grid-cols-3 gap-6">
@@ -288,29 +386,30 @@ const Dashboard = () => {
           </Card>
         </div>
 
-        {/* Performance Overview */}
-        <div className="grid lg:grid-cols-2 gap-6">
-          <Card>
-            <Card.Header>
-              <Card.Title>Sales Overview</Card.Title>
-            </Card.Header>
-            <Card.Body>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-dark-600">Pending Orders</span>
-                  <span className="font-semibold text-dark-900">{stats.pendingOrders}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-dark-600">Completed Orders</span>
-                  <span className="font-semibold text-dark-900">{stats.completedOrders}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-dark-600">Total Reviews</span>
-                  <span className="font-semibold text-dark-900">{stats.totalReviews}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-dark-600">Average Rating</span>
-                  <div className="flex items-center gap-2">
+        {/* Performance Overview - Only for Admin */}
+        {user?.role === "admin" && (
+          <div className="grid lg:grid-cols-2 gap-6">
+            <Card>
+              <Card.Header>
+                <Card.Title>Sales Overview</Card.Title>
+              </Card.Header>
+              <Card.Body>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-dark-600">Pending Orders</span>
+                    <span className="font-semibold text-dark-900">{stats.pendingOrders}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-dark-600">Completed Orders</span>
+                    <span className="font-semibold text-dark-900">{stats.completedOrders}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-dark-600">Total Reviews</span>
+                    <span className="font-semibold text-dark-900">{stats.totalReviews}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-dark-600">Average Rating</span>
+                    <div className="flex items-center gap-2">
                     <FaStar className="text-yellow-500" />
                     <span className="font-semibold text-dark-900">{stats.avgRating}</span>
                   </div>
@@ -346,7 +445,8 @@ const Dashboard = () => {
               </div>
             </Card.Body>
           </Card>
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -10,8 +10,12 @@ const {
   getProductDetails,
   deleteProduct,
   updateProduct,
-  getDashboardStats
+  getDashboardStats,
+  setProductRoot,
+  updateCommissionRates
 } = require("../controllers/productCtrl");
+
+const { getBinaryTreeVisualization } = require("../controllers/dashboardCtrl");
 
 
 const {
@@ -31,6 +35,11 @@ router.get("/all-product", getAllProduct);
 router.get("/adminGetOrder",auth, getAllOrders);
 router.post("/updateOrder",auth, updateOrderStatus);
 router.get("/dashboard-stats",auth, getDashboardStats);
+router.post("/:productId/set-root", auth, setProductRoot);
+router.put("/:productId/commission-rates", auth, updateCommissionRates);
+
+// Binary tree visualization
+router.get("/:productId/binary-tree/:memberId", getBinaryTreeVisualization);
 
 // export all router
 module.exports = router;

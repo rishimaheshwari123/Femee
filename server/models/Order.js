@@ -3,7 +3,20 @@ const mongoose = require("mongoose"); // Erase if already required
 // Declare the Schema of the Mongo model
 const orderSchema = new mongoose.Schema(
   {
-
+    orderNumber: {
+      type: String,
+      unique: true,
+      required: true,
+    },
+    sequenceNumber: {
+      type: Number,
+      unique: true,
+      required: true,
+    },
+    internalNumber: {
+      type: String,
+      required: true,
+    },
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Memeber",
@@ -60,7 +73,25 @@ const orderSchema = new mongoose.Schema(
           type: Number,
           required: true,
         },
-
+        price: {
+          type: Number,
+          required: true,
+        },
+        
+        // Referral tracking per product
+        referrerId: { 
+          type: mongoose.Schema.Types.ObjectId, 
+          ref: "Memeber" 
+        },
+        isFirstPurchase: { 
+          type: Boolean, 
+          default: false 
+        },
+        placedInLeg: { 
+          type: String, 
+          enum: ['left', 'right', 'none'], 
+          default: 'none' 
+        }
       },
     ],
     paidAt: {

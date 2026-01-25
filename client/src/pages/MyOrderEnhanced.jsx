@@ -97,7 +97,7 @@ function MyOrderEnhanced() {
     
     doc.setFontSize(10);
     doc.setFont("helvetica", "normal");
-    doc.text(`Order ID: ${order.order_id}`, 20, 73);
+    doc.text(`Order Number: ${order.orderNumber || order._id}`, 20, 73);
     doc.text(`Order Date: ${new Date(order.createdAt).toLocaleDateString('en-IN')}`, 20, 80);
     doc.text(`Payment Status: ${order.paymentInfo?.status || 'Pending'}`, 20, 87);
     
@@ -202,7 +202,7 @@ function MyOrderEnhanced() {
     doc.text("For support: support@femmecure.com | +91-XXXXXXXXXX", 105, pageHeight - 8, { align: "center" });
     
     // Save PDF
-    doc.save(`Invoice_${order.order_id}.pdf`);
+    doc.save(`Invoice_${order.orderNumber || order._id}.pdf`);
   };
 
   if (loading) {
@@ -253,8 +253,8 @@ function MyOrderEnhanced() {
                 <div className="bg-gradient-to-r from-green-600 to-green-700 p-6 text-white">
                   <div className="flex flex-wrap justify-between items-start gap-4">
                     <div>
-                      <p className="text-sm opacity-90 mb-1">Order ID</p>
-                      <p className="text-xl font-bold">{order.order_id}</p>
+                      <p className="text-sm opacity-90 mb-1">Order Number</p>
+                      <p className="text-xl font-bold">{order.orderNumber || `FEME-${order._id?.slice(-6)}`}</p>
                     </div>
                     <div>
                       <p className="text-sm opacity-90 mb-1">Order Date</p>

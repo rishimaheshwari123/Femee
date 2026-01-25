@@ -15,7 +15,7 @@ import { GrGallery } from "react-icons/gr";
 import { MdOutlineProductionQuantityLimits } from "react-icons/md";
 import { AiFillProduct } from "react-icons/ai";
 import { BiPurchaseTag } from "react-icons/bi";
-import { FaTrophy, FaGift, FaUsers } from "react-icons/fa";
+import { FaTrophy, FaGift, FaUsers, FaSitemap } from "react-icons/fa";
 
 const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(
@@ -112,6 +112,11 @@ const Sidebar = () => {
             to: "/member/my-orders",
             icon: <BiPurchaseTag />,
             label: "My Orders",
+          },
+          {
+            to: "/member/binary-trees",
+            icon: <FaSitemap className="text-purple-300" />,
+            label: "Binary Trees",
           },
           {
             to: "/member/pair-rewards",

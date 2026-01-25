@@ -119,60 +119,60 @@ const GetAllMembers = () => {
   const [selectedMember, setSelectedMember] = useState(null);
   const [memberOrders, setMemberOrders] = useState([]);
   const [loadingOrders, setLoadingOrders] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterTier, setFilterTier] = useState("All");
   const [filterStatus, setFilterStatus] = useState("All");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalMembers, setTotalMembers] = useState(0);
+  const limit = 10;
   const { user, token } = useSelector((state) => state.auth);
 
-  const getMember = async () => {
+  const getMember = async (page = 1, search = "", tier = "All", status = "All") => {
     try {
-      const response = await getAllMembersApi();
-      const sortedMembers = (response || []).sort(
-        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-      );
-      setMembers(sortedMembers);
-      setFilteredMembers(sortedMembers);
+      setLoading(true);
+      const queryParams = new URLSearchParams({
+        page: page,
+        limit: limit,
+        ...(search && { search }),
+        ...(tier !== "All" && { tier }),
+        ...(status !== "All" && { status })
+      });
+      
+      const response = await fetch(`${process.env.REACT_APP_BASE_URL}/auth/getAll?${queryParams}`);
+      const data = await response.json();
+      
+      if (data.success) {
+        setMembers(data.members);
+        setFilteredMembers(data.members);
+        setTotalPages(data.pagination.totalPages);
+        setTotalMembers(data.pagination.totalMembers);
+        setCurrentPage(data.pagination.currentPage);
+      }
     } catch (error) {
       toast.error("Failed to fetch members.");
+    } finally {
+      setLoading(false);
     }
   };
 
+  // Debounced search
   useEffect(() => {
-    let result = [...members];
-
-    if (searchTerm) {
-      result = result.filter(
-        (member) =>
-          member.fName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          member.lName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          member.userName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          member.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          member.phone?.toString().includes(searchTerm)
-      );
-    }
-
-    if (filterTier !== "All") {
-      result = result.filter((member) => member.tier === filterTier);
-    }
-
-    if (filterStatus !== "All") {
-      result = result.filter((member) =>
-        filterStatus === "Active" ? member.isActive : !member.isActive
-      );
-    }
-
-    setFilteredMembers(result);
-  }, [searchTerm, filterTier, filterStatus, members]);
+    const timer = setTimeout(() => {
+      setCurrentPage(1);
+      getMember(1, searchTerm, filterTier, filterStatus);
+    }, 500);
+    
+    return () => clearTimeout(timer);
+  }, [searchTerm, filterTier, filterStatus]);
 
   const handleActivate = async (id) => {
     try {
       const updatedMember = await updateVerifyMembersApi(id);
       if (updatedMember) {
-        setMembers((prev) =>
-          prev.map((member) =>
-            member._id === id ? { ...member, isActive: true } : member
-          )
-        );
+        // Refresh current page
+        getMember(currentPage, searchTerm, filterTier, filterStatus);
         toast.success("Member activated successfully!");
       }
     } catch {
@@ -184,7 +184,8 @@ const GetAllMembers = () => {
     try {
       const deleted = await deleteMemberApi(id);
       if (deleted) {
-        setMembers((prev) => prev.filter((member) => member._id !== id));
+        // Refresh current page
+        getMember(currentPage, searchTerm, filterTier, filterStatus);
         toast.success("Member deleted successfully!");
       }
     } catch {
@@ -196,11 +197,8 @@ const GetAllMembers = () => {
     try {
       const updatedMember = await updateTierMembersApi(id, tier);
       if (updatedMember) {
-        setMembers((prev) =>
-          prev.map((member) =>
-            member._id === id ? { ...member, tier } : member
-          )
-        );
+        // Refresh current page
+        getMember(currentPage, searchTerm, filterTier, filterStatus);
         toast.success(`Tier updated to ${tier}!`);
       }
     } catch {
@@ -236,7 +234,7 @@ const GetAllMembers = () => {
   };
 
   useEffect(() => {
-    getMember();
+    getMember(1, "", "All", "All");
   }, []);
 
   return (
@@ -295,7 +293,8 @@ const GetAllMembers = () => {
 
           <div className="mt-3 flex items-center justify-between text-sm">
             <span className="text-gray-600">
-              Showing <strong>{filteredMembers.length}</strong> of <strong>{members.length}</strong> members
+              Showing <strong>{filteredMembers.length}</strong> of <strong>{totalMembers}</strong> members
+              {totalPages > 1 && ` (Page ${currentPage} of ${totalPages})`}
             </span>
             {(searchTerm || filterTier !== "All" || filterStatus !== "All") && (
               <button
@@ -313,15 +312,24 @@ const GetAllMembers = () => {
         </div>
 
         {/* Members Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredMembers.length === 0 ? (
-            <div className="col-span-full text-center py-12">
-              <div className="text-6xl mb-4">🔍</div>
-              <p className="text-gray-500 font-medium">No members found</p>
-              <p className="text-sm text-gray-400 mt-2">Try adjusting your filters</p>
+        {loading ? (
+          <div className="flex items-center justify-center py-20">
+            <div className="text-center">
+              <div className="animate-spin text-6xl mb-4">⏳</div>
+              <p className="text-gray-600 font-medium">Loading members...</p>
             </div>
-          ) : (
-            filteredMembers.map((member) => (
+          </div>
+        ) : (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredMembers.length === 0 ? (
+                <div className="col-span-full text-center py-12">
+                  <div className="text-6xl mb-4">🔍</div>
+                  <p className="text-gray-500 font-medium">No members found</p>
+                  <p className="text-sm text-gray-400 mt-2">Try adjusting your filters</p>
+                </div>
+              ) : (
+                filteredMembers.map((member) => (
               <div
                 key={member._id}
                 className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow p-6"
@@ -429,9 +437,80 @@ const GetAllMembers = () => {
                   )}
                 </div>
               </div>
-            ))
+              ))
+            )}
+          </div>
+
+          {/* Pagination */}
+          {totalPages > 1 && !loading && (
+            <div className="mt-8 flex items-center justify-center gap-2">
+              <button
+                onClick={() => {
+                  const newPage = currentPage - 1;
+                  setCurrentPage(newPage);
+                  getMember(newPage, searchTerm, filterTier, filterStatus);
+                }}
+                disabled={currentPage === 1}
+                className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                  currentPage === 1
+                    ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                    : 'bg-green-500 text-white hover:bg-green-600'
+                }`}
+              >
+                ← Previous
+              </button>
+
+              <div className="flex items-center gap-1">
+                {[...Array(totalPages)].map((_, index) => {
+                  const page = index + 1;
+                  // Show first, last, current, and adjacent pages
+                  if (
+                    page === 1 ||
+                    page === totalPages ||
+                    (page >= currentPage - 1 && page <= currentPage + 1)
+                  ) {
+                    return (
+                      <button
+                        key={page}
+                        onClick={() => {
+                          setCurrentPage(page);
+                          getMember(page, searchTerm, filterTier, filterStatus);
+                        }}
+                        className={`w-10 h-10 rounded-lg font-medium transition-colors ${
+                          currentPage === page
+                            ? 'bg-green-500 text-white'
+                            : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-300'
+                        }`}
+                      >
+                        {page}
+                      </button>
+                    );
+                  } else if (page === currentPage - 2 || page === currentPage + 2) {
+                    return <span key={page} className="text-gray-400">...</span>;
+                  }
+                  return null;
+                })}
+              </div>
+
+              <button
+                onClick={() => {
+                  const newPage = currentPage + 1;
+                  setCurrentPage(newPage);
+                  getMember(newPage, searchTerm, filterTier, filterStatus);
+                }}
+                disabled={currentPage === totalPages}
+                className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                  currentPage === totalPages
+                    ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                    : 'bg-green-500 text-white hover:bg-green-600'
+                }`}
+              >
+                Next →
+              </button>
+            </div>
           )}
-        </div>
+        </>
+        )}
       </div>
 
       {/* Tree Modal */}

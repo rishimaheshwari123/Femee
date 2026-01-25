@@ -164,7 +164,46 @@ const loginMemberCtrl = async (req, res) => {
 
 const getAllMemberCtrl = async (req, res) => {
   try {
-    const members = await memberModel.find()
+    // Pagination parameters
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+    
+    // Search parameters
+    const search = req.query.search || '';
+    const tier = req.query.tier || '';
+    const status = req.query.status || '';
+    
+    // Build query
+    let query = {};
+    
+    // Search filter
+    if (search) {
+      query.$or = [
+        { fName: { $regex: search, $options: 'i' } },
+        { lName: { $regex: search, $options: 'i' } },
+        { userName: { $regex: search, $options: 'i' } },
+        { email: { $regex: search, $options: 'i' } },
+        { phone: { $regex: search, $options: 'i' } }
+      ];
+    }
+    
+    // Tier filter
+    if (tier && tier !== 'All') {
+      query.tier = tier;
+    }
+    
+    // Status filter
+    if (status && status !== 'All') {
+      query.isActive = status === 'Active';
+    }
+    
+    // Get total count for pagination
+    const totalMembers = await memberModel.countDocuments(query);
+    const totalPages = Math.ceil(totalMembers / limit);
+    
+    // Fetch members with pagination
+    const members = await memberModel.find(query)
       .populate({
         path: "parent",
         select: "fName lName userName"
@@ -173,6 +212,9 @@ const getAllMemberCtrl = async (req, res) => {
         path: "child",
         select: "fName lName userName"
       })
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
       .exec();
 
     // Add referral chain info to each member
@@ -200,15 +242,24 @@ const getAllMemberCtrl = async (req, res) => {
       })
     );
 
-    return res.status(200).json({
+    res.status(200).json({
       success: true,
-      members: membersWithChain
+      members: membersWithChain,
+      pagination: {
+        currentPage: page,
+        totalPages: totalPages,
+        totalMembers: totalMembers,
+        limit: limit,
+        hasNextPage: page < totalPages,
+        hasPrevPage: page > 1
+      }
     });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({
+    console.error("Error in getAllMemberCtrl:", error);
+    res.status(500).json({
       success: false,
-      message: "Something went wrong in get all member api",
+      message: "Failed to fetch members",
+      error: error.message
     });
   }
 };

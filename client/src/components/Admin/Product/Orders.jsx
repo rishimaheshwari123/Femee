@@ -13,7 +13,11 @@ function Orders() {
       try {
         const orders = await getAllOrders(token);
         console.log(orders);
-        setAllOrders(orders);
+        // Sort by createdAt - latest first
+        const sortedOrders = orders.sort((a, b) => 
+          new Date(b.createdAt) - new Date(a.createdAt)
+        );
+        setAllOrders(sortedOrders);
       } catch (error) {
         console.error("Error fetching orders:", error);
       }
@@ -102,7 +106,10 @@ function Orders() {
           <thead className="bg-gray-50">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Order ID
+                Order Number
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Sequence #
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 User
@@ -140,7 +147,20 @@ function Orders() {
             {allOrders.map((order) => (
               <tr key={order._id}>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                  {order._id}
+                  <div className="text-sm font-medium text-gray-900">
+                    {order.orderNumber || `FEME-${order._id.slice(-6)}`}
+                  </div>
+                  <div className="text-xs text-gray-500">
+                    Customer sees this
+                  </div>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="text-sm font-semibold text-blue-600">
+                    #{order.sequenceNumber || 'N/A'}
+                  </div>
+                  <div className="text-xs text-gray-500">
+                    {order.internalNumber || 'N/A'}
+                  </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   <div>

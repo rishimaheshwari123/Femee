@@ -13,7 +13,7 @@ import {
   FaEnvelope
 } from "react-icons/fa";
 import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
+import "jspdf-autotable";
 
 function MyOrderEnhanced() {
   const [orders, setOrders] = useState([]);
@@ -67,225 +67,142 @@ function MyOrderEnhanced() {
     return icons[status] || <FaClock />;
   };
 
-  // Helper function to format price without currency symbol
-  const formatPriceNumber = (price) => {
-    return new Intl.NumberFormat("en-IN").format(price);
-  };
-
   const downloadInvoice = (order) => {
     const doc = new jsPDF();
-    const pageWidth = doc.internal.pageSize.width;
-    const pageHeight = doc.internal.pageSize.height;
     
-    // Professional Header
-    doc.setFillColor(41, 128, 185); // Professional blue
-    doc.rect(0, 0, pageWidth, 50, 'F');
+    // Header with gradient effect
+    doc.setFillColor(34, 197, 94);
+    doc.rect(0, 0, 210, 40, 'F');
     
-    // Company Name
+    // Company Logo/Name
     doc.setTextColor(255, 255, 255);
-    doc.setFontSize(28);
+    doc.setFontSize(24);
     doc.setFont("helvetica", "bold");
-    doc.text("FEMMECURE", 20, 25);
+    doc.text("FemmeCure", 105, 20, { align: "center" });
     
-    // Tagline
-    doc.setFontSize(11);
-    doc.setFont("helvetica", "normal");
-    doc.text("Your Trusted Health Partner", 20, 35);
-    
-    // Invoice Number (Right aligned)
-    doc.setFontSize(14);
-    doc.setFont("helvetica", "bold");
-    doc.text("INVOICE", pageWidth - 20, 25, { align: "right" });
-    doc.setFontSize(10);
-    doc.setFont("helvetica", "normal");
-    doc.text(`#${order.orderNumber || order._id.slice(-8).toUpperCase()}`, pageWidth - 20, 35, { align: "right" });
-    
-    // Reset text color
-    doc.setTextColor(0, 0, 0);
-    
-    // Invoice Details Section
-    const startY = 65;
     doc.setFontSize(12);
-    doc.setFont("helvetica", "bold");
-    doc.text("Invoice Details", 20, startY);
+    doc.setFont("helvetica", "normal");
+    doc.text("Your Trusted Health Partner", 105, 28, { align: "center" });
     
-    // Details box - make it taller to accommodate more info
-    doc.setDrawColor(200, 200, 200);
+    // Invoice Title
+    doc.setTextColor(0, 0, 0);
+    doc.setFontSize(20);
+    doc.setFont("helvetica", "bold");
+    doc.text("INVOICE", 105, 55, { align: "center" });
+    
+    // Order Details Box
+    doc.setDrawColor(34, 197, 94);
     doc.setLineWidth(0.5);
-    doc.rect(20, startY + 5, pageWidth - 40, order.setNumber ? 40 : 30);
+    doc.rect(15, 65, 180, 30);
     
     doc.setFontSize(10);
     doc.setFont("helvetica", "normal");
-    doc.text(`Order Number: ${order.orderNumber || `FEME-${order._id?.slice(-6)}`}`, 25, startY + 15);
-    doc.text(`Order Date: ${new Date(order.createdAt).toLocaleDateString('en-IN', {
-      day: '2-digit',
-      month: 'short',
-      year: 'numeric'
-    })}`, 25, startY + 23);
+    doc.text(`Order Number: ${order.orderNumber || order._id}`, 20, 73);
+    doc.text(`Order Date: ${new Date(order.createdAt).toLocaleDateString('en-IN')}`, 20, 80);
+    doc.text(`Payment Status: ${order.paymentInfo?.status || 'Pending'}`, 20, 87);
     
-    doc.text(`UTR: ${order.paymentInfo?.utr || 'N/A'}`, pageWidth/2 + 10, startY + 15);
-    doc.text(`Payment Status: ${order.paymentInfo?.status || 'Pending'}`, pageWidth/2 + 10, startY + 23);
-    
-    // Add set number and order status on new lines if set number exists
-    if (order.setNumber) {
-      doc.text(`Set Number: #${order.setNumber}`, 25, startY + 31);
-      doc.text(`Order Status: ${order.orderStatus}`, pageWidth/2 + 10, startY + 31);
-    } else {
-      doc.text(`Order Status: ${order.orderStatus}`, pageWidth/2 + 10, startY + 31);
-    }
-    
-    // Billing Information Section
-    const billingY = startY + (order.setNumber ? 55 : 45);
-    const sectionWidth = (pageWidth - 50) / 2;
-    
-    // TO Section (Left side)
-    doc.setFillColor(248, 249, 250);
-    doc.rect(20, billingY, sectionWidth, 45, 'F');
-    doc.setDrawColor(200, 200, 200);
-    doc.rect(20, billingY, sectionWidth, 45);
-    
-    doc.setFontSize(11);
     doc.setFont("helvetica", "bold");
-    doc.setTextColor(41, 128, 185);
-    doc.text("TO", 25, billingY + 10);
+    doc.text(`Status: ${order.orderStatus}`, 120, 73);
+    doc.text(`Total: ${formatPrice(order.totalPrice)}`, 120, 80);
     
-    doc.setTextColor(0, 0, 0);
+    // Customer Information
+    doc.setFillColor(240, 240, 240);
+    doc.rect(15, 100, 85, 40, 'F');
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(10);
-    doc.text(order.shippingInfo.name.toUpperCase(), 25, billingY + 20);
+    doc.setFontSize(12);
+    doc.text("Bill To:", 20, 108);
     
     doc.setFont("helvetica", "normal");
-    doc.setFontSize(9);
-    const addressLines = doc.splitTextToSize(order.shippingInfo.address, sectionWidth - 10);
-    doc.text(addressLines, 25, billingY + 28);
-    doc.text(`${order.shippingInfo.city}, ${order.shippingInfo.state}`, 25, billingY + 36);
-    doc.text(`PIN: ${order.shippingInfo.pincode}`, 25, billingY + 42);
-    
-    // FROM Section (Right side)
-    doc.setFillColor(248, 249, 250);
-    doc.rect(pageWidth/2 + 5, billingY, sectionWidth, 45, 'F');
-    doc.setDrawColor(200, 200, 200);
-    doc.rect(pageWidth/2 + 5, billingY, sectionWidth, 45);
-    
-    doc.setFontSize(11);
-    doc.setFont("helvetica", "bold");
-    doc.setTextColor(41, 128, 185);
-    doc.text("FROM", pageWidth/2 + 10, billingY + 10);
-    
-    doc.setTextColor(0, 0, 0);
-    doc.setFont("helvetica", "bold");
     doc.setFontSize(10);
-    doc.text("FEMMECURE", pageWidth/2 + 10, billingY + 20);
+    doc.text(order.shippingInfo.name, 20, 116);
+    doc.text(order.shippingInfo.address, 20, 122);
+    doc.text(`${order.shippingInfo.city}, ${order.shippingInfo.state}`, 20, 128);
+    doc.text(`PIN: ${order.shippingInfo.pincode}`, 20, 134);
+    
+    // Shipping Information
+    doc.setFillColor(240, 240, 240);
+    doc.rect(110, 100, 85, 40, 'F');
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(12);
+    doc.text("Ship To:", 115, 108);
     
     doc.setFont("helvetica", "normal");
-    doc.setFontSize(9);
-    doc.text("Bhopal, Madhya Pradesh", pageWidth/2 + 10, billingY + 28);
-    doc.text("India", pageWidth/2 + 10, billingY + 34);
-    doc.text("Phone: +91-7879523232", pageWidth/2 + 10, billingY + 40);
+    doc.setFontSize(10);
+    doc.text(order.shippingInfo.name, 115, 116);
+    doc.text(order.shippingInfo.address, 115, 122);
+    doc.text(`${order.shippingInfo.city}, ${order.shippingInfo.state}`, 115, 128);
+    doc.text(`PIN: ${order.shippingInfo.pincode}`, 115, 134);
     
     // Order Items Table
-    const tableStartY = billingY + 60;
     const tableData = order.orderItems.map((item, index) => [
-      (index + 1).toString(),
+      index + 1,
       item.product.title,
-      item.quantity.toString(),
-      formatPriceNumber(item.product.price),
-      formatPriceNumber(item.product.price * item.quantity)
+      item.quantity,
+      formatPrice(item.product.price),
+      formatPrice(item.product.price * item.quantity)
     ]);
     
-    autoTable(doc, {
-      startY: tableStartY,
-      head: [['S.No.', 'Product Description', 'Qty', 'Unit Price', 'Amount']],
+    doc.autoTable({
+      startY: 150,
+      head: [['#', 'Product', 'Qty', 'Price', 'Total']],
       body: tableData,
-      theme: 'striped',
+      theme: 'grid',
       headStyles: {
-        fillColor: [41, 128, 185],
+        fillColor: [34, 197, 94],
         textColor: [255, 255, 255],
         fontStyle: 'bold',
-        fontSize: 10,
-        halign: 'center'
+        fontSize: 11
       },
       bodyStyles: {
-        fontSize: 9,
-        cellPadding: 4
+        fontSize: 10
       },
       columnStyles: {
-        0: { cellWidth: 18, halign: 'center' },
-        1: { cellWidth: 90, halign: 'left' },
-        2: { cellWidth: 18, halign: 'center' },
-        3: { cellWidth: 28, halign: 'right' },
-        4: { cellWidth: 28, halign: 'right' }
+        0: { cellWidth: 15, halign: 'center' },
+        1: { cellWidth: 80 },
+        2: { cellWidth: 20, halign: 'center' },
+        3: { cellWidth: 35, halign: 'right' },
+        4: { cellWidth: 35, halign: 'right' }
       },
-      margin: { left: 20, right: 20 },
-      alternateRowStyles: {
-        fillColor: [248, 249, 250]
-      }
+      margin: { left: 15, right: 15 }
     });
     
-    // Calculate totals
-    const finalY = doc.lastAutoTable.finalY + 15;
-    const subtotal = order.totalPrice;
-    const deliveryCharges = 0;
-    const grandTotal = subtotal + deliveryCharges;
+    // Calculate final Y position after table
+    const finalY = doc.lastAutoTable.finalY + 10;
     
-    // Summary Section
-    const summaryX = pageWidth - 90;
-    const summaryWidth = 70;
-    
-    // Summary box
-    doc.setDrawColor(200, 200, 200);
+    // Summary Box
+    doc.setDrawColor(34, 197, 94);
     doc.setLineWidth(0.5);
-    doc.rect(summaryX, finalY, summaryWidth, 35);
+    doc.rect(120, finalY, 75, 35);
     
-    // Summary content
-    doc.setFontSize(10);
     doc.setFont("helvetica", "normal");
-    doc.text("Subtotal:", summaryX + 5, finalY + 10);
-    doc.text(formatPriceNumber(subtotal), summaryX + summaryWidth - 5, finalY + 10, { align: "right" });
-    
-    doc.text("Delivery Charges:", summaryX + 5, finalY + 18);
-    doc.text("FREE", summaryX + summaryWidth - 5, finalY + 18, { align: "right" });
-    
-    // Divider line
-    doc.setDrawColor(150, 150, 150);
-    doc.line(summaryX + 5, finalY + 22, summaryX + summaryWidth - 5, finalY + 22);
-    
-    // Grand Total
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(11);
-    doc.text("GRAND TOTAL:", summaryX + 5, finalY + 30);
-    doc.text(formatPriceNumber(grandTotal), summaryX + summaryWidth - 5, finalY + 30, { align: "right" });
-    
-    // Terms and Conditions
-    const termsY = finalY + 50;
     doc.setFontSize(10);
+    doc.text("Subtotal:", 125, finalY + 8);
+    doc.text(formatPrice(order.totalPrice), 185, finalY + 8, { align: "right" });
+    
+    doc.text("Delivery Charges:", 125, finalY + 16);
+    doc.text("FREE", 185, finalY + 16, { align: "right" });
+    
+    doc.setDrawColor(200, 200, 200);
+    doc.line(125, finalY + 20, 190, finalY + 20);
+    
     doc.setFont("helvetica", "bold");
-    doc.setTextColor(41, 128, 185);
-    doc.text("TERMS & CONDITIONS", 20, termsY);
+    doc.setFontSize(12);
+    doc.text("Grand Total:", 125, finalY + 28);
+    doc.text(formatPrice(order.totalPrice), 185, finalY + 28, { align: "right" });
     
-    doc.setTextColor(0, 0, 0);
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(8);
-    doc.text("• All sales are final. No returns or exchanges.", 20, termsY + 8);
-    doc.text("• Delivery within 3-5 business days.", 20, termsY + 14);
-    doc.text("• For any queries, contact our support team.", 20, termsY + 20);
-    
-    // Professional Footer
-    doc.setFillColor(41, 128, 185);
-    doc.rect(0, pageHeight - 30, pageWidth, 30, 'F');
+    // Footer
+    const pageHeight = doc.internal.pageSize.height;
+    doc.setFillColor(34, 197, 94);
+    doc.rect(0, pageHeight - 25, 210, 25, 'F');
     
     doc.setTextColor(255, 255, 255);
-    doc.setFontSize(10);
-    doc.setFont("helvetica", "bold");
-    doc.text("Thank you for choosing FemmeCure!", pageWidth/2, pageHeight - 18, { align: "center" });
-    
-    doc.setFontSize(8);
+    doc.setFontSize(9);
     doc.setFont("helvetica", "normal");
-    doc.text("Email: support@femmecure.com | Phone: +91-7879523232", pageWidth/2, pageHeight - 10, { align: "center" });
-    doc.text("Visit us: www.femmecure.com", pageWidth/2, pageHeight - 4, { align: "center" });
+    doc.text("Thank you for your business!", 105, pageHeight - 15, { align: "center" });
+    doc.text("For support: support@femmecure.com | +91-XXXXXXXXXX", 105, pageHeight - 8, { align: "center" });
     
     // Save PDF
-    doc.save(`FemmeCure_Invoice_${order.orderNumber || order._id.slice(-8)}.pdf`);
+    doc.save(`Invoice_${order.orderNumber || order._id}.pdf`);
   };
 
   if (loading) {
@@ -353,13 +270,6 @@ function MyOrderEnhanced() {
                       <p className="text-sm opacity-90 mb-1">Total Amount</p>
                       <p className="text-2xl font-bold">{formatPrice(order.totalPrice)}</p>
                     </div>
-                    {/* Show setNumber if available */}
-                    {order.setNumber && (
-                      <div>
-                        <p className="text-sm opacity-90 mb-1">Set Number</p>
-                        <p className="text-2xl font-bold">#{order.setNumber}</p>
-                      </div>
-                    )}
                   </div>
                 </div>
 

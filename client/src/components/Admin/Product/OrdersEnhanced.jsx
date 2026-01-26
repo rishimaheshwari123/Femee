@@ -28,8 +28,12 @@ function OrdersEnhanced() {
         setLoading(true);
         const orders = await getAllOrders(token);
         console.log("Fetched orders:", orders); // Debug log
-        setAllOrders(orders);
-        setFilteredOrders(orders);
+        // Sort by createdAt - latest first
+        const sortedOrders = orders.sort((a, b) => 
+          new Date(b.createdAt) - new Date(a.createdAt)
+        );
+        setAllOrders(sortedOrders);
+        setFilteredOrders(sortedOrders);
       } catch (error) {
         console.error("Error fetching orders:", error);
       } finally {

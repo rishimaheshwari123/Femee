@@ -57,14 +57,14 @@ const generateOrderNumber = async () => {
     
     // Generate encrypted display number
     const encryptedCode = encryptSequence(sequenceNumber);
-    const displayNumber = `FEME-${encryptedCode}`;
+    const displayNumber = `FEMME-${encryptedCode}`;
     
     console.log(`Order generated: Sequence=${sequenceNumber}, Display=${displayNumber}`);
     
     return {
       sequenceNumber: sequenceNumber,        // For admin: 1, 2, 3...
       displayNumber: displayNumber,          // For customer: FEME-7A2K9
-      internalNumber: `FEME-${String(sequenceNumber).padStart(4, "0")}` // FEME-0001 (optional)
+      internalNumber: `FEMME-${String(sequenceNumber).padStart(4, "0")}` // FEME-0001 (optional)
     };
   } catch (error) {
     console.error("Error generating order number:", error);

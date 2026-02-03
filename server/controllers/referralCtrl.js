@@ -21,7 +21,7 @@ exports.generateReferralLink = async (req, res) => {
         const referralLink = await ReferralService.generateReferralLink(productId, referrerId);
 
         // Return the full URL (you can customize the base URL based on environment)
-        const baseUrl = process.env.FRONTEND_URL || "http://localhost:3000";
+        const baseUrl = process.env.FRONTEND_URL || "https://www.femmecurehelpingher.com";
         const fullReferralUrl = `${baseUrl}${referralLink}`;
 
         return res.status(200).json({

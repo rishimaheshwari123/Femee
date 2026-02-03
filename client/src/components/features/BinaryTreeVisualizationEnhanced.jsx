@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { FaUser, FaChevronDown, FaChevronUp, FaUsers, FaSpinner } from 'react-icons/fa';
+import { FaUser, FaChevronDown, FaChevronUp, FaUsers, FaSpinner, FaTrophy } from 'react-icons/fa';
 import { Card } from '../ui';
 import { getBinaryTreeStructure } from '../../services/operations/binaryTree';
+import ALMLClaimsModal from './ALMLClaimsModal';
 
 /**
  * Enhanced Binary Tree Visualization Component
@@ -17,6 +18,7 @@ const BinaryTreeVisualizationEnhanced = ({
   const [selectedRoot, setSelectedRoot] = useState(null);
   const [viewMode, setViewMode] = useState('tree'); // 'tree', 'list', 'levels'
   const [expandedNodes, setExpandedNodes] = useState(new Set());
+  const [showClaimsModal, setShowClaimsModal] = useState(false);
 
   // Fetch tree data
   useEffect(() => {
@@ -250,9 +252,30 @@ const BinaryTreeVisualizationEnhanced = ({
                 </span>
                 <p className="text-sm text-dark-600 mt-1">Status</p>
               </div>
+              <div className="text-center col-span-2 md:col-span-1">
+                <button
+                  onClick={() => setShowClaimsModal(true)}
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg font-semibold hover:from-purple-700 hover:to-pink-700 transition-all shadow-md hover:shadow-lg"
+                >
+                  <FaTrophy />
+                  View Claims
+                </button>
+              </div>
             </div>
           </Card.Body>
         </Card>
+      )}
+
+      {/* ALML Claims Modal */}
+      {showClaimsModal && selectedRoot && (
+        <ALMLClaimsModal
+          isOpen={showClaimsModal}
+          onClose={() => setShowClaimsModal(false)}
+          memberId={memberId}
+          productId={productId}
+          rootNumber={selectedRoot.rootNumber}
+          productTitle={treeData.productName || 'Product'}
+        />
       )}
 
       {/* Tree Content */}

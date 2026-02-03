@@ -9,6 +9,10 @@ import {
   FaClipboardList,
   FaArrowUp,
   FaArrowDown,
+  FaTrophy,
+  FaCheckCircle,
+  FaTimesCircle,
+  FaClock,
 } from "react-icons/fa";
 import axios from "axios";
 import { useSelector } from "react-redux";
@@ -39,6 +43,8 @@ const Dashboard = () => {
     pending: 0,
     completed: 0,
   });
+  const [pairRequests, setPairRequests] = useState([]);
+  const [recentClaims, setRecentClaims] = useState([]);
   const [loading, setLoading] = useState(true);
   const BASE_URL = process.env.REACT_APP_BASE_URL;
 
@@ -107,6 +113,36 @@ const Dashboard = () => {
               avgRating: parseFloat(response.data.data.avgRating) || 4.8,
             });
             setRecentActivity(response.data.data.recentActivity || []);
+          }
+
+          // Fetch pair requests for admin
+          try {
+            const pairResponse = await axios.get(`${BASE_URL}/pair/admin/all?limit=5`, {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            });
+
+            if (pairResponse.data.success) {
+              setPairRequests(pairResponse.data.data.pairRequests || []);
+            }
+          } catch (pairError) {
+            console.error("Failed to fetch pair requests", pairError);
+          }
+
+          // Fetch recent ALML claims for admin
+          try {
+            const claimsResponse = await axios.get(`${BASE_URL}/product/transactions?transactionType=alml_claim&limit=5`, {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            });
+
+            if (claimsResponse.data.success) {
+              setRecentClaims(claimsResponse.data.data || []);
+            }
+          } catch (claimsError) {
+            console.error("Failed to fetch recent claims", claimsError);
           }
         }
       } catch (error) {
@@ -389,6 +425,68 @@ const Dashboard = () => {
         {/* Performance Overview - Only for Admin */}
         {user?.role === "admin" && (
           <div className="grid lg:grid-cols-2 gap-6">
+            {/* Pair Claims Section */}
+            <Card>
+              <Card.Header>
+                <div className="flex items-center justify-between">
+                  <Card.Title className="flex items-center gap-2">
+                    <FaTrophy className="text-yellow-500" />
+                    Recent Pair Claims
+                  </Card.Title>
+                  <Link to="/admin/pair-requests">
+                    <Button variant="secondary" size="sm">
+                      View All
+                    </Button>
+                  </Link>
+                </div>
+              </Card.Header>
+              <Card.Body>
+                <div className="space-y-3">
+                  {pairRequests.length === 0 ? (
+                    <div className="text-center py-8 text-dark-500">
+                      No pair claims yet
+                    </div>
+                  ) : (
+                    pairRequests.map((request, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center justify-between p-3 rounded-lg bg-dark-50 hover:bg-dark-100 transition-colors"
+                      >
+                        <div className="flex-1">
+                          <p className="text-sm font-semibold text-dark-900">
+                            {request.member?.fName} {request.member?.lName}
+                          </p>
+                          <p className="text-xs text-dark-600">
+                            @{request.member?.userName} • Pair {request.pairNumber}
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          {request.status === "pending" && (
+                            <Badge variant="warning" size="sm">
+                              <FaClock className="mr-1" />
+                              Pending
+                            </Badge>
+                          )}
+                          {request.status === "approved" && (
+                            <Badge variant="success" size="sm">
+                              <FaCheckCircle className="mr-1" />
+                              Approved
+                            </Badge>
+                          )}
+                          {request.status === "rejected" && (
+                            <Badge variant="danger" size="sm">
+                              <FaTimesCircle className="mr-1" />
+                              Rejected
+                            </Badge>
+                          )}
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </Card.Body>
+            </Card>
+
             <Card>
               <Card.Header>
                 <Card.Title>Sales Overview</Card.Title>
@@ -446,6 +544,71 @@ const Dashboard = () => {
             </Card.Body>
           </Card>
           </div>
+        )}
+
+        {/* Recent ROOT Claims Section - Only for Admin */}
+        {user?.role === "admin" && (
+          <Card>
+            <Card.Header>
+              <Card.Title className="flex items-center gap-2">
+                <FaTrophy className="text-purple-500" />
+                Recent ROOT Achievement Claims
+              </Card.Title>
+            </Card.Header>
+            <Card.Body>
+              <div className="space-y-3">
+                {recentClaims.length === 0 ? (
+                  <div className="text-center py-8 text-dark-500">
+                    No ROOT claims yet
+                  </div>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead>
+                        <tr className="border-b border-dark-200">
+                          <th className="text-left py-3 px-2 text-sm font-semibold text-dark-700">Member</th>
+                          <th className="text-left py-3 px-2 text-sm font-semibold text-dark-700">Product</th>
+                          <th className="text-center py-3 px-2 text-sm font-semibold text-dark-700">ROOT</th>
+                          <th className="text-right py-3 px-2 text-sm font-semibold text-dark-700">Amount</th>
+                          <th className="text-right py-3 px-2 text-sm font-semibold text-dark-700">Date</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {recentClaims.map((claim, index) => (
+                          <tr key={index} className="border-b border-dark-100 hover:bg-dark-50 transition-colors">
+                            <td className="py-3 px-2">
+                              <div>
+                                <p className="text-sm font-semibold text-dark-900">
+                                  {claim.memberId?.fName} {claim.memberId?.lName}
+                                </p>
+                                <p className="text-xs text-dark-600">@{claim.memberId?.userName}</p>
+                              </div>
+                            </td>
+                            <td className="py-3 px-2">
+                              <p className="text-sm text-dark-900">{claim.productId?.title || 'N/A'}</p>
+                            </td>
+                            <td className="py-3 px-2 text-center">
+                              <Badge variant="primary" size="sm">
+                                ROOT {claim.almlDetails?.rootNumber}
+                              </Badge>
+                            </td>
+                            <td className="py-3 px-2 text-right">
+                              <span className="text-sm font-bold text-green-600">₹{claim.amount}</span>
+                            </td>
+                            <td className="py-3 px-2 text-right">
+                              <span className="text-xs text-dark-600">
+                                {new Date(claim.createdAt).toLocaleDateString('en-IN')}
+                              </span>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
+            </Card.Body>
+          </Card>
         )}
       </div>
     </div>

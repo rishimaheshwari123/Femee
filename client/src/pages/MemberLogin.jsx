@@ -220,7 +220,7 @@ function MemberLogin() {
                 {/* Register Links */}
                 <div className="space-y-3">
                   <Button
-                    to="/become-member/meenusahu"
+                    to="/become-member/meenusahuADMIN"
                     variant="outline"
                     size="md"
                     fullWidth

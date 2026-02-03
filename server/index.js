@@ -47,6 +47,7 @@ app.use("/api/v1/rating", require("./routes/ratingReview"))
 app.use("/api", require("./routes/mlm"))
 app.use("/api/v1/pair", require("./routes/pairRoutes"))
 app.use("/api/v1/referral", require("./routes/referralRoutes"))
+app.use("/api/v1/alml", require("./routes/almlRoutes")) // ALML - Achievement Level-based Member Logic
 
 
 

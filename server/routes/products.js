@@ -17,6 +17,7 @@ const {
 
 const { getBinaryTreeVisualization } = require("../controllers/dashboardCtrl");
 
+const { getAllTransactions, getTransactionStats } = require("../controllers/transactionCtrl");
 
 const {
   getAllOrders,
@@ -40,6 +41,10 @@ router.put("/:productId/commission-rates", auth, updateCommissionRates);
 
 // Binary tree visualization
 router.get("/:productId/binary-tree/:memberId", getBinaryTreeVisualization);
+
+// Transactions
+router.get("/transactions", auth, getAllTransactions);
+router.get("/transactions/stats", auth, getTransactionStats);
 
 // export all router
 module.exports = router;

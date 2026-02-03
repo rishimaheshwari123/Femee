@@ -11,6 +11,8 @@ const MyProfile = () => {
   const { user } = useSelector((state) => state.auth);
   const [member, setMember] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [profileImage, setProfileImage] = useState(null);
+  const [previewImage, setPreviewImage] = useState(null);
   const [formData, setFormData] = useState({
     fName: "",
     lName: "",
@@ -65,13 +67,42 @@ const MyProfile = () => {
     }));
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setProfileImage(file);
+      // Create preview
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewImage(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const updatedProfile = await updateMemberProfileApi(user?._id, formData);
+    
+    // Create FormData for file upload
+    const submitData = new FormData();
+    
+    // Append all form fields
+    Object.keys(formData).forEach(key => {
+      submitData.append(key, formData[key]);
+    });
+    
+    // Append profile image if selected
+    if (profileImage) {
+      submitData.append('profileImage', profileImage);
+    }
+    
+    const updatedProfile = await updateMemberProfileApi(user?._id, submitData);
     if (updatedProfile) {
       toast.success("Profile updated successfully");
       setMember(updatedProfile); // Update local state with the new profile data
       setIsEditing(false); // Exit edit mode
+      setProfileImage(null);
+      setPreviewImage(null);
     } else {
       toast.error("Failed to update profile");
     }
@@ -96,13 +127,31 @@ const MyProfile = () => {
         <div className="bg-white shadow-xl rounded-lg p-8 max-w-4xl mx-auto">
           {/* Profile Header */}
           <div className="flex flex-col items-center border-b pb-6">
-            <img
-              src={
-                member?.images?.[0]?.url || "https://via.placeholder.com/150"
-              }
-              alt="Profile"
-              className="w-32 h-32 rounded-full object-cover shadow-lg mb-4"
-            />
+            <div className="relative">
+              <img
+                src={
+                  previewImage || member?.images?.[0]?.url || "https://via.placeholder.com/150"
+                }
+                alt="Profile"
+                className="w-32 h-32 rounded-full object-cover shadow-lg mb-4"
+              />
+              {isEditing && (
+                <label
+                  htmlFor="profileImageInput"
+                  className="absolute bottom-4 right-0 bg-blue-600 text-white p-2 rounded-full cursor-pointer hover:bg-blue-700 transition shadow-lg"
+                  title="Change profile photo"
+                >
+                  <FiEdit className="text-lg" />
+                  <input
+                    id="profileImageInput"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    className="hidden"
+                  />
+                </label>
+              )}
+            </div>
             <h2 className="text-2xl font-semibold text-gray-900">
               {member?.fName} {member?.lName}
             </h2>

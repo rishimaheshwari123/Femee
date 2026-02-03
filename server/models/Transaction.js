@@ -17,7 +17,7 @@ const transactionSchema = new mongoose.Schema(
     
     transactionType: {
       type: String,
-      enum: ['matching_bonus', 'direct_referral', 'withdrawal', 'adjustment'],
+      enum: ['matching_bonus', 'direct_referral', 'withdrawal', 'adjustment', 'alml_claim'],
       required: true
     },
     
@@ -38,6 +38,13 @@ const transactionSchema = new mongoose.Schema(
       matchingPercentage: { type: Number },
       carryForwardLeft: { type: Number },
       carryForwardRight: { type: Number }
+    },
+    
+    // For ALML claim transactions
+    almlDetails: {
+      rootNumber: { type: Number },
+      completedSteps: { type: Number },
+      claimedAt: { type: Date }
     },
     
     // Reference to related order (if applicable)

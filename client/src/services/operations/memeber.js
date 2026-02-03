@@ -247,9 +247,6 @@ export const updateTierMembersApi = async (id, tier) => {
 
 
 export const updateMemberProfileApi = async (id, formData) => {
-  // Exclude role from the formData
-  const { role, ...updatedData } = formData;
-
   Swal.fire({
     title: "Loading",
     allowOutsideClick: false,
@@ -262,7 +259,24 @@ export const updateMemberProfileApi = async (id, formData) => {
   });
 
   try {
-    const response = await apiConnector("PUT", `${UPDATE_MEMBER_PROFILE}/${id}`, updatedData);
+    // Check if formData is FormData object (for file upload) or regular object
+    const isFormDataObject = formData instanceof FormData;
+    
+    let updatedData = formData;
+    if (!isFormDataObject) {
+      // Exclude role from the formData if it's a regular object
+      const { role, ...rest } = formData;
+      updatedData = rest;
+    }
+
+    const response = await apiConnector(
+      "PUT", 
+      `${UPDATE_MEMBER_PROFILE}/${id}`, 
+      updatedData,
+      isFormDataObject ? {
+        "Content-Type": "multipart/form-data",
+      } : undefined
+    );
 
     if (!response?.data?.success) {
       throw new Error(toast.error(response?.data?.message));

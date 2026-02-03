@@ -64,11 +64,19 @@ const TreeNode = ({ member, level = 0 }) => {
           )}
         </div>
 
-        <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-          level === 0 ? 'bg-blue-500' : 'bg-green-500'
-        } text-white`}>
-          <FaUser />
-        </div>
+        {member?.images?.[0]?.url ? (
+          <img
+            src={member.images[0].url}
+            alt={`${member.fName} ${member.lName}`}
+            className="w-10 h-10 rounded-full object-cover border-2 border-green-200"
+          />
+        ) : (
+          <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+            level === 0 ? 'bg-blue-500' : 'bg-green-500'
+          } text-white`}>
+            <FaUser />
+          </div>
+        )}
 
         <div className="flex-1">
           <div className="flex items-center gap-2">
@@ -345,9 +353,17 @@ const GetAllMembers = () => {
               >
                 {/* Member Header */}
                 <div className="flex items-start gap-4 mb-4">
-                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-white text-xl font-bold flex-shrink-0">
-                    {member?.fName?.[0]}{member?.lName?.[0]}
-                  </div>
+                  {member?.images?.[0]?.url ? (
+                    <img
+                      src={member.images[0].url}
+                      alt={`${member.fName} ${member.lName}`}
+                      className="w-16 h-16 rounded-full object-cover flex-shrink-0 border-2 border-green-200"
+                    />
+                  ) : (
+                    <div className="w-16 h-16 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-white text-xl font-bold flex-shrink-0">
+                      {member?.fName?.[0]}{member?.lName?.[0]}
+                    </div>
+                  )}
                   <div className="flex-1 min-w-0">
                     <h3 className="font-bold text-gray-800 text-lg truncate">
                       {member.fName} {member.lName}
@@ -607,9 +623,17 @@ const GetAllMembers = () => {
             <div className="p-6 border-b border-gray-200 bg-gradient-to-r from-blue-500 to-blue-600">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                  <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center text-blue-600 text-2xl font-bold">
-                    {selectedMember.fName?.[0]}{selectedMember.lName?.[0]}
-                  </div>
+                  {selectedMember?.images?.[0]?.url ? (
+                    <img
+                      src={selectedMember.images[0].url}
+                      alt={`${selectedMember.fName} ${selectedMember.lName}`}
+                      className="w-16 h-16 rounded-full object-cover border-2 border-white"
+                    />
+                  ) : (
+                    <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center text-blue-600 text-2xl font-bold">
+                      {selectedMember.fName?.[0]}{selectedMember.lName?.[0]}
+                    </div>
+                  )}
                   <div className="text-white">
                     <h2 className="text-2xl font-bold">
                       {selectedMember.fName} {selectedMember.lName}

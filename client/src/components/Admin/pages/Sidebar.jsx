@@ -95,7 +95,7 @@ const Sidebar = () => {
           {
             to: "/admin/pair-requests",
             icon: <FaTrophy className="text-yellow-300" />,
-            label: "Pair Requests",
+            label: "Root Reward Requests",
           },
         ]
       : []),
@@ -204,10 +204,26 @@ const Sidebar = () => {
         >
           <div className="cursor-pointer flex items-center justify-center text-white">
             {isCollapsed ? (
-              <AiOutlineUser size={24} />
+              user?.images?.[0]?.url ? (
+                <img
+                  src={user.images[0].url}
+                  alt="Profile"
+                  className="w-10 h-10 rounded-full object-cover border-2 border-white/50"
+                />
+              ) : (
+                <AiOutlineUser size={24} />
+              )
             ) : (
               <div className="flex items-center gap-3 w-full">
-                <AiOutlineUser size={24} />
+                {user?.images?.[0]?.url ? (
+                  <img
+                    src={user.images[0].url}
+                    alt="Profile"
+                    className="w-10 h-10 rounded-full object-cover border-2 border-white/50"
+                  />
+                ) : (
+                  <AiOutlineUser size={24} />
+                )}
                 <div className="flex-1">
                   <p className="font-semibold text-sm">My Profile</p>
                   <p className="text-xs text-white/70">{user?.userName}</p>

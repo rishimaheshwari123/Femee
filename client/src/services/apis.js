@@ -118,3 +118,11 @@ export const referralEndpoints = {
 export const memberEndpoints = {
   GET_BINARY_TREE_STRUCTURE: BASE_URL + "/auth/:memberId/binary-tree/:productId",
 }
+
+// ALML (Achievement Level-based Member Logic) APIS
+export const almlEndpoints = {
+  GET_ACHIEVEMENT_CHART: BASE_URL + "/alml/:memberId/chart/:productId/:rootNumber",
+  GET_ALL_ROOT_ACHIEVEMENTS: BASE_URL + "/alml/:memberId/all/:productId",
+  CLAIM_ACHIEVEMENTS: BASE_URL + "/alml/:memberId/claim",
+  GET_ALML_SUMMARY: BASE_URL + "/alml/:memberId/summary",
+}

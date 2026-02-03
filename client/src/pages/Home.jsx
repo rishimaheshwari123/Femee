@@ -319,7 +319,7 @@ const Home = () => {
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <Button 
-                to="/become-member/meenusahu" 
+                to="/become-member/meenusahuADMIN" 
                 variant="dark"
                 size="xl"
               >

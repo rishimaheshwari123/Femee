@@ -54,7 +54,12 @@ export const getMemberProductTrees = async (memberId) => {
     const BASE_URL = process.env.REACT_APP_BASE_URL;
     const url = `${BASE_URL}/auth/${memberId}/product-trees`;
     
+    console.log('getMemberProductTrees called with memberId:', memberId);
+    console.log('API URL:', url);
+    
     const response = await apiConnector('GET', url);
+    
+    console.log('API Response:', response.data);
     
     if (response.data.success) {
       return response.data.data.productTrees || [];

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   getAllMembersApi,
   updateVerifyMembersApi,
@@ -7,7 +8,7 @@ import {
   getMembersProfileApi,
 } from "../../../services/operations/memeber";
 import { getAllOrders } from "../../../services/operations/admin";
-import { FaEye, FaTimes, FaChevronDown, FaChevronRight, FaUser, FaSearch, FaIdCard, FaShoppingCart } from "react-icons/fa";
+import { FaEye, FaTimes, FaChevronDown, FaChevronRight, FaUser, FaSearch, FaIdCard, FaShoppingCart, FaSitemap } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 
@@ -120,6 +121,7 @@ const TreeNode = ({ member, level = 0 }) => {
 };
 
 const GetAllMembers = () => {
+  const navigate = useNavigate();
   const [members, setMembers] = useState([]);
   const [filteredMembers, setFilteredMembers] = useState([]);
   const [showTreeModal, setShowTreeModal] = useState(false);
@@ -420,20 +422,28 @@ const GetAllMembers = () => {
 
                 {/* Actions */}
                 <div className="space-y-2">
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="grid grid-cols-3 gap-2">
                     <button
                       onClick={() => openProfileModal(member)}
-                      className="bg-gradient-to-r from-blue-500 to-blue-600 text-white py-2 px-4 rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all flex items-center justify-center gap-2 font-medium text-sm"
+                      className="bg-gradient-to-r from-blue-500 to-blue-600 text-white py-2 px-2 rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all flex items-center justify-center gap-1 font-medium text-xs"
                     >
                       <FaIdCard />
                       Profile
                     </button>
                     <button
                       onClick={() => openTreeModal(member)}
-                      className="bg-gradient-to-r from-purple-500 to-purple-600 text-white py-2 px-4 rounded-lg hover:from-purple-600 hover:to-purple-700 transition-all flex items-center justify-center gap-2 font-medium text-sm"
+                      className="bg-gradient-to-r from-purple-500 to-purple-600 text-white py-2 px-2 rounded-lg hover:from-purple-600 hover:to-purple-700 transition-all flex items-center justify-center gap-1 font-medium text-xs"
                     >
                       <FaEye />
-                      Network ({member.child?.length || 0})
+                      Network
+                    </button>
+                    <button
+                      onClick={() => navigate(`/admin/member-binary-trees/${member._id}`)}
+                      className="bg-gradient-to-r from-green-500 to-green-600 text-white py-2 px-2 rounded-lg hover:from-green-600 hover:to-green-700 transition-all flex items-center justify-center gap-1 font-medium text-xs"
+                      title="View Binary Trees"
+                    >
+                      <FaSitemap />
+                      Trees
                     </button>
                   </div>
 

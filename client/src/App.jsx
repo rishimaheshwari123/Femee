@@ -54,6 +54,7 @@ import OrdersEnhanced from "./components/Admin/Product/OrdersEnhanced";
 
 // Binary Tree Dashboard
 import MemberDashboard from "./pages/MemberDashboard";
+import BinaryTreesPage from "./pages/BinaryTreesPage";
 
 const App = () => {
   const { user } = useSelector((state) => state.auth);
@@ -158,6 +159,16 @@ const App = () => {
               <Route path="/admin/profile" element={<MyProfile />} />
               <Route path="/admin/add-gallery" element={<AddGallery />} />
               <Route path="/admin/get-gallery" element={<GetGallery />} />
+              
+              {/* Admin Binary Trees - View any member's trees */}
+              <Route 
+                path="/admin/member-binary-trees/:memberId" 
+                element={
+                  <PrivateRoute>
+                    <BinaryTreesPage />
+                  </PrivateRoute>
+                } 
+              />
 
               <Route
                 path="admin/add-product"

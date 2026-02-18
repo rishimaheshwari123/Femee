@@ -88,11 +88,11 @@ const BinaryTreesPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-dark-50 to-dark-100 p-6">
+      <div className="min-h-screen bg-gradient-to-br from-dark-50 to-dark-100 p-1.5 md:p-3">
         <div className="flex items-center justify-center h-96">
           <div className="text-center">
-            <FaSpinner className="animate-spin text-4xl text-primary-500 mb-4 mx-auto" />
-            <p className="text-dark-600">Loading binary trees...</p>
+            <FaSpinner className="animate-spin text-2xl md:text-3xl text-primary-500 mb-2 md:mb-3 mx-auto" />
+            <p className="text-dark-600 text-xs md:text-sm">Loading binary trees...</p>
           </div>
         </div>
       </div>
@@ -100,34 +100,34 @@ const BinaryTreesPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-dark-50 to-dark-100 p-6">
-      <div className="max-w-7xl mx-auto space-y-6">
+    <div className="min-h-screen bg-gradient-to-br from-dark-50 to-dark-100 p-1.5 md:p-3">
+      <div className="max-w-7xl mx-auto space-y-2 md:space-y-3">
         {/* Header */}
         <div>
           {isAdminView ? (
             viewingMember ? (
               <>
-                <h1 className="text-4xl font-display font-bold text-dark-900 mb-2">
+                <h1 className="text-lg md:text-2xl font-display font-bold text-dark-900 mb-0.5 md:mb-1">
                   {viewingMember.fName} {viewingMember.lName}'s Binary Trees
                 </h1>
-                <p className="text-dark-600">
+                <p className="text-dark-600 text-xs md:text-sm">
                   Viewing @{viewingMember.userName}'s product networks
                 </p>
               </>
             ) : (
               <>
-                <h1 className="text-4xl font-display font-bold text-dark-900 mb-2">
+                <h1 className="text-lg md:text-2xl font-display font-bold text-dark-900 mb-0.5 md:mb-1">
                   Loading Member Info...
                 </h1>
-                <p className="text-dark-600">Please wait...</p>
+                <p className="text-dark-600 text-xs md:text-sm">Please wait...</p>
               </>
             )
           ) : (
             <>
-              <h1 className="text-4xl font-display font-bold text-dark-900 mb-2">
+              <h1 className="text-lg md:text-2xl font-display font-bold text-dark-900 mb-0.5 md:mb-1">
                 My Binary Trees
               </h1>
-              <p className="text-dark-600">
+              <p className="text-dark-600 text-xs md:text-sm">
                 Welcome back, {user?.userName}! Track your product networks.
               </p>
             </>
@@ -138,13 +138,13 @@ const BinaryTreesPage = () => {
         {productTrees.length > 0 && (
           <Card>
             <Card.Body>
-              <div className="flex items-center gap-4 flex-wrap">
-                <span className="text-sm font-medium text-dark-700">Select Product:</span>
+              <div className="flex items-center gap-1.5 md:gap-2 flex-wrap">
+                <span className="text-[10px] md:text-xs font-medium text-dark-700">Select Product:</span>
                 {productTrees.map((tree) => (
                   <button
                     key={tree.productId}
                     onClick={() => setSelectedProduct(tree)}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    className={`px-1.5 md:px-2 py-0.5 md:py-1 rounded text-[10px] md:text-xs font-medium transition-colors ${
                       selectedProduct?.productId === tree.productId
                         ? 'bg-primary-500 text-white'
                         : 'bg-dark-100 text-dark-700 hover:bg-dark-200'
@@ -167,9 +167,9 @@ const BinaryTreesPage = () => {
         ) : (
           <Card>
             <Card.Body>
-              <div className="text-center py-12">
-                <p className="text-dark-600 font-medium mb-2">No Product Trees Yet</p>
-                <p className="text-dark-500 text-sm">
+              <div className="text-center py-6 md:py-8">
+                <p className="text-dark-600 font-medium mb-0.5 md:mb-1 text-xs md:text-sm">No Product Trees Yet</p>
+                <p className="text-dark-500 text-[10px] md:text-xs">
                   {isAdminView 
                     ? 'This member has not joined any product networks yet'
                     : 'Start by making your first purchase to join a product network'

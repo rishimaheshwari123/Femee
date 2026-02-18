@@ -139,50 +139,50 @@ const BinaryTreeVisualizationEnhanced = ({
   const isEmptyRoot = selectedRoot && selectedRoot.totalMembers === 0;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-1.5 md:space-y-2">
       {/* Header Card */}
       <Card>
         <Card.Header>
-          <div className="flex items-center justify-between flex-wrap gap-4">
+          <div className="flex items-center justify-between flex-wrap gap-1.5 md:gap-2">
             <div>
-              <Card.Title>My Binary Tree</Card.Title>
-              <Card.Description>
+              <Card.Title className="text-xs md:text-base">My Binary Tree</Card.Title>
+              <Card.Description className="text-[10px] md:text-xs">
                 {treeData.totalRoots} ROOT{treeData.totalRoots > 1 ? 's' : ''} • 
                 Active ROOT: {treeData.currentActiveRoot}
               </Card.Description>
             </div>
             
             {/* View Mode Selector */}
-            <div className="flex gap-2">
+            <div className="flex gap-0.5 md:gap-1">
               <button
                 onClick={() => setViewMode('tree')}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                className={`px-1.5 md:px-2 py-0.5 md:py-1 rounded text-[9px] md:text-xs font-medium transition-colors ${
                   viewMode === 'tree'
                     ? 'bg-primary-500 text-white'
                     : 'bg-dark-100 text-dark-700 hover:bg-dark-200'
                 }`}
               >
-                Tree View
+                Tree
               </button>
               <button
                 onClick={() => setViewMode('list')}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                className={`px-1.5 md:px-2 py-0.5 md:py-1 rounded text-[9px] md:text-xs font-medium transition-colors ${
                   viewMode === 'list'
                     ? 'bg-primary-500 text-white'
                     : 'bg-dark-100 text-dark-700 hover:bg-dark-200'
                 }`}
               >
-                List View
+                List
               </button>
               <button
                 onClick={() => setViewMode('levels')}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                className={`px-1.5 md:px-2 py-0.5 md:py-1 rounded text-[9px] md:text-xs font-medium transition-colors ${
                   viewMode === 'levels'
                     ? 'bg-primary-500 text-white'
                     : 'bg-dark-100 text-dark-700 hover:bg-dark-200'
                 }`}
               >
-                Step View
+                Step
               </button>
             </div>
           </div>
@@ -193,13 +193,13 @@ const BinaryTreeVisualizationEnhanced = ({
       {treeData.trees.length > 1 && (
         <Card>
           <Card.Body>
-            <div className="flex items-center gap-4 flex-wrap">
-              <span className="text-sm font-medium text-dark-700">Select ROOT:</span>
+            <div className="flex items-center gap-1 md:gap-2 flex-wrap">
+              <span className="text-[10px] md:text-xs font-medium text-dark-700">Select ROOT:</span>
               {treeData.trees.map((root) => (
                 <button
                   key={root.rootNumber}
                   onClick={() => setSelectedRoot(root)}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  className={`px-1.5 md:px-2 py-0.5 md:py-1 rounded text-[9px] md:text-xs font-medium transition-colors ${
                     selectedRoot?.rootNumber === root.rootNumber
                       ? 'bg-primary-500 text-white'
                       : 'bg-dark-100 text-dark-700 hover:bg-dark-200'
@@ -217,48 +217,48 @@ const BinaryTreeVisualizationEnhanced = ({
       {selectedRoot && (
         <Card>
           <Card.Body>
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+            <div className="grid grid-cols-4 md:grid-cols-8 gap-1 md:gap-2 text-xs">
               <div className="text-center">
-                <p className="text-2xl font-bold text-primary-600">{selectedRoot.totalMembers}</p>
-                <p className="text-sm text-dark-600">Total Members</p>
+                <p className="text-sm md:text-base font-bold text-primary-600">{selectedRoot.totalMembers}</p>
+                <p className="text-[8px] md:text-[10px] text-dark-600">Total</p>
               </div>
               <div className="text-center">
-                <p className="text-2xl font-bold text-dark-900">{selectedRoot.levels.level1.filled}/{selectedRoot.levels.level1.capacity}</p>
-                <p className="text-sm text-dark-600">Step 1</p>
+                <p className="text-sm md:text-base font-bold text-dark-900">{selectedRoot.levels.level1.filled}/{selectedRoot.levels.level1.capacity}</p>
+                <p className="text-[8px] md:text-[10px] text-dark-600">S1</p>
               </div>
               <div className="text-center">
-                <p className="text-2xl font-bold text-dark-900">{selectedRoot.levels.level2.filled}/{selectedRoot.levels.level2.capacity}</p>
-                <p className="text-sm text-dark-600">Step 2</p>
+                <p className="text-sm md:text-base font-bold text-dark-900">{selectedRoot.levels.level2.filled}/{selectedRoot.levels.level2.capacity}</p>
+                <p className="text-[8px] md:text-[10px] text-dark-600">S2</p>
               </div>
               <div className="text-center">
-                <p className="text-2xl font-bold text-dark-900">{selectedRoot.levels.level3.filled}/{selectedRoot.levels.level3.capacity}</p>
-                <p className="text-sm text-dark-600">Step 3</p>
+                <p className="text-sm md:text-base font-bold text-dark-900">{selectedRoot.levels.level3.filled}/{selectedRoot.levels.level3.capacity}</p>
+                <p className="text-[8px] md:text-[10px] text-dark-600">S3</p>
               </div>
               <div className="text-center">
-                <p className="text-2xl font-bold text-dark-900">{selectedRoot.levels.level4.filled}/{selectedRoot.levels.level4.capacity}</p>
-                <p className="text-sm text-dark-600">Step 4</p>
+                <p className="text-sm md:text-base font-bold text-dark-900">{selectedRoot.levels.level4.filled}/{selectedRoot.levels.level4.capacity}</p>
+                <p className="text-[8px] md:text-[10px] text-dark-600">S4</p>
               </div>
               <div className="text-center">
-                <p className="text-2xl font-bold text-dark-900">{selectedRoot.levels.level5.filled}/{selectedRoot.levels.level5.capacity}</p>
-                <p className="text-sm text-dark-600">Step 5</p>
+                <p className="text-sm md:text-base font-bold text-dark-900">{selectedRoot.levels.level5.filled}/{selectedRoot.levels.level5.capacity}</p>
+                <p className="text-[8px] md:text-[10px] text-dark-600">S5</p>
               </div>
               <div className="text-center">
-                <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${
+                <span className={`inline-block px-1 md:px-2 py-0.5 rounded-full text-[8px] md:text-[10px] font-medium ${
                   selectedRoot.status === 'COMPLETE'
                     ? 'bg-green-100 text-green-700'
                     : 'bg-blue-100 text-blue-700'
                 }`}>
                   {selectedRoot.status}
                 </span>
-                <p className="text-sm text-dark-600 mt-1">Status</p>
+                <p className="text-[8px] md:text-[10px] text-dark-600 mt-0.5">Status</p>
               </div>
-              <div className="text-center col-span-2 md:col-span-1">
+              <div className="text-center">
                 <button
                   onClick={() => setShowClaimsModal(true)}
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg font-semibold hover:from-purple-700 hover:to-pink-700 transition-all shadow-md hover:shadow-lg"
+                  className="inline-flex items-center gap-0.5 md:gap-1 px-1 md:px-2 py-0.5 md:py-1 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded text-[8px] md:text-[10px] font-semibold hover:from-purple-700 hover:to-pink-700 transition-all"
                 >
-                  <FaTrophy />
-                  View Claims
+                  <FaTrophy className="text-[8px] md:text-xs" />
+                  <span className="hidden md:inline">Claims</span>
                 </button>
               </div>
             </div>
@@ -346,25 +346,25 @@ const TreeView = ({ treeStructure, expandedNodes, toggleNode, expandAll, collaps
     <Card>
       <Card.Header>
         <div className="flex items-center justify-between">
-          <Card.Title>Hierarchical Tree Structure</Card.Title>
-          <div className="flex gap-2">
+          <Card.Title className="text-xs md:text-sm">Tree Structure</Card.Title>
+          <div className="flex gap-0.5 md:gap-1">
             <button
               onClick={expandAll}
-              className="px-3 py-1 text-sm bg-primary-100 text-primary-700 rounded-lg hover:bg-primary-200 transition-colors"
+              className="px-1.5 md:px-2 py-0.5 text-[9px] md:text-xs bg-primary-100 text-primary-700 rounded hover:bg-primary-200 transition-colors"
             >
-              Expand All
+              Expand
             </button>
             <button
               onClick={collapseAll}
-              className="px-3 py-1 text-sm bg-dark-100 text-dark-700 rounded-lg hover:bg-dark-200 transition-colors"
+              className="px-1.5 md:px-2 py-0.5 text-[9px] md:text-xs bg-dark-100 text-dark-700 rounded hover:bg-dark-200 transition-colors"
             >
-              Collapse All
+              Collapse
             </button>
           </div>
         </div>
       </Card.Header>
       <Card.Body>
-        <div className="overflow-x-auto pb-4">
+        <div className="overflow-x-auto pb-1 md:pb-2">
           <div className="inline-block min-w-full">
             <TreeNode
               node={treeStructure}
@@ -394,59 +394,59 @@ const TreeNode = ({ node, isExpanded, onToggle, expandedNodes, isRoot = false })
       <div className="relative">
         <div
           className={`
-            relative px-6 py-4 rounded-2xl shadow-lg transition-all duration-300
+            relative px-2 md:px-3 py-1.5 md:py-2 rounded-lg shadow transition-all duration-300
             ${isRoot 
-              ? 'bg-gradient-to-br from-primary-500 to-accent-500 text-white scale-110 shadow-glow' 
-              : 'bg-white border-2 border-dark-200 hover:border-primary-300 hover:shadow-xl'
+              ? 'bg-gradient-to-br from-primary-500 to-accent-500 text-white scale-105 shadow-glow' 
+              : 'bg-white border border-dark-200 hover:border-primary-300 hover:shadow-md'
             }
             ${hasChildren ? 'cursor-pointer' : ''}
           `}
           onClick={() => hasChildren && onToggle(node.id)}
         >
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1 md:gap-2">
             <div className={`
-              p-2 rounded-full
+              p-0.5 md:p-1 rounded-full
               ${isRoot ? 'bg-white/20' : 'bg-primary-100'}
             `}>
               <FaUser className={`
-                text-lg
+                text-[8px] md:text-xs
                 ${isRoot ? 'text-white' : 'text-primary-600'}
               `} />
             </div>
             <div>
               <p className={`
-                font-semibold text-sm
+                font-semibold text-[9px] md:text-xs
                 ${isRoot ? 'text-white' : 'text-dark-900'}
               `}>
                 {node.name}
               </p>
               <p className={`
-                text-xs
+                text-[7px] md:text-[10px]
                 ${isRoot ? 'text-white/80' : 'text-dark-600'}
               `}>
-                Step {node.level} • {node.position}
+                S{node.level} • {node.position}
               </p>
             </div>
           </div>
 
           {hasChildren && (
             <div className={`
-              absolute -bottom-3 left-1/2 transform -translate-x-1/2
-              w-6 h-6 rounded-full flex items-center justify-center
+              absolute -bottom-1.5 md:-bottom-2 left-1/2 transform -translate-x-1/2
+              w-3 h-3 md:w-4 md:h-4 rounded-full flex items-center justify-center
               ${isRoot ? 'bg-white text-primary-600' : 'bg-primary-500 text-white'}
-              shadow-lg
+              shadow
             `}>
               {isExpanded ? (
-                <FaChevronUp className="text-xs" />
+                <FaChevronUp className="text-[6px] md:text-[8px]" />
               ) : (
-                <FaChevronDown className="text-xs" />
+                <FaChevronDown className="text-[6px] md:text-[8px]" />
               )}
             </div>
           )}
         </div>
 
         {isRoot && (
-          <div className="absolute -top-2 -right-2 px-2 py-1 bg-accent-500 text-white text-xs font-semibold rounded-full shadow-lg">
+          <div className="absolute -top-0.5 md:-top-1 -right-0.5 md:-right-1 px-1 md:px-1.5 py-0.5 bg-accent-500 text-white text-[7px] md:text-[9px] font-semibold rounded-full shadow">
             ROOT
           </div>
         )}
@@ -456,21 +456,21 @@ const TreeNode = ({ node, isExpanded, onToggle, expandedNodes, isRoot = false })
       {isExpanded && hasChildren && (
         <>
           {/* Connecting Lines */}
-          <div className="relative w-full h-12 flex items-center justify-center">
-            <div className="absolute top-0 left-1/2 w-0.5 h-6 bg-dark-300"></div>
+          <div className="relative w-full h-6 md:h-8 flex items-center justify-center">
+            <div className="absolute top-0 left-1/2 w-0.5 h-3 md:h-4 bg-dark-300"></div>
             {node.left && node.right && (
-              <div className="absolute top-6 left-1/4 right-1/4 h-0.5 bg-dark-300"></div>
+              <div className="absolute top-3 md:top-4 left-1/4 right-1/4 h-0.5 bg-dark-300"></div>
             )}
             {node.left && (
-              <div className="absolute top-6 left-1/4 w-0.5 h-6 bg-dark-300"></div>
+              <div className="absolute top-3 md:top-4 left-1/4 w-0.5 h-3 md:h-4 bg-dark-300"></div>
             )}
             {node.right && (
-              <div className="absolute top-6 right-1/4 w-0.5 h-6 bg-dark-300"></div>
+              <div className="absolute top-3 md:top-4 right-1/4 w-0.5 h-3 md:h-4 bg-dark-300"></div>
             )}
           </div>
 
           {/* Child Nodes */}
-          <div className="flex gap-8 items-start">
+          <div className="flex gap-2 md:gap-4 items-start">
             <div className="flex-1 flex justify-end">
               {node.left ? (
                 <TreeNode
@@ -508,10 +508,10 @@ const TreeNode = ({ node, isExpanded, onToggle, expandedNodes, isRoot = false })
  */
 const EmptyNode = ({ position }) => {
   return (
-    <div className="px-6 py-4 rounded-2xl border-2 border-dashed border-dark-200 bg-dark-50">
-      <div className="flex items-center gap-2 text-dark-400">
-        <FaUser className="text-sm" />
-        <span className="text-xs font-medium">Empty {position}</span>
+    <div className="px-2 md:px-3 py-1 md:py-2 rounded border border-dashed border-dark-200 bg-dark-50">
+      <div className="flex items-center gap-0.5 md:gap-1 text-dark-400">
+        <FaUser className="text-[7px] md:text-[10px]" />
+        <span className="text-[8px] md:text-[10px] font-medium">Empty</span>
       </div>
     </div>
   );
@@ -533,25 +533,25 @@ const ListView = ({ parentChildList }) => {
   return (
     <Card>
       <Card.Header>
-        <Card.Title>Parent-Child Relationships</Card.Title>
-        <Card.Description>Complete list showing who is under whom</Card.Description>
+        <Card.Title className="text-xs md:text-sm">Parent-Child Relationships</Card.Title>
+        <Card.Description className="text-[10px] md:text-xs">Complete list showing who is under whom</Card.Description>
       </Card.Header>
       <Card.Body>
-        <div className="space-y-6">
+        <div className="space-y-2 md:space-y-3">
           {Object.keys(groupedByLevel).sort((a, b) => a - b).map(level => (
             <div key={level}>
-              <h3 className="text-lg font-semibold text-dark-900 mb-3">
-                Step {level} ({groupedByLevel[level].length} members)
+              <h3 className="text-xs md:text-sm font-semibold text-dark-900 mb-1 md:mb-1.5">
+                Step {level} ({groupedByLevel[level].length})
               </h3>
-              <div className="space-y-2">
+              <div className="space-y-0.5 md:space-y-1">
                 {groupedByLevel[level].map((rel, index) => (
                   <div
                     key={index}
-                    className="flex items-center gap-3 p-3 bg-dark-50 rounded-lg hover:bg-dark-100 transition-colors"
+                    className="flex items-center gap-1 md:gap-2 p-1.5 md:p-2 bg-dark-50 rounded hover:bg-dark-100 transition-colors text-[10px] md:text-xs"
                   >
-                    <span className="font-medium text-dark-900">{rel.parent}</span>
+                    <span className="font-medium text-dark-900 truncate">{rel.parent}</span>
                     <span className="text-dark-500">→</span>
-                    <span className={`px-2 py-1 rounded text-xs font-medium ${
+                    <span className={`px-1 md:px-1.5 py-0.5 rounded text-[8px] md:text-[10px] font-medium ${
                       rel.leg === 'LEFT' 
                         ? 'bg-blue-100 text-blue-700' 
                         : 'bg-green-100 text-green-700'
@@ -559,8 +559,8 @@ const ListView = ({ parentChildList }) => {
                       {rel.leg}
                     </span>
                     <span className="text-dark-500">→</span>
-                    <span className="font-medium text-primary-600">{rel.child}</span>
-                    <span className="ml-auto text-xs text-dark-500">[{rel.position}]</span>
+                    <span className="font-medium text-primary-600 truncate">{rel.child}</span>
+                    <span className="ml-auto text-[8px] md:text-[10px] text-dark-500">[{rel.position}]</span>
                   </div>
                 ))}
               </div>
@@ -579,39 +579,39 @@ const LevelView = ({ levelWiseData }) => {
   return (
     <Card>
       <Card.Header>
-        <Card.Title>Step-wise Members</Card.Title>
-        <Card.Description>All members organized by their level in the tree</Card.Description>
+        <Card.Title className="text-xs md:text-sm">Step-wise Members</Card.Title>
+        <Card.Description className="text-[10px] md:text-xs">All members organized by their level in the tree</Card.Description>
       </Card.Header>
       <Card.Body>
-        <div className="space-y-6">
+        <div className="space-y-2 md:space-y-3">
           {[1, 2, 3, 4, 5].map(level => {
             const members = levelWiseData[level] || [];
             const capacity = level === 1 ? 1 : Math.pow(2, level - 1);
             
             return (
               <div key={level}>
-                <h3 className="text-lg font-semibold text-dark-900 mb-3">
+                <h3 className="text-xs md:text-sm font-semibold text-dark-900 mb-1 md:mb-1.5">
                   Step {level} ({members.length}/{capacity})
                 </h3>
                 {members.length > 0 ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-1.5 md:gap-2">
                     {members.map((member, index) => (
                       <div
                         key={index}
-                        className="flex items-center gap-3 p-3 bg-white border border-dark-200 rounded-lg hover:border-primary-300 hover:shadow-md transition-all"
+                        className="flex items-center gap-1.5 md:gap-2 p-1.5 md:p-2 bg-white border border-dark-200 rounded hover:border-primary-300 hover:shadow-sm transition-all"
                       >
-                        <div className="p-2 rounded-full bg-primary-100">
-                          <FaUser className="text-primary-600" />
+                        <div className="p-0.5 md:p-1 rounded-full bg-primary-100">
+                          <FaUser className="text-primary-600 text-[8px] md:text-xs" />
                         </div>
-                        <div className="flex-1">
-                          <p className="font-medium text-dark-900">{member.name}</p>
-                          <p className="text-xs text-dark-600">{member.position}</p>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium text-dark-900 text-[10px] md:text-xs truncate">{member.name}</p>
+                          <p className="text-[8px] md:text-[10px] text-dark-600 truncate">{member.position}</p>
                         </div>
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <p className="text-dark-500 text-sm">No members at this level yet</p>
+                  <p className="text-dark-500 text-[10px] md:text-xs">No members at this level yet</p>
                 )}
               </div>
             );

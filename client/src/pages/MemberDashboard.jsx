@@ -301,17 +301,17 @@ const MemberDashboard = () => {
           <div className="space-y-6">
             {/* Product Info Header */}
             <Card>
-              <div className="flex items-center gap-4">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
                 <img
                   src={selectedProduct.productImage}
                   alt={selectedProduct.productName}
-                  className="w-20 h-20 rounded-2xl object-cover"
+                  className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl object-cover flex-shrink-0"
                 />
-                <div className="flex-1">
-                  <h3 className="text-2xl font-bold text-dark-900">
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-lg sm:text-2xl font-bold text-dark-900 truncate">
                     {selectedProduct.productName}
                   </h3>
-                  <p className="text-dark-600">
+                  <p className="text-xs sm:text-sm text-dark-600 line-clamp-2">
                     Binary tree structure and network visualization
                   </p>
                 </div>
@@ -320,8 +320,10 @@ const MemberDashboard = () => {
                   onClick={() => handleGenerateReferralLink(selectedProduct.productId)}
                   loading={generatingLink === selectedProduct.productId}
                   icon={<FaLink />}
+                  className="w-full sm:w-auto flex-shrink-0 text-sm sm:text-base"
                 >
-                  Share Product
+                  <span className="hidden sm:inline">Share Product</span>
+                  <span className="sm:hidden">Share</span>
                 </Button>
               </div>
             </Card>
@@ -340,17 +342,17 @@ const MemberDashboard = () => {
           <div className="space-y-6">
             {/* Product Info Header */}
             <Card>
-              <div className="flex items-center gap-4">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
                 <img
                   src={selectedProduct.productImage}
                   alt={selectedProduct.productName}
-                  className="w-20 h-20 rounded-2xl object-cover"
+                  className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl object-cover flex-shrink-0"
                 />
-                <div className="flex-1">
-                  <h3 className="text-2xl font-bold text-dark-900">
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-lg sm:text-2xl font-bold text-dark-900 truncate">
                     {selectedProduct.productName}
                   </h3>
-                  <p className="text-dark-600">
+                  <p className="text-xs sm:text-sm text-dark-600 line-clamp-2">
                     Complete purchase history for this product
                   </p>
                 </div>

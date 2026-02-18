@@ -136,55 +136,55 @@ const Sidebar = () => {
     <div
       ref={sidebarRef}
       className={`fixed h-screen top-0 ${
-        isCollapsed ? "w-20" : "w-72"
+        isCollapsed ? "w-12 md:w-16" : "w-48 md:w-56"
       } bg-gradient-to-b from-green-600 via-green-700 to-green-800 shadow-2xl transition-all duration-300 z-50 text-white`}
     >
-      <div className="flex items-center justify-between p-4 border-b border-green-500/30">
+      <div className="flex items-center justify-between p-1.5 md:p-2 border-b border-green-500/30">
         {/* Logo */}
         <div
-          className={`${isCollapsed ? "hidden" : "flex items-center gap-3"} font-bold text-xl`}
+          className={`${isCollapsed ? "hidden" : "flex items-center gap-1.5 md:gap-2"} font-bold text-sm md:text-base`}
         >
           <img
             src={logo}
             alt="Logo"
-            className="w-12 h-12 object-cover rounded-full ring-2 ring-white/50"
+            className="w-6 h-6 md:w-8 md:h-8 object-cover rounded-full ring-2 ring-white/50"
           />
-          <span className="text-white font-semibold">FemmeCure</span>
+          <span className="text-white font-semibold text-xs md:text-sm">FemmeCure</span>
         </div>
 
         {/* Toggle Button */}
         <button
           onClick={handleToggle}
-          className="bg-white/10 hover:bg-white/20 backdrop-blur-sm border-none w-10 h-10 flex justify-center items-center cursor-pointer text-white rounded-lg transition-all duration-200"
+          className="bg-white/10 hover:bg-white/20 backdrop-blur-sm border-none w-7 h-7 md:w-8 md:h-8 flex justify-center items-center cursor-pointer text-white rounded-lg transition-all duration-200"
         >
-          {isCollapsed ? <CiMenuFries size={22} /> : <RxCross1 size={22} />}
+          {isCollapsed ? <CiMenuFries size={16} className="md:text-lg" /> : <RxCross1 size={16} className="md:text-lg" />}
         </button>
       </div>
 
       {/* Navigation Links */}
-      <ul className="list-none flex flex-col p-3 mb-14 overflow-y-auto max-h-[65vh] scrollbar-hide space-y-1">
+      <ul className="list-none flex flex-col p-1 md:p-2 mb-12 md:mb-14 overflow-y-auto max-h-[65vh] scrollbar-hide space-y-0.5">
         {navItems.map((item, index) => (
           <NavLink
             key={index}
             to={item.to}
             className={({ isActive }) =>
-              `group relative flex items-center py-3 px-3 rounded-xl transition-all duration-200 ${
+              `group relative flex items-center py-1.5 md:py-2 px-1.5 md:px-2 rounded-lg transition-all duration-200 ${
                 isActive 
                   ? "bg-white text-green-700 shadow-lg" 
                   : "text-white/90 hover:bg-white/10 hover:text-white"
               }`
             }
           >
-            <div className={`text-2xl ${isCollapsed ? "mx-auto" : ""}`}>
+            <div className={`text-base md:text-lg ${isCollapsed ? "mx-auto" : ""}`}>
               {item.icon}
             </div>
             <span
-              className={`ml-4 font-medium ${isCollapsed ? "hidden" : "block"}`}
+              className={`ml-1.5 md:ml-2 font-medium text-[10px] md:text-xs ${isCollapsed ? "hidden" : "block"}`}
             >
               {item.label}
             </span>
             {!isCollapsed && (
-              <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity">
+              <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity text-[10px] md:text-xs">
                 →
               </div>
             )}
@@ -193,13 +193,13 @@ const Sidebar = () => {
       </ul>
 
       {/* User and Logout Section */}
-      <div className="absolute bottom-4 left-3 right-3 space-y-2">
+      <div className="absolute bottom-1.5 md:bottom-2 left-1.5 md:left-2 right-1.5 md:right-2 space-y-1">
         <Link
           to={`${user?.role}/profile`}
           className={`flex items-center justify-center w-full transition-all duration-200 ${
             isCollapsed
-              ? "w-14 h-14 rounded-full bg-white/20 hover:bg-white/30 mx-auto"
-              : "bg-white/20 hover:bg-white/30 backdrop-blur-sm py-3 px-4 rounded-xl"
+              ? "w-9 h-9 md:w-12 md:h-12 rounded-full bg-white/20 hover:bg-white/30 mx-auto"
+              : "bg-white/20 hover:bg-white/30 backdrop-blur-sm py-1.5 md:py-2 px-1.5 md:px-2 rounded-lg"
           }`}
         >
           <div className="cursor-pointer flex items-center justify-center text-white">
@@ -208,25 +208,25 @@ const Sidebar = () => {
                 <img
                   src={user.images[0].url}
                   alt="Profile"
-                  className="w-10 h-10 rounded-full object-cover border-2 border-white/50"
+                  className="w-6 h-6 md:w-8 md:h-8 rounded-full object-cover border-2 border-white/50"
                 />
               ) : (
-                <AiOutlineUser size={24} />
+                <AiOutlineUser size={16} className="md:text-xl" />
               )
             ) : (
-              <div className="flex items-center gap-3 w-full">
+              <div className="flex items-center gap-1.5 md:gap-2 w-full">
                 {user?.images?.[0]?.url ? (
                   <img
                     src={user.images[0].url}
                     alt="Profile"
-                    className="w-10 h-10 rounded-full object-cover border-2 border-white/50"
+                    className="w-6 h-6 md:w-8 md:h-8 rounded-full object-cover border-2 border-white/50"
                   />
                 ) : (
-                  <AiOutlineUser size={24} />
+                  <AiOutlineUser size={16} className="md:text-xl" />
                 )}
                 <div className="flex-1">
-                  <p className="font-semibold text-sm">My Profile</p>
-                  <p className="text-xs text-white/70">{user?.userName}</p>
+                  <p className="font-semibold text-[10px] md:text-xs">My Profile</p>
+                  <p className="text-[8px] md:text-[10px] text-white/70 truncate">{user?.userName}</p>
                 </div>
               </div>
             )}
@@ -237,15 +237,15 @@ const Sidebar = () => {
           onClick={handleLogout}
           className={`bg-red-500 hover:bg-red-600 text-white flex items-center justify-center transition-all duration-200 ${
             isCollapsed
-              ? "w-14 h-14 rounded-full mx-auto"
-              : "py-3 px-4 w-full rounded-xl"
+              ? "w-9 h-9 md:w-12 md:h-12 rounded-full mx-auto"
+              : "py-1.5 md:py-2 px-1.5 md:px-2 w-full rounded-lg"
           }`}
         >
           {isCollapsed ? (
-            <MdLogout size={24} />
+            <MdLogout size={16} className="md:text-xl" />
           ) : (
-            <span className="flex gap-2 items-center font-semibold">
-              <MdLogout size={20} /> Logout
+            <span className="flex gap-1 md:gap-1.5 items-center font-semibold text-[10px] md:text-xs">
+              <MdLogout size={14} className="md:text-base" /> Logout
             </span>
           )}
         </button>

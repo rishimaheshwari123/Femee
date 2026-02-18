@@ -131,41 +131,19 @@ const handleDownloadPDF = (order) => {
     const companyY = startY + 50;
     const sectionWidth = (pageWidth - 50) / 2;
 
-    // TO Section (Customer Details) - Using proper Hindi with text cleaning
-    doc.setFillColor(248, 249, 250);
-    doc.rect(20, companyY, sectionWidth, 55, 'F');
-    doc.setDrawColor(200, 200, 200);
-    doc.rect(20, companyY, sectionWidth, 55);
-
-    doc.setFontSize(11);
-    doc.setFont("helvetica", "bold");
-    doc.setTextColor(41, 128, 185);
-    doc.text("TO (Customer)", 25, companyY + 10);
-
-    doc.setTextColor(0, 0, 0);
-    doc.setFontSize(10);
-    doc.text((order.shippingInfo?.name || "N/A").toUpperCase(), 25, companyY + 20);
-
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(9);
-    
-    // Clean and decode the address properly
+    // Calculate address height dynamically
     let cleanAddress = order.shippingInfo?.address || 'N/A';
     
-    // Handle different encoding issues and Hindi text
+    // Clean and decode the address properly
     try {
-        // Check if address contains Hindi/Devanagari characters
         const hasHindiText = /[\u0900-\u097F]/.test(cleanAddress);
         
         if (hasHindiText) {
-            // If Hindi text is present, use user's address as fallback or create readable version
             const fallbackAddress = order.user?.address || '';
             
-            // Try to use user's address if it's more readable
             if (fallbackAddress && fallbackAddress.length > 10 && !/[\u0900-\u097F]/.test(fallbackAddress)) {
                 cleanAddress = fallbackAddress;
             } else {
-                // Create a readable address from available data
                 const addressParts = [];
                 if (order.shippingInfo?.city) addressParts.push(order.shippingInfo.city);
                 if (order.shippingInfo?.state) addressParts.push(order.shippingInfo.state);
@@ -177,7 +155,6 @@ const handleDownloadPDF = (order) => {
                 }
             }
         } else {
-            // Handle encoded characters for non-Hindi text
             if (cleanAddress.includes('&') || cleanAddress.includes('%') || cleanAddress.includes('\\')) {
                 cleanAddress = cleanAddress
                     .replace(/&amp;/g, '&')
@@ -194,46 +171,75 @@ const handleDownloadPDF = (order) => {
                 }
             }
             
-            // Remove problematic special characters but keep basic punctuation
             cleanAddress = cleanAddress.replace(/[^\w\s\-,./()]/g, ' ').replace(/\s+/g, ' ').trim();
             
-            // If still looks corrupted, use fallback
             if (cleanAddress.length < 5 || /^[^a-zA-Z0-9\s]{3,}/.test(cleanAddress)) {
                 cleanAddress = order.user?.address || 'Address not available';
             }
         }
         
-        // Remove phone numbers from address (both formats: 1234567890 and +91-1234567890)
+        // Remove phone numbers from address
         cleanAddress = cleanAddress
-            .replace(/Mobile\s*[-:]?\s*\d{10}\/?\d{10}/gi, '') // Remove "Mobile -8433010567/9837147813"
-            .replace(/Phone\s*[-:]?\s*\d{10}/gi, '') // Remove "Phone: 1234567890"
-            .replace(/\b\d{10}\b/g, '') // Remove standalone 10-digit numbers
-            .replace(/\+91[-\s]?\d{10}/g, '') // Remove +91-1234567890 format
-            .replace(/[-\/]\d{10}/g, '') // Remove -1234567890 or /1234567890
-            .replace(/\s+/g, ' ') // Clean up extra spaces
+            .replace(/Mobile\s*[-:]?\s*\d{10}\/?\d{10}/gi, '')
+            .replace(/Phone\s*[-:]?\s*\d{10}/gi, '')
+            .replace(/\b\d{10}\b/g, '')
+            .replace(/\+91[-\s]?\d{10}/g, '')
+            .replace(/[-\/]\d{10}/g, '')
+            .replace(/\s+/g, ' ')
             .trim();
             
     } catch (error) {
         cleanAddress = order.user?.address || 'Address not available';
     }
     
+    // Calculate how many lines the address will take
     const addressLines = doc.splitTextToSize(cleanAddress, sectionWidth - 10);
+    const addressHeight = addressLines.length * 4; // 4 units per line
+    
+    // Calculate box height dynamically (minimum 55, add more if needed)
+    const baseHeight = 45; // Base height for name, PIN, phones
+    const boxHeight = Math.max(55, baseHeight + addressHeight);
+
+    // TO Section (Customer Details) - Dynamic height
+    doc.setFillColor(248, 249, 250);
+    doc.rect(20, companyY, sectionWidth, boxHeight, 'F');
+    doc.setDrawColor(200, 200, 200);
+    doc.rect(20, companyY, sectionWidth, boxHeight);
+
+    doc.setFontSize(11);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(41, 128, 185);
+    doc.text("TO (Customer)", 25, companyY + 10);
+
+    doc.setTextColor(0, 0, 0);
+    doc.setFontSize(10);
+    doc.text((order.shippingInfo?.name || "N/A").toUpperCase(), 25, companyY + 20);
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(9);
+    
+    // Address with dynamic positioning
     doc.text(addressLines, 25, companyY + 28);
     
-    // PIN Code above phone numbers
-    doc.text(`PIN: ${order.shippingInfo?.pincode || 'N/A'}`, 25, companyY + 40);
+    // Calculate positions for PIN and phones based on address height
+    const pinY = companyY + 28 + addressHeight + 4;
+    const phoneY = pinY + 6;
     
-    // Primary & Secondary Phone Numbers for Customer - Fixed phone number field mapping
-    doc.text(`Phone 1: ${order.shippingInfo?.phoneNumber || order.shippingInfo?.phone1 || 'N/A'}`, 25, companyY + 46);
-    if(order.shippingInfo?.alternateNumber || order.shippingInfo?.phone2) {
-        doc.text(`Phone 2: ${order.shippingInfo?.alternateNumber || order.shippingInfo?.phone2}`, 25, companyY + 52);
-    }
+    // PIN Code
+    doc.text(`PIN: ${order.shippingInfo?.pincode || 'N/A'}`, 25, pinY);
+    
+    // Customer Phone Numbers (comma-separated)
+    const customerPhones = [
+        order.shippingInfo?.phoneNumber || order.shippingInfo?.phone1,
+        order.shippingInfo?.alternateNumber || order.shippingInfo?.phone2
+    ].filter(Boolean).join(', ');
+    doc.text(`Contact: ${customerPhones || 'N/A'}`, 25, phoneY);
 
-    // FROM Section (Your Details)
+    // FROM Section (Your Details) - Same height as customer box
     doc.setFillColor(248, 249, 250);
-    doc.rect(pageWidth/2 + 5, companyY, sectionWidth, 55, 'F');
+    doc.rect(pageWidth/2 + 5, companyY, sectionWidth, boxHeight, 'F');
     doc.setDrawColor(200, 200, 200);
-    doc.rect(pageWidth/2 + 5, companyY, sectionWidth, 55);
+    doc.rect(pageWidth/2 + 5, companyY, sectionWidth, boxHeight);
 
     doc.setFontSize(11);
     doc.setFont("helvetica", "bold");
@@ -250,8 +256,8 @@ const handleDownloadPDF = (order) => {
     doc.text("Phone: +91-7879523232", pageWidth/2 + 10, companyY + 42);
     doc.text("Alt: +91-9575227672", pageWidth/2 + 10, companyY + 48);
 
-    // Order Items Table
-    const tableStartY = companyY + 65;
+    // Order Items Table - Start after the dynamic boxes
+    const tableStartY = companyY + boxHeight + 10;
     const tableData = order.orderItems.map((item, index) => [
         (index + 1).toString(),
         item.product?.title || "N/A",
@@ -413,6 +419,9 @@ const handleDownloadPDF = (order) => {
                     Total
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">
+                    UTR Number
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">
                     Set Number
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">
@@ -461,17 +470,27 @@ const handleDownloadPDF = (order) => {
                     </td>
                     
                     <td className="px-6 py-4">
-                      <div className="text-sm font-medium text-gray-900">
-                        Primary: {order.shippingInfo?.phone1 || "N/A"}
-                      </div>
-                      <div className="text-sm text-gray-600">
-                        Secondary: {order.shippingInfo?.phone2 || "N/A"}
-                      </div>
-                      {order.user?.phone && (
-                        <div className="text-xs text-blue-600">
-                          Profile: {order.user.phone}
+                      <div className="space-y-1">
+                        <div className="text-xs text-gray-500 font-semibold">Customer:</div>
+                        <div className="text-sm text-gray-900">
+                          {[
+                            order.shippingInfo?.phoneNumber || order.shippingInfo?.phone1,
+                            order.shippingInfo?.alternateNumber || order.shippingInfo?.phone2
+                          ].filter(Boolean).join(', ') || 'N/A'}
                         </div>
-                      )}
+                        
+                        {order.user?.parent && (
+                          <>
+                            <div className="text-xs text-gray-500 font-semibold mt-2">From (Referrer):</div>
+                            <div className="text-sm text-blue-600">
+                              {[
+                                order.user.parent.phone,
+                                order.user.parent.sContact
+                              ].filter(Boolean).join(', ') || 'N/A'}
+                            </div>
+                          </>
+                        )}
+                      </div>
                     </td>
                     
                     <td className="px-6 py-4">
@@ -504,6 +523,12 @@ const handleDownloadPDF = (order) => {
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm font-bold text-green-600">
                         {formatPrice(order.totalPrice)}
+                      </div>
+                    </td>
+                    
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-900">
+                        {order.paymentInfo?.utr || 'N/A'}
                       </div>
                     </td>
                     

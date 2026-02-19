@@ -237,14 +237,14 @@ const Home = () => {
 
             <div data-aos="fade-left">
               <Card variant="glass" className="p-8">
-                <h3 className="text-2xl font-display font-bold mb-6 text-white">
+                <h3 className="text-2xl font-display font-bold mb-6 text-gray-900">
                   Our Commitments
                 </h3>
                 <div className="space-y-4">
                   {benefits.map((benefit, index) => (
                     <div key={index} className="flex items-start gap-3">
                       <FaCheckCircle className="text-green-400 text-xl flex-shrink-0 mt-1" />
-                      <span className="text-white/90">{benefit}</span>
+                      <span className="text-gray-900">{benefit}</span>
                     </div>
                   ))}
                 </div>
@@ -255,40 +255,42 @@ const Home = () => {
       </section>
 
       {/* Stats Section */}
-      <section className="py-20 bg-gradient-to-br from-secondary-500 to-secondary-600 text-white">
-        <Container>
-          <div className="text-center mb-16" data-aos="fade-up">
-            <h2 className="text-4xl md:text-5xl font-display font-bold mb-4">
-              Our Impact
-            </h2>
-            <p className="text-xl text-white/90">
-              Making a difference across India
-            </p>
+  <section className="py-20 bg-gradient-to-br from-secondary-100 to-secondary-200">
+  <Container>
+    <div className="text-center mb-16" data-aos="fade-up">
+      <h2 className="text-4xl md:text-5xl font-display font-bold mb-4 text-gray-800">
+        Our Impact
+      </h2>
+      <p className="text-xl text-gray-600">
+        Making a difference across India
+      </p>
+    </div>
+
+    <div className="grid md:grid-cols-4 gap-8">
+      {stats.map((stat, index) => (
+        <Card
+          key={index}
+          className="text-center bg-white shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 rounded-2xl p-8"
+          data-aos="zoom-in"
+          data-aos-delay={index * 100}
+        >
+          <div className="text-5xl mb-4 text-secondary-600 transition-transform duration-300 group-hover:scale-110">
+            {stat.icon}
           </div>
 
-          <div className="grid md:grid-cols-4 gap-8">
-            {stats.map((stat, index) => (
-              <Card
-                key={index}
-                variant="glass"
-                className="text-center group hover:scale-105"
-                data-aos="zoom-in"
-                data-aos-delay={index * 100}
-              >
-                <div className="text-5xl mb-4 text-white group-hover:scale-110 transition-transform">
-                  {stat.icon}
-                </div>
-                <div className="text-4xl font-bold mb-2 text-white">
-                  {stat.number}
-                </div>
-                <div className="text-white/80 font-medium">
-                  {stat.label}
-                </div>
-              </Card>
-            ))}
+          <div className="text-4xl font-bold mb-2 text-gray-800">
+            {stat.number}
           </div>
-        </Container>
-      </section>
+
+          <div className="text-gray-600 font-medium">
+            {stat.label}
+          </div>
+        </Card>
+      ))}
+    </div>
+  </Container>
+</section>
+
 
       {/* Testimonials Section */}
       {allRatings.length > 0 && (

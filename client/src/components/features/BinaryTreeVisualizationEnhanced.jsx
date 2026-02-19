@@ -164,7 +164,7 @@ const BinaryTreeVisualizationEnhanced = ({
               >
                 Tree
               </button>
-              <button
+              {/* <button
                 onClick={() => setViewMode('list')}
                 className={`px-1.5 md:px-2 py-0.5 md:py-1 rounded text-[9px] md:text-xs font-medium transition-colors ${
                   viewMode === 'list'
@@ -183,7 +183,7 @@ const BinaryTreeVisualizationEnhanced = ({
                 }`}
               >
                 Step
-              </button>
+              </button> */}
             </div>
           </div>
         </Card.Header>

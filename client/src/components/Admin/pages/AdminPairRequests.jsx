@@ -169,7 +169,7 @@ const AdminPairRequests = () => {
               </select>
             </div>
 
-            <div>
+            {/* <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Pair Number
               </label>
@@ -184,7 +184,7 @@ const AdminPairRequests = () => {
                 <option value="3">Pair 3 (₹400)</option>
                 <option value="4">Pair 4 (₹450)</option>
               </select>
-            </div>
+            </div> */}
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">

@@ -54,11 +54,39 @@ function OrdersEnhanced() {
 
     // Filter by search term
     if (searchTerm) {
-      filtered = filtered.filter(order => 
-        order._id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        order.user?.userName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        order.user?.email?.toLowerCase().includes(searchTerm.toLowerCase())
-      );
+      const searchLower = searchTerm.toLowerCase().trim();
+      filtered = filtered.filter(order => {
+        // Search in order number
+        const orderNumber = (order.orderNumber || '').toLowerCase();
+        const orderId = (order._id || '').toLowerCase();
+        const sequenceNumber = (order.sequenceNumber || '').toString();
+        const internalNumber = (order.internalNumber || '').toLowerCase();
+        
+        // Search in user details
+        const userName = (order.user?.userName || '').toLowerCase();
+        const userEmail = (order.user?.email || '').toLowerCase();
+        const userFName = (order.user?.fName || '').toLowerCase();
+        const userLName = (order.user?.lName || '').toLowerCase();
+        const fullName = `${userFName} ${userLName}`.toLowerCase();
+        
+        // Search in phone numbers
+        const phone1 = (order.shippingInfo?.phone1 || '').toString();
+        const phone2 = (order.shippingInfo?.phone2 || '').toString();
+        const userPhone = (order.user?.phone || '').toString();
+        
+        return (
+          orderNumber.includes(searchLower) ||
+          orderId.includes(searchLower) ||
+          sequenceNumber.includes(searchLower) ||
+          internalNumber.includes(searchLower) ||
+          userName.includes(searchLower) ||
+          userEmail.includes(searchLower) ||
+          fullName.includes(searchLower) ||
+          phone1.includes(searchLower) ||
+          phone2.includes(searchLower) ||
+          userPhone.includes(searchLower)
+        );
+      });
     }
 
     setFilteredOrders(filtered);

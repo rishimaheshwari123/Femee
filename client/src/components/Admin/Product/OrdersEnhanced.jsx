@@ -253,8 +253,9 @@ const handleDownloadPDF = (order) => {
     doc.setFontSize(9);
     doc.text("Bhopal, Madhya Pradesh", pageWidth/2 + 10, companyY + 28);
     doc.text("PIN Code: 462042", pageWidth/2 + 10, companyY + 34);
-    doc.text("Phone: +91-7879523232", pageWidth/2 + 10, companyY + 42);
-    doc.text("Alt: +91-9575227672", pageWidth/2 + 10, companyY + 48);
+    doc.text("GST No: 23AAFCF7404H1ZW", pageWidth/2 + 10, companyY + 40);
+    doc.text("Phone: +91-7879523232", pageWidth/2 + 10, companyY + 46);
+    doc.text("Alt: +91-9575227672", pageWidth/2 + 10, companyY + 52);
 
     // Order Items Table - Start after the dynamic boxes
     const tableStartY = companyY + boxHeight + 10;

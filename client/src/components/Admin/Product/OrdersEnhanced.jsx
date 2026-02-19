@@ -417,6 +417,9 @@ const handleDownloadPDF = (order) => {
                     Products
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">
+                    Set Numbers
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">
                     Total
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">
@@ -518,6 +521,22 @@ const handleDownloadPDF = (order) => {
                             +{order.orderItems.length - 2} more
                           </div>
                         )}
+                      </div>
+                    </td>
+                    
+                    <td className="px-6 py-4">
+                      <div className="flex flex-col gap-2">
+                        {order.orderItems?.map((item) => (
+                          <div key={item._id} className="text-sm">
+                            {item.setNumber ? (
+                              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                                Set #{item.setNumber}
+                              </span>
+                            ) : (
+                              <span className="text-gray-400 text-xs">-</span>
+                            )}
+                          </div>
+                        ))}
                       </div>
                     </td>
                     

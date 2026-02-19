@@ -185,6 +185,23 @@ const memeberSchema = new mongoose.Schema(
         wallet: { type: Number, default: 0 },
         totalEarnings: { type: Number, default: 0 },
 
+        // Product Set Number Tracking
+        productSetNumbers: [{
+            productId: { 
+                type: mongoose.Schema.Types.ObjectId, 
+                ref: "Product",
+                required: true 
+            },
+            setNumber: { 
+                type: Number, 
+                required: true 
+            },
+            lastOrderDate: { 
+                type: Date, 
+                default: Date.now 
+            }
+        }],
+
         token: {
             type: String,
         },

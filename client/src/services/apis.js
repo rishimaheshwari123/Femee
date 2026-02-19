@@ -126,3 +126,8 @@ export const almlEndpoints = {
   CLAIM_ACHIEVEMENTS: BASE_URL + "/alml/:memberId/claim",
   GET_ALML_SUMMARY: BASE_URL + "/alml/:memberId/summary",
 }
+
+// SET NUMBER TRACKING APIS
+export const setNumberEndpoints = {
+  GET_USER_SET_NUMBERS: BASE_URL + "/setNumber/getUserSetNumbers",
+}

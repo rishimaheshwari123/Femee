@@ -171,7 +171,7 @@ const createOrder = asyncHandler(async (req, res) => {
         }
 
         // Destructure address fields
-        const { billingCity, billingPincode, billingState, billingAddress, utr, phone1, phone2 } = address;
+        const { billingCity, billingPincode, billingState, billingAddress, utr, phone1, phone2, setNumbers } = address;
 
         // Find user by ID
         const userDetails = await User.findById(userId).session(session);
@@ -228,11 +228,18 @@ const createOrder = asyncHandler(async (req, res) => {
           // Check if this is the first purchase of this product for the user
           const isFirstPurchase = await BinaryTreeService.isFirstPurchaseOfProduct(userId, productId);
 
+          // Get set number for this product if it's a SET product
+          let setNumber = null;
+          if (setNumbers && setNumbers[productId]) {
+            setNumber = parseInt(setNumbers[productId]);
+          }
+
           // Prepare order item with referral tracking (use validated referrer)
           const orderItem = {
             product: productId,
             quantity: quantity,
             price: product.price, // Store price at time of purchase
+            setNumber: setNumber, // Add set number
             referrerId: validatedReferrerId || null,
             isFirstPurchase: isFirstPurchase,
             placedInLeg: 'none' // Will be updated during binary placement
@@ -282,6 +289,29 @@ const createOrder = asyncHandler(async (req, res) => {
           product.sold += orderItem.quantity;
           product.quantity -= orderItem.quantity;
           await product.save({ session });
+
+          // Update user's set number for this product if applicable
+          if (orderItem.setNumber) {
+            const member = await User.findById(userId).session(session);
+            const existingSetIndex = member.productSetNumbers.findIndex(
+              ps => ps.productId.toString() === productId.toString()
+            );
+            
+            if (existingSetIndex !== -1) {
+              // Update existing set number
+              member.productSetNumbers[existingSetIndex].setNumber = orderItem.setNumber;
+              member.productSetNumbers[existingSetIndex].lastOrderDate = new Date();
+            } else {
+              // Add new set number entry
+              member.productSetNumbers.push({
+                productId: productId,
+                setNumber: orderItem.setNumber,
+                lastOrderDate: new Date()
+              });
+            }
+            
+            await member.save({ session });
+          }
 
           // Process product-wise binary tree operations
           try {

@@ -296,6 +296,13 @@ function MyOrderEnhanced() {
                               <h4 className="font-semibold text-gray-900 mb-1">
                                 {item.product.title}
                               </h4>
+                              {item.setNumber && (
+                                <div className="mb-2">
+                                  <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-purple-100 text-purple-800 border border-purple-300">
+                                    Set #{item.setNumber}
+                                  </span>
+                                </div>
+                              )}
                               <p className="text-sm text-gray-600">
                                 Quantity: {item.quantity}
                               </p>

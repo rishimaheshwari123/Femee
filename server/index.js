@@ -48,6 +48,7 @@ app.use("/api", require("./routes/mlm"))
 app.use("/api/v1/pair", require("./routes/pairRoutes"))
 app.use("/api/v1/referral", require("./routes/referralRoutes"))
 app.use("/api/v1/alml", require("./routes/almlRoutes")) // ALML - Achievement Level-based Member Logic
+app.use("/api/v1/setNumber", require("./routes/setNumberRoutes")) // Set Number Tracking
 
 
 

@@ -77,6 +77,10 @@ const orderSchema = new mongoose.Schema(
           type: Number,
           required: true,
         },
+        setNumber: {
+          type: Number,
+          default: null
+        },
         
         // Referral tracking per product
         referrerId: { 

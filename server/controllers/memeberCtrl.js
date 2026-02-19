@@ -435,7 +435,7 @@ const updateTierCtrl = async (req, res) => {
 
 const updateMemberProfileCtrl = async (req, res) => {
   const { id } = req.params;
-  const { fName, lName, userName, email, phone, address, acc, ifsc, bankName, sContact, bankHolderName } = req.body;
+  const { fName, lName, userName, email, phone, address, acc, ifsc, bankName, sContact, bankHolderName, utrNumber } = req.body;
 
   try {
     const member = await memberModel.findById(id);

@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setStep, setAddressData } from "../../../redux/paymentSlice";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { getUserSetNumbers } from "../../../services/operations/setNumber";
 
 function Address() {
   const dispatch = useDispatch();
+  const { cart } = useSelector((state) => state.cart);
+  const { token } = useSelector((state) => state.auth);
+  
   const [formData, setFormData] = useState({
     billingCity: "",
     billingPincode: "",
@@ -17,10 +21,50 @@ function Address() {
     utr: "",
   });
   const [isPincodeValid, setIsPincodeValid] = useState(false);
+  const [setNumbers, setSetNumbers] = useState({});
+  const [setNumberInputs, setSetNumberInputs] = useState({});
+  const [loadingSetNumbers, setLoadingSetNumbers] = useState(true);
 
   const areAllFieldsFilled = () => {
-    return Object.values(formData).every((value) => value.trim() !== "");
+    const basicFieldsFilled = Object.values(formData).every((value) => value.trim() !== "");
+    
+    // Check if all SET products have set numbers
+    const setProductsValid = Object.keys(setNumbers).every(productId => {
+      if (setNumbers[productId].isSetProduct) {
+        return setNumberInputs[productId] && setNumberInputs[productId] > 0;
+      }
+      return true;
+    });
+    
+    return basicFieldsFilled && setProductsValid;
   };
+
+  // Fetch set numbers when component mounts
+  useEffect(() => {
+    const fetchSetNumbers = async () => {
+      if (cart && cart.length > 0 && token) {
+        setLoadingSetNumbers(true);
+        const productIds = cart.map(item => item.product._id || item.product);
+        const data = await getUserSetNumbers(productIds, token);
+        
+        if (data) {
+          setSetNumbers(data);
+          
+          // Initialize set number inputs with next set number for SET products
+          const initialInputs = {};
+          Object.keys(data).forEach(productId => {
+            if (data[productId].isSetProduct) {
+              initialInputs[productId] = data[productId].nextSetNumber;
+            }
+          });
+          setSetNumberInputs(initialInputs);
+        }
+        setLoadingSetNumbers(false);
+      }
+    };
+    
+    fetchSetNumbers();
+  }, [cart, token]);
 
   useEffect(() => {
     if (formData.billingPincode.length === 6) {
@@ -59,12 +103,26 @@ function Address() {
     }));
   };
 
+  const handleSetNumberChange = (productId, value) => {
+    setSetNumberInputs(prev => ({
+      ...prev,
+      [productId]: parseInt(value) || 0
+    }));
+  };
+
   const handleSubmit = () => {
     if (!areAllFieldsFilled()) {
-      toast.error("All fields are required");
+      toast.error("All fields are required including set numbers for SET products");
       return;
     }
-    dispatch(setAddressData(formData));
+    
+    // Include set numbers in address data
+    const addressDataWithSetNumbers = {
+      ...formData,
+      setNumbers: setNumberInputs
+    };
+    
+    dispatch(setAddressData(addressDataWithSetNumbers));
     dispatch(setStep(2));
   };
 
@@ -179,6 +237,66 @@ function Address() {
               required
             />
           </div>
+
+          {/* Set Number Inputs for SET Products */}
+          {!loadingSetNumbers && Object.keys(setNumbers).length > 0 && (
+            <div className="mb-3 mt-6 border-t pt-4">
+              <h3 className="text-lg font-semibold mb-3 text-gray-700">Set Numbers</h3>
+              {Object.keys(setNumbers).map(productId => {
+                const setData = setNumbers[productId];
+                if (!setData.isSetProduct) return null;
+                
+                return (
+                  <div key={productId} className="mb-4 p-3 bg-blue-50 rounded-lg">
+                    <label className="block mb-2 text-gray-700 font-medium">
+                      {setData.productTitle}
+                    </label>
+                    {setData.currentSetNumber ? (
+                      <>
+                        <p className="text-sm text-gray-600 mb-2">
+                          Your last set number: <span className="font-bold text-blue-600">#{setData.currentSetNumber}</span>
+                        </p>
+                        <div className="flex items-center gap-2">
+                          <label className="text-sm text-gray-600">Set Number:</label>
+                          <input
+                            type="number"
+                            value={setNumberInputs[productId] || ''}
+                            className="flex-1 border rounded px-3 py-2 bg-gray-100 font-semibold text-gray-700 cursor-not-allowed"
+                            disabled
+                            readOnly
+                          />
+                        </div>
+                        <p className="text-xs text-green-600 mt-1 font-medium">
+                          ✓ Automatically set to next number: #{setData.nextSetNumber}
+                        </p>
+                      </>
+                    ) : (
+                      <>
+                        <p className="text-sm text-gray-600 mb-2">
+                          This is your first order for this product
+                        </p>
+                        <div className="flex items-center gap-2">
+                          <label className="text-sm text-gray-600">Set Number:</label>
+                          <input
+                            type="number"
+                            min="1"
+                            value={setNumberInputs[productId] || ''}
+                            onChange={(e) => handleSetNumberChange(productId, e.target.value)}
+                            placeholder={`Enter set number (suggested: ${setData.nextSetNumber})`}
+                            className="flex-1 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 font-semibold"
+                            required
+                          />
+                        </div>
+                        <p className="text-xs text-gray-500 mt-1">
+                          Suggested next set: #{setData.nextSetNumber}
+                        </p>
+                      </>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       </div>
       <div className="flex justify-center mt-">

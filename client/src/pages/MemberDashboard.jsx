@@ -4,19 +4,15 @@ import {
   FaWallet, 
   FaChartLine, 
   FaLink, 
-  FaHistory,
   FaSpinner,
   FaExclamationCircle
 } from 'react-icons/fa';
 import { Card, Button, Badge } from '../components/ui';
 import ProductTreeCard from '../components/features/ProductTreeCard';
 import BinaryTreeVisualizationEnhanced from '../components/features/BinaryTreeVisualizationEnhanced';
-import ProductPurchaseHistory from '../components/features/ProductPurchaseHistory';
 import {
   getMemberProductTrees,
-  getProductBinaryTree,
   generateReferralLink,
-  getMemberTransactions,
   copyReferralLink
 } from '../services/operations/binaryTree';
 import { toast } from 'react-toastify';
@@ -36,9 +32,8 @@ const MemberDashboard = () => {
   const [productTrees, setProductTrees] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [binaryTreeData, setBinaryTreeData] = useState(null);
-  const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [viewMode, setViewMode] = useState('overview'); // overview, tree, history
+  const [viewMode, setViewMode] = useState('overview'); // overview, tree
   const [generatingLink, setGeneratingLink] = useState(null);
 
   // Format currency
@@ -76,23 +71,29 @@ const MemberDashboard = () => {
     setViewMode('tree');
   };
 
-  // Handle view purchase history
-  const handleViewHistory = (productTree) => {
-    setSelectedProduct(productTree);
-    setViewMode('history');
-  };
-
   // Handle generate referral link
   const handleGenerateReferralLink = async (productId) => {
+    if (!productId) {
+      toast.error('Product ID not found');
+      return;
+    }
+    
     setGeneratingLink(productId);
     try {
       const linkData = await generateReferralLink(productId, user._id);
       if (linkData) {
-        const fullLink = `${window.location.origin}/product/${productId}/${user._id}`;
-        copyReferralLink(fullLink);
+        const success = await copyReferralLink(linkData);
+        if (success) {
+          toast.success('Referral link copied to clipboard!');
+        } else {
+          toast.error('Failed to copy link. Please try again.');
+        }
+      } else {
+        toast.error('Failed to generate referral link');
       }
     } catch (error) {
       console.error('Error generating referral link:', error);
+      toast.error('Error generating referral link');
     } finally {
       setGeneratingLink(null);
     }
@@ -142,9 +143,7 @@ const MemberDashboard = () => {
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
             <h1 className="text-4xl font-display font-bold text-dark-900 mb-2">
-              {viewMode === 'overview' ? 'My Binary Trees' : 
-               viewMode === 'tree' ? 'Binary Tree Visualization' :
-               'Purchase History'}
+              {viewMode === 'overview' ? 'My Binary Trees' : 'Binary Tree Visualization'}
             </h1>
             <p className="text-dark-600">
               {viewMode === 'overview' 
@@ -246,35 +245,31 @@ const MemberDashboard = () => {
                   </Badge>
                 </div>
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  {productTrees.map((tree, index) => (
-                    <div key={tree.productId || index} className="space-y-3">
-                      <ProductTreeCard
-                        productTree={tree}
-                        onViewDetails={handleViewTreeDetails}
-                      />
-                      <div className="grid grid-cols-2 gap-3">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          fullWidth
-                          onClick={() => handleViewHistory(tree)}
-                          icon={<FaHistory />}
-                        >
-                          View History
-                        </Button>
+                  {productTrees.map((tree, index) => {
+                    // Extract productId properly (handle both string and object)
+                    const productId = typeof tree.productId === 'object' 
+                      ? tree.productId?._id 
+                      : tree.productId;
+                    
+                    return (
+                      <div key={productId || index} className="space-y-3">
+                        <ProductTreeCard
+                          productTree={tree}
+                          onViewDetails={handleViewTreeDetails}
+                        />
                         <Button
                           variant="secondary"
                           size="sm"
                           fullWidth
-                          onClick={() => handleGenerateReferralLink(tree.productId)}
-                          loading={generatingLink === tree.productId}
+                          onClick={() => handleGenerateReferralLink(productId)}
+                          loading={generatingLink === productId}
                           icon={<FaLink />}
                         >
                           Get Link
                         </Button>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             ) : (
@@ -317,8 +312,15 @@ const MemberDashboard = () => {
                 </div>
                 <Button
                   variant="secondary"
-                  onClick={() => handleGenerateReferralLink(selectedProduct.productId)}
-                  loading={generatingLink === selectedProduct.productId}
+                  onClick={() => {
+                    const productId = typeof selectedProduct.productId === 'object' 
+                      ? selectedProduct.productId?._id 
+                      : selectedProduct.productId;
+                    handleGenerateReferralLink(productId);
+                  }}
+                  loading={generatingLink === (typeof selectedProduct.productId === 'object' 
+                    ? selectedProduct.productId?._id 
+                    : selectedProduct.productId)}
                   icon={<FaLink />}
                   className="w-full sm:w-auto flex-shrink-0 text-sm sm:text-base"
                 >
@@ -333,36 +335,6 @@ const MemberDashboard = () => {
               key={`${user._id}-${selectedProduct.productId}`}
               memberId={user._id}
               productId={selectedProduct.productId}
-            />
-          </div>
-        )}
-
-        {/* Purchase History Mode */}
-        {!loading && viewMode === 'history' && selectedProduct && (
-          <div className="space-y-6">
-            {/* Product Info Header */}
-            <Card>
-              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
-                <img
-                  src={selectedProduct.productImage}
-                  alt={selectedProduct.productName}
-                  className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl object-cover flex-shrink-0"
-                />
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-lg sm:text-2xl font-bold text-dark-900 truncate">
-                    {selectedProduct.productName}
-                  </h3>
-                  <p className="text-xs sm:text-sm text-dark-600 line-clamp-2">
-                    Complete purchase history for this product
-                  </p>
-                </div>
-              </div>
-            </Card>
-
-            {/* Purchase History */}
-            <ProductPurchaseHistory
-              purchases={selectedProduct.purchaseHistory}
-              productName={selectedProduct.productName}
             />
           </div>
         )}

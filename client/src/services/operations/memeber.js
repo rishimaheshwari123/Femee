@@ -392,3 +392,40 @@ export const getReferralTreeApi = async (id) => {
     return { upline: [], downline: [] };
   }
 }
+
+export const generatePasswordApi = async (id) => {
+  Swal.fire({
+    title: "Generating Reset Link...",
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+    allowEnterKey: false,
+    showConfirmButton: false,
+    didOpen: () => {
+      Swal.showLoading();
+    },
+  });
+
+  try {
+    const BASE_URL = process.env.REACT_APP_BASE_URL;
+    const response = await apiConnector("POST", `${BASE_URL}/auth/generate-password/${id}`);
+    
+    if (!response?.data?.success) {
+      throw new Error(response?.data?.message || "Failed to generate reset link");
+    }
+
+    Swal.close();
+    return {
+      success: true,
+      resetLink: response?.data?.resetLink,
+      userName: response?.data?.userName,
+      phone: response?.data?.phone,
+      email: response?.data?.email,
+      name: response?.data?.name
+    };
+  } catch (error) {
+    Swal.close();
+    console.log(error);
+    toast.error(error?.response?.data?.message || "Failed to generate reset link");
+    return { success: false };
+  }
+}

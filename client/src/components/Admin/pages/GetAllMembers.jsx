@@ -6,6 +6,7 @@ import {
   updateTierMembersApi,
   deleteMemberApi,
   getMembersProfileApi,
+  generatePasswordApi,
 } from "../../../services/operations/memeber";
 import { getAllOrders } from "../../../services/operations/admin";
 import { FaEye, FaTimes, FaChevronDown, FaChevronRight, FaUser, FaSearch, FaIdCard, FaShoppingCart, FaSitemap } from "react-icons/fa";
@@ -693,6 +694,40 @@ const GetAllMembers = () => {
                     <div>
                       <p className="text-gray-500 font-medium">Address</p>
                       <p className="text-gray-800">{selectedMember.address || "N/A"}</p>
+                    </div>
+                    
+                    {/* Generate Password Reset Link */}
+                    <div className="pt-3 border-t border-gray-200">
+                      <p className="text-gray-500 font-medium mb-2">Password Reset Link</p>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={async () => {
+                            const result = await generatePasswordApi(selectedMember._id);
+                            if (result.success) {
+                              const message = `Hello ${result.name},\n\nYour password reset link:\n${result.resetLink}\n\nThis link will expire in 24 hours.\n\nUsername: ${result.userName}`;
+                              const whatsappUrl = `https://wa.me/91${result.phone}?text=${encodeURIComponent(message)}`;
+                              window.open(whatsappUrl, '_blank');
+                            }
+                          }}
+                          className="flex-1 bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded-lg transition-colors flex items-center justify-center gap-2 font-medium"
+                        >
+                          <span>📱</span>
+                          Send via WhatsApp
+                        </button>
+                        <button
+                          onClick={async () => {
+                            const result = await generatePasswordApi(selectedMember._id);
+                            if (result.success) {
+                              navigator.clipboard.writeText(result.resetLink);
+                              toast.success("Reset link copied to clipboard!");
+                            }
+                          }}
+                          className="flex-1 bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-lg transition-colors flex items-center justify-center gap-2 font-medium"
+                        >
+                          <span>📋</span>
+                          Copy Link
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>

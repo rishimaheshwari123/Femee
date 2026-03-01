@@ -5,6 +5,7 @@ const mailSender = require("../utils/mailSender");
 const verifyAccountTemplate = require("../templates/emailVerificationTemplate");
 const memeberModel = require("../models/memeberModel");
 const accountReject = require("../templates/accountReject");
+const crypto = require("crypto");
 
 
 
@@ -530,6 +531,53 @@ const updatePassword = async (req, res) => {
   }
 };
 
+// Generate password reset link for a member (same as email reset)
+const generatePasswordCtrl = async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    const member = await memberModel.findById(id);
+    if (!member) {
+      return res.status(404).json({
+        success: false,
+        message: "Member not found",
+      });
+    }
+
+    // Generate random token (same as email reset)
+    const token = crypto.randomBytes(20).toString("hex");
+
+    // Update member with token and expiry time (1 hour)
+    await memberModel.findByIdAndUpdate(
+      id,
+      {
+        token: token,
+        resetPasswordExpires: Date.now() + 3600000, // 1 hour
+      },
+      { new: true }
+    );
+
+    // Create password reset link (same format as email)
+    const resetLink = `https://www.femmecurehelpingher.com/update-password/${token}`;
+
+    return res.status(200).json({
+      success: true,
+      message: "Password reset link generated successfully",
+      resetLink: resetLink,
+      userName: member.userName,
+      phone: member.phone,
+      email: member.email,
+      name: `${member.fName} ${member.lName}`
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong in generate password reset link API",
+    });
+  }
+};
+
 // Get Complete Referral Tree (Upline + Downline)
 const getReferralTreeCtrl = async (req, res) => {
   try {
@@ -645,4 +693,4 @@ const getMemberByUsernameCtrl = async (req, res) => {
   }
 };
 
-module.exports = { registerMemberCtrl, loginMemberCtrl, getAllMemberCtrl, verifyMemberCtrl, updateTierCtrl, memberProfileCtrl, updateMemberProfileCtrl, deleteMemberCtrl, updatePassword, getReferralTreeCtrl, getMemberByUsernameCtrl };
+module.exports = { registerMemberCtrl, loginMemberCtrl, getAllMemberCtrl, verifyMemberCtrl, updateTierCtrl, memberProfileCtrl, updateMemberProfileCtrl, deleteMemberCtrl, updatePassword, generatePasswordCtrl, getReferralTreeCtrl, getMemberByUsernameCtrl };
